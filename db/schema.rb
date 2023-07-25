@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_25_112154) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_25_122158) do
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -19,8 +19,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_25_112154) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.float "exam_grade"
-    t.float "middle_grade"
+    t.float "admission_average"
+    t.float "en_average"
+    t.float "ro_grade"
+    t.float "mathematics_grade"
+    t.string "mother_tongue"
+    t.float "mother_tongue_grade"
+    t.float "graduation_average"
     t.string "role"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
