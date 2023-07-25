@@ -10,7 +10,56 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_25_122158) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_25_173038) do
+  create_table "assignments", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "school_specialization_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["school_specialization_id"], name: "index_assignments_on_school_specialization_id"
+    t.index ["user_id"], name: "index_assignments_on_user_id"
+  end
+
+  create_table "preferences", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "school_specialization_id", null: false
+    t.integer "priority"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["school_specialization_id"], name: "index_preferences_on_school_specialization_id"
+    t.index ["user_id"], name: "index_preferences_on_user_id"
+  end
+
+  create_table "school_specializations", force: :cascade do |t|
+    t.integer "school_id", null: false
+    t.integer "track_id", null: false
+    t.integer "specialization_id", null: false
+    t.integer "spots_available"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["school_id"], name: "index_school_specializations_on_school_id"
+    t.index ["specialization_id"], name: "index_school_specializations_on_specialization_id"
+    t.index ["track_id"], name: "index_school_specializations_on_track_id"
+  end
+
+  create_table "schools", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "specializations", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "tracks", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -31,4 +80,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_25_122158) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "assignments", "school_specializations"
+  add_foreign_key "assignments", "users"
+  add_foreign_key "preferences", "school_specializations"
+  add_foreign_key "preferences", "users"
+  add_foreign_key "school_specializations", "schools"
+  add_foreign_key "school_specializations", "specializations"
+  add_foreign_key "school_specializations", "tracks"
 end

@@ -1,14 +1,25 @@
 <nav class="bg-gray-800">
   <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
     <div class="relative flex h-16 items-center justify-between">
-      <div class="text-white text-xl pl-2">School Admissions 2023</div>
-      <div class="flex justify-center items-center space-x-4">
-        <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Add Students</a>
-        <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Add Schools</a>
-        <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Allocate Students</a>
-      </div>
+       <%= link_to "School Admissions 2023", root_path, class: "text-white text-xl pl-2" %>
+        <% if current_user && current_user.role == 'admin' %>
+          <div class="flex justify-center items-center space-x-4">
+            <%= link_to "Add Students", "#", class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
+            <%= link_to "Add Schools", "#", class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
+            <%= link_to "Allocate Students", "#", class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
+          </div>
+        <% elsif current_user && current_user.role == 'user' %>
+          <div class="flex justify-center items-center space-x-4">
+              <%= link_to "Add Students", "#", class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
+          </div>
+        <% end %>
       <div class="flex justify-end items-center">
-        <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Login</a>
+        <% if current_user.nil? %>
+          <%= link_to "Login", new_user_session_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
+        <% else %>
+          <%= link_to current_user.email, edit_user_registration_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
+          <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
+        <% end %>
       </div>
     </div>
   </div>
