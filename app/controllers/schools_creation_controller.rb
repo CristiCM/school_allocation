@@ -8,14 +8,27 @@ class SchoolsCreationController < ApplicationController
       @school_specialization = SchoolSpecialization.new(school_specialization_params)
       
       if @school_specialization.save
-         redirect_to create_schools_path, notice: "Added successfully!"
+         redirect_to new_school_specialization_path, notice: "Added successfully!"
       else
         render :new, notice: "Failed."
       end
     end
 
     def update
+      puts params.inspect
+      @school_specialization = SchoolSpecialization.find(params[:id])
+      if @school_specialization.update(school_specialization_params)
+        redirect_to new_school_specialization_path, notice: "Updated successfully"
+      else
+        render :edit, notice: "Update failed."
+      end
     end
+    
+    def destroy
+      @school_specialization = SchoolSpecialization.find(params[:id])
+      @school_specialization.destroy
+      redirect_to school_specializations_path, notice: "Record was successfully deleted."
+    end    
 
     def import
       Rails.logger.info "Importing file..."
@@ -31,7 +44,7 @@ class SchoolsCreationController < ApplicationController
         Track.import(params[:file])
         Specialization.import(params[:file])
   
-        redirect_to add_schools_path, notice: "Data imported successfully"
+        redirect_to new_school_specialization_path, notice: "Data imported successfully"
       rescue => e
         flash[:alert] = "Import failed: #{e.message}"
         render :new, status: :unprocessable_entity

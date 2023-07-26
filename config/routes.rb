@@ -6,19 +6,13 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
-  get "create_students", to: "students_creation#new"
-  post "create_students", to: "students_creation#create"
-  post 'import_data', to: 'schools_creation#import', as: :import_data
-  patch "create_students", to: "students_creation#update"
+  # Assuming you have a Student resource
+  resources :students, controller: 'students_creation', only: [:new, :create, :update]
 
-  get "create_schools", to: "schools_creation#new"
-  post "create_schools", to: "schools_creation#create"
-  patch "create_schools", to: "schools_creation#update"
-
-
-
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Defines the root path route ("/")
-  # root "articles#index"
+  # Assuming you have a SchoolSpecialization resource
+  resources :school_specializations, path: 'create_schools', controller: 'schools_creation', only: [:new, :create, :update, :destroy] do
+    collection do
+      post :import, as: :import_data
+    end
+  end
 end

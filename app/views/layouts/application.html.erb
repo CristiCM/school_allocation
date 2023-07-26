@@ -13,9 +13,9 @@
 
   <body>
     <%= render partial: "/shared/navbar"%>
-    <main class="container mx-auto mt-28 px-5">
+    <main class="container mx-auto mt-25 px-5">
       <% if flash[:alert] %>
-        <div class="alert alert-danger">
+        <div class="alert alert-danger, text-center">
           <%= flash[:alert] %>
         </div>
       <% end %>
