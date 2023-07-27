@@ -10,9 +10,11 @@ Rails.application.routes.draw do
   resources :students, controller: 'students_creation', only: [:new, :create, :update]
 
   # Assuming you have a SchoolSpecialization resource
-  resources :school_specializations, path: 'create_schools', controller: 'schools_creation', only: [:new, :create, :update, :destroy] do
+  resources :school_specializations, controller: 'schools_creation', only: [:new, :create, :update, :destroy, :edit] do
     collection do
-      post :import, as: :import_data
+      get :import_data, as: :import_data
+      post :import, as: :import
+      get :edit_all, as: :edit_all
     end
   end
 end
