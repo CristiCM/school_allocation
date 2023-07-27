@@ -1,9 +1,87 @@
+<% if !current_user.nil? && current_user.role == "student" %>
+  <div class="mt-10 relative overflow-x-auto shadow-md sm:rounded-lg">
+      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                  <th scope="col" class="px-6 py-3">
+                      Grade category
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                      Grade
+                  </th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      Admission average
+                  </th>
+                  <td class="px-6 py-4">
+                      <%= current_user.admission_average %>
+                  </td>
+              </tr>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      English average
+                  </th>
+                  <td class="px-6 py-4">
+                      <%= current_user.en_average %>
+                  </td>
+              </tr>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      Romanian grade
+                  </th>
+                  <td class="px-6 py-4">
+                      <%= current_user.ro_grade %>
+                  </td>
+              </tr>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      Mathematics grade
+                  </th>
+                  <td class="px-6 py-4">
+                      <%= current_user.mathematics_grade %>
+                  </td>
+              </tr>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      Mother tongue
+                  </th>
+                  <td class="px-6 py-4">
+                      <%= current_user.mother_tongue.empty? ? "-" : current_user.mother_tongue %>
+                  </td>
+              </tr>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      Mother tongue grade
+                  </th>
+                  <td class="px-6 py-4">
+                      <%= current_user.mother_tongue_grade.nil? ? "-" : current_user.mother_tongue_grade %>
+                  </td>
+              </tr>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      Graduation average
+                  </th>
+                  <td class="px-6 py-4">
+                      <%= current_user.graduation_average %>
+                  </td>
+              </tr>
 
-<label for="small" class="block mb-2 text-sm font-medium text-black">CONTENT</label>
-<select id="small" class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-  <option selected>SOME MORE CONTENT</option>
-  <option value="US">United States</option>
-  <option value="CA">Canada</option>
-  <option value="FR">France</option>
-  <option value="DE">Germany</option>
-</select>
+          </tbody>
+      </table>
+  </div>
+<% end %>
+<!--
+USER (student role) fields
+email
+admission_average
+en_average
+ro_grade
+mathematics_grade
+mother_tongue
+mother_tongue_grade
+graduation_average
+role
+-->

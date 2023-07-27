@@ -1,28 +1,48 @@
 <div class="mt-8 ">
   <h2 class="mb-6 text-2xl font-extrabold text-gray-900">Create student account:</h2>
-  <%= form_with model: @student, url: school_specializations_path, local: true do |form| %>
+  <%= form_with model: @student, url: students_path, local: true do |form| %>
 
-    <div class="field mb-6">
-      <%= form.label :school_id, "School", class: "block text-sm font-medium leading-5 text-gray-700" %>
-      <%= form.collection_select(:school_id, School.all, :id, :name, {}, { class: "px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1" }) %>
+    <div class="mb-6">
+      <%= form.label :email, "Email", class: "block text-sm font-medium leading-5 text-gray-700" %>
+      <%= form.email_field :email, placeholder: "email@provider.com" ,class: "px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1" %>
     </div>
 
-    <div class="field mb-6">
-      <%= form.label :track_id, "Track", class: "block text-sm font-medium leading-5 text-gray-700" %>
-      <%= form.collection_select(:track_id, Track.all, :id, :name, {}, { class: "px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1" }) %>
+    <div class="mb-6">
+    <%= form.label :admission_average, "Admission average", class: "block text-sm font-medium leading-5 text-gray-700" %>
+    <%= form.number_field :admission_average, step: :any, placeholder: "9.56" ,class: "px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1" %>
     </div>
 
-    <div class="field mb-6">
-      <%= form.label :specialization_id, "Specialization", class: "block text-sm font-medium leading-5 text-gray-700" %>
-      <%= form.collection_select(:specialization_id, Specialization.all, :id, :name, {}, { class: "px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1" }) %>
+    <div class="mb-6">
+    <%= form.label :en_average, "English average", class: "block text-sm font-medium leading-5 text-gray-700" %>
+    <%= form.number_field :en_average, step: :any, placeholder: "9.56" ,class: "px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1" %>
     </div>
 
-    <div class="field mb-6">
-      <%= form.label :spots_available, "Capacity", class: "block text-sm font-medium leading-5 text-gray-700" %>
-      <%= form.number_field :spots_available, class: "px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1" %>
+    <div class="mb-6">
+    <%= form.label :ro_grade, "Romanian grade", class: "block text-sm font-medium leading-5 text-gray-700" %>
+    <%= form.number_field :ro_grade, step: :any, placeholder: "9.56" ,class: "px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1" %>
     </div>
 
-    <div class="field mb-6">
+    <div class="mb-6">
+    <%= form.label :mathematics_grade, "Mathematics grade", class: "block text-sm font-medium leading-5 text-gray-700" %>
+    <%= form.number_field :mathematics_grade, step: :any, placeholder: "9.56" ,class: "px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1" %>
+    </div>
+
+    <div class="mb-6">
+    <%= form.label :mother_tongue, "Mother tongue", class: "block text-sm font-medium leading-5 text-gray-700" %>
+    <%= form.text_field :mother_tongue, placeholder: "Spanish" ,class: "px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1" %>
+    </div>
+    
+    <div class="mb-6">
+    <%= form.label :mother_tongue_grade, "Mother tongue grade", class: "block text-sm font-medium leading-5 text-gray-700" %>
+    <%= form.number_field :mother_tongue_grade, step: :any, placeholder: "9.56" ,class: "px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1" %>
+    </div>
+
+    <div class="mb-6">
+    <%= form.label :graduation_average, "Graduation average", class: "block text-sm font-medium leading-5 text-gray-700" %>
+    <%= form.number_field :graduation_average, step: :any, placeholder: "9.56" ,class: "px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1" %>
+    </div>
+
+    <div class="mb-6">
       <%= form.submit class: "py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-block" %>
     </div>
 

@@ -8,9 +8,9 @@
             <%= link_to "Create School Specializations", new_school_specialization_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
             <%= link_to "Allocate Students", "#", class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
           </div>
-        <% elsif current_user && current_user.role == 'user' %>
+        <% elsif current_user && current_user.role == 'student' %>
           <div class="flex justify-center items-center space-x-4">
-              <%= link_to "Add Students", "#", class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
+              <%= link_to "Choose school preference", new_preference_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
           </div>
         <% end %>
       <div class="flex justify-end items-center">

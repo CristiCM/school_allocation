@@ -17,4 +17,6 @@ Rails.application.routes.draw do
       get :edit_all, as: :edit_all
     end
   end
+
+  resources :preferences, only: [:new, :create]
 end
