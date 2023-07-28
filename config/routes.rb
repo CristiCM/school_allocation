@@ -18,5 +18,9 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :preferences, only: [:new, :create, :destroy]
+  resources :preferences, only: [:new, :create, :destroy] do
+    collection do
+      get 'add_new'
+    end
+  end
 end
