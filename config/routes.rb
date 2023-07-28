@@ -18,5 +18,5 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :preferences, only: [:new, :create]
+  resources :preferences, only: [:new, :create, :destroy]
 end

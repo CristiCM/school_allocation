@@ -1,6 +1,6 @@
 class PreferencesController < ApplicationController
     def new
-        5.times { current_user.preferences.build }
+        5.times { current_user.preferences.build } unless current_user.preferences.count > 0
     end
 
     def create
@@ -15,7 +15,12 @@ class PreferencesController < ApplicationController
         redirect_to new_preference_path, notice: 'Preferences updated successfully.'
     rescue ActiveRecord::RecordInvalid
         render :new, status: :unprocessable_entity
-    end         
+    end 
+    
+    def destroy
+        current_user.preferences.destroy_all
+        redirect_to new_preference_path, notice: "Please pick your preferences again."
+    end
     
     private
     
