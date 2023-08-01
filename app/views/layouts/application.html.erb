@@ -14,11 +14,25 @@
   <body>
     <%= render partial: "/shared/navbar"%>
     <main class="container mx-auto mt-25 px-5">
+
       <% if flash[:alert] %>
-        <div class="alert alert-danger, text-center">
+        <div class="pt-10 alert alert-danger text-center">
           <%= flash[:alert] %>
         </div>
       <% end %>
+
+      <% if flash[:success] %>
+        <div class="pt-10 alert alert-success text-center">
+          <%= flash[:success] %>
+        </div>
+      <% end %>
+
+      <% if flash[:error] %>
+        <div class="pt-10 alert alert-danger text-center">
+          <%= flash[:error] %>
+        </div>
+      <% end %>
+
       <%= yield %>
     </main>
   </body>

@@ -13,25 +13,39 @@ class PreferencesController < ApplicationController
     end
 
     def create
-        Rails.logger.debug "Raw params: #{params.inspect}"
-  
-        preferences_params = params.require(:user).permit(preferences: [:school_specialization_id, :priority])
-        
-        Rails.logger.debug "Processed params: #{preferences_params.inspect}"
-
-        preferences_params[:preferences].each do |preference_params|
-          preference = current_user.preferences.find_or_initialize_by(school_specialization_id: preference_params[:school_specialization_id])
-          preference.update(preference_params)
+        begin
+            current_user.preferences.create!(preference_params)
+            flash[:success] = 'Preference was successfully created.'
+            redirect_to preferences_path
+        rescue ActiveRecord::RecordInvalid
+            flash[:error] = "You have already chosen this specialization"
+            redirect_to preferences_path
         end
-      
-        redirect_to new_preference_path, notice: 'Preferences updated successfully.'
-      rescue ActiveRecord::RecordInvalid
-        render :new, status: :unprocessable_entity
     end
-           
+      
+    def update
+        preference = current_user.preferences.find(params[:id])
+        preference.update!(preference_params)
+        redirect_to preferences_path, notice: 'Preference updated successfully.'
+    end
     
     def destroy
-        current_user.preferences.destroy_all
-        redirect_to new_preference_path, notice: "Please pick your preferences again."
-    end   
+        preference = current_user.preferences.find(params[:id])
+        preference.destroy
+        update_priority_after_deletion
+        flash[:success] = 'Preference was successfully removed.'
+        redirect_to preferences_path
+    end
+    
+    private
+    
+    def preference_params
+        params.require(:preference).permit(:school_specialization_id, :priority)
+    end
+
+    def update_priority_after_deletion
+        current_user.preferences.order(:priority).each_with_index do |preference, index|
+        preference.update(priority: index + 1)
+        end
+    end
 end

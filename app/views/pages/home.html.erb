@@ -81,7 +81,7 @@
                   <th scope="col" class="px-6 py-3">
                       Preference
                   </th>
-                  <th scope="col" class="px-6 py-3">
+                  <th scope="col" class="px-6 py-3 text-center">
                       Priority
                   </th>
               </tr>
@@ -92,15 +92,13 @@
                   <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       <%= SchoolSpecialization.find(preference.school_specialization_id).display_name if preference.school_specialization_id.present? %>
                   </th>
-                  <td class="px-6 py-4">
+                  <td class="px-6 py-4 text-center">
                       <%= preference.priority %>
                   </td>
               </tr>
           <% end %>
           </tbody>
       </table>
-  </div>
-  <%= button_to 'Change your preferences', preference_path(current_user.preferences), method: :delete, class: "mt-10 py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-block" %>
 <% end %>
 <!--
 USER (student role) fields
