@@ -7,7 +7,13 @@ Rails.application.routes.draw do
   }
 
   # Assuming you have a Student resource
-  resources :students, controller: 'students_creation', only: [:new, :create, :update]
+  resources :students, controller: 'students_creation', only: [:new, :create, :update] do
+    collection do
+      get 'overview'
+      post 'notify'
+      post 'notify_all'
+    end
+  end
 
   # Assuming you have a SchoolSpecialization resource
   resources :school_specializations, controller: 'schools_creation', only: [:new, :create, :update, :destroy, :edit] do

@@ -20,6 +20,30 @@ class StudentsCreationController < ApplicationController
     def update
     end
 
+    def overview
+    end
+
+    def notify
+      @user = User.find(params[:user_id])
+
+      if params[:status]  == "true"
+        UserMailer.preferences_email(@user).deliver_later
+        flash[:success] = "Notification sent successfully."
+      else
+        flash[:alert] = "The user has selected his preferences."
+      end
+      
+      redirect_to overview_students_path
+    end
+
+    def notify_all
+      User.all.each do |user|
+        if user.preferences.blank?
+          UserMailer.preferences_email(user).deliver_later
+        end
+      end
+    end  
+
     private
 
     def student_params

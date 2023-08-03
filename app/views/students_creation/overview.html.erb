@@ -1,0 +1,37 @@
+<h2 class="mt-10 mb-6 text-2xl font-extrabold text-gray-900">Student preference status:</h2>
+
+<div class="mt-10 relative overflow-x-auto shadow-md sm:rounded-lg">
+  <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+       <tr>
+          <th scope="col" class="px-6 py-3 text-center">
+            User Email
+          </th>
+          <th scope="col" class="px-6 py-3 text-center">
+            Status
+            </th>
+            <th>
+            </th>
+        </tr>
+     </thead>
+       <tbody>
+          <% User.all.each do |user|%>
+           <% if user.role != 'admin' %>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      <%= user.email %>
+                  </th>
+                  <td class="px-6 py-4 text-center">
+                      <%= user.preferences.blank? ? "NOT OK" : "OK" %>
+                  </td>
+                  <td class="px-6 py-4">
+                    <%= button_to 'Notify', notify_students_path(user_id: user.id, status: user.preferences.blank?), method: :post , data: { turbo: false } %>
+                  </td>
+              </tr>
+            <% end %>
+          <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%= button_to "Notify all pending students", notify_all_students_path, method: :post, class: "mt-10 py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-block" %>
