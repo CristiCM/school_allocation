@@ -9,9 +9,10 @@ Rails.application.routes.draw do
   # Assuming you have a Student resource
   resources :students, controller: 'students_creation', only: [:new, :create, :update] do
     collection do
-      get 'overview'
-      post 'notify'
-      post 'notify_all'
+      get 'scheduler'
+      post 'update_first_notification'
+      post 'update_second_notification'
+      post 'update_allocation'
     end
   end
 

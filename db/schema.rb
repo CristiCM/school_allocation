@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_25_173038) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_03_173344) do
   create_table "assignments", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "school_specialization_id", null: false
@@ -18,6 +18,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_25_173038) do
     t.datetime "updated_at", null: false
     t.index ["school_specialization_id"], name: "index_assignments_on_school_specialization_id"
     t.index ["user_id"], name: "index_assignments_on_user_id"
+  end
+
+  create_table "jobs", force: :cascade do |t|
+    t.string "first_notification_jid"
+    t.string "second_notification_jid"
+    t.string "allocation_date_jid"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "first_notification_time"
+    t.datetime "second_notification_time"
+    t.datetime "allocation_time"
   end
 
   create_table "preferences", force: :cascade do |t|
