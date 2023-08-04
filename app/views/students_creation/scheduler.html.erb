@@ -29,26 +29,28 @@
   </table>
 </div>
 
-<%= form_for :job, url: update_first_notification_students_path do |f| %>
+<%= form_for :job, url: update_notification_students_path do |f| %>
   <div class="field mb-6 mt-10">
     <%= f.label :first_notification, class: "block text-sm font-medium leading-5 text-gray-700" %>
-    <%= f.datetime_select :first_notification, include_seconds: false, class: "rounded px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1" %>
+    <%= f.text_field :first_notification, type: 'datetime-local', class: "px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1" %>
   </div>
   <%= f.submit "Save date", class: "py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-block" %>
 <% end %>
+<%= link_to "Delete", delete_notification_students_path(first_notification: true), method: :delete, data: { turbo_action: 'replace', turbo_method: 'delete' }, class: "py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-block" %>
 
-<%= form_for :job, url: update_second_notification_students_path do |f| %>
+<%= form_for :job, url: update_notification_students_path do |f| %>
   <div class="field mb-6 mt-6">
     <%= f.label :second_notification, class: "block text-sm font-medium leading-5 text-gray-700" %>
-    <%= f.datetime_select :second_notification, include_seconds: false, class: "rounded px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1" %>
+    <%= f.text_field :second_notification, type: 'datetime-local', class: "rounded px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1" %>
   </div>
   <%= f.submit "Save date", class: "py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-block" %>
 <% end %>
+<%= link_to "Delete", delete_notification_students_path(second_notification: true), method: :delete, data: { turbo_action: 'replace', turbo_method: 'delete' }, class: "py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-block" %>
 
 <%= form_for :job, url: update_allocation_students_path do |f| %>
   <div class="field mb-6 mt-6">
     <%= f.label :allocation_date, class: "block text-sm font-medium leading-5 text-gray-700" %>
-    <%= f.datetime_select :allocation_date, include_seconds: false, class: "rounded px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1" %>
+    <%= f.text_field :allocation_date, type: 'datetime-local', class: "rounded px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1" %>
   </div>
   <%= f.submit "Save date", class: "py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-block" %>
 <% end %>

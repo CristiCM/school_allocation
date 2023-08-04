@@ -6,17 +6,15 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
-  # Assuming you have a Student resource
   resources :students, controller: 'students_creation', only: [:new, :create, :update] do
     collection do
       get 'scheduler'
-      post 'update_first_notification'
-      post 'update_second_notification'
+      post 'update_notification'
       post 'update_allocation'
+      delete 'delete_notification'
     end
   end
 
-  # Assuming you have a SchoolSpecialization resource
   resources :school_specializations, controller: 'schools_creation', only: [:new, :create, :update, :destroy, :edit] do
     collection do
       get :import_data, as: :import_data
