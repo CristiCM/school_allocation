@@ -4,7 +4,7 @@ class EmailWorker
     def perform
         User.all.each do |user|
             if user.role == "student" && user.preferences.blank?
-              puts "Mail sent to: #{user.email}"
+              puts "\n\nMail sent to: #{user.email}\n\n"
               UserMailer.preferences_email(user).deliver
             end
         end

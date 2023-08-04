@@ -1,4 +1,4 @@
-class UserMailer < ApplicationMailer
+class UserMailer < Devise::Mailer
   include Devise::Controllers::UrlHelpers
 
   def preferences_email(user)
