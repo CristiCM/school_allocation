@@ -6,8 +6,8 @@
           <div class="flex justify-center items-center space-x-4">
             <%= link_to "Create School Specializations", new_school_specialization_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
             <%= link_to "Create Student Account", new_student_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
-            <%= link_to "Scheduler", scheduler_students_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
-            <%= link_to "Allocation Overview", "#", class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
+            <%= link_to "Scheduler", scheduler_assignments_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
+            <%= link_to "Allocation Overview", new_assignment_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
           </div>
         <% elsif current_user && current_user.role == 'student' %>
           <div class="flex justify-center items-center space-x-4">

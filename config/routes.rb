@@ -6,14 +6,7 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
-  resources :students, controller: 'students_creation', only: [:new, :create, :update] do
-    collection do
-      get 'scheduler'
-      post 'update_notification'
-      post 'update_allocation'
-      delete 'delete_notification'
-    end
-  end
+  resources :students, controller: 'students_creation', only: [:new, :create, :update]
 
   resources :school_specializations, controller: 'schools_creation', only: [:new, :create, :update, :destroy, :edit] do
     collection do
@@ -28,4 +21,14 @@ Rails.application.routes.draw do
       get 'add_new'
     end
   end
+
+  resources :assignments, only: [:new] do
+    collection do
+      get 'scheduler'
+      post 'update_notification'
+      post 'update_allocation'
+      delete 'delete_notification'
+    end
+  end
+
 end
