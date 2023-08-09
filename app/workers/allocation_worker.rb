@@ -12,7 +12,7 @@ class AllocationWorker
     private
 
     def assign_to_preference(user)
-        user.preferences.each do |preference|
+        user.preferences.sort_by(&:priority).each do |preference|
             specialization = SchoolSpecialization.find(preference[:school_specialization_id])
             if specialization[:spots_available] > 0
                 ActiveRecord::Base.transaction do
