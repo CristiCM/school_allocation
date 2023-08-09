@@ -64,6 +64,12 @@
               <td class="px-6 py-4 text-center">
                 <%= user.graduation_average %>
               </td>
+              <td class="px-6 py-4 text-center">
+                <%= School.find(SchoolSpecialization.find(assignment[:school_specialization_id])[:school_id])[:name] %>
+              </td>
+              <td class="px-6 py-4 text-center">
+                <%= Track.find(SchoolSpecialization.find(assignment[:school_specialization_id])[:track_id])[:name] %>
+              </td>
             </tr>
           <% end %>
     </tbody>
