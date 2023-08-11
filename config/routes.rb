@@ -8,13 +8,9 @@ Rails.application.routes.draw do
 
   resources :students, controller: 'students_creation', only: [:new, :create, :update]
 
-  resources :school_specializations, controller: 'schools_creation', only: [:new, :create, :update, :destroy, :edit] do
-    collection do
-      get :import_data, as: :import_data
-      post :import, as: :import
-      get :edit_all, as: :edit_all
-    end
-  end
+  resources :school_specializations, controller: 'schools_creation', only: [:new, :create, :update, :destroy, :edit, :index]
+
+  resources :school_specialization_import , controller: 'schools_creation_import', only: [:new, :create]
 
   resources :preferences, only: [:new, :create, :destroy] do
     collection do

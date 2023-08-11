@@ -4,8 +4,21 @@
        <%= link_to "School Admissions 2023", root_path, class: "text-white text-lg pl-2" %>
         <% if current_user && current_user.role == 'admin' %>
           <div class="flex justify-center items-center space-x-4">
-            <%= link_to "Create School Specializations", new_school_specialization_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
-            <%= link_to "Create Student Account", new_student_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
+            <button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover" data-dropdown-trigger="hover" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" type="button">School Creation <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+              </svg></button>
+            <!-- Dropdown menu -->
+            <div id="dropdownHover" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                <ul class="text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
+                  <li class="flex justify-center items-center space-x-4">
+                    <%= link_to "Create School Specializations", new_school_specialization_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
+                  </li>
+                  <li class="pt-1 flex justify-center items-center space-x-4">
+                    <%= link_to "Import Data", new_school_specialization_import_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
+                  </li>
+                </ul>
+            </div>
+            <%= link_to "Student Creation", new_student_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
             <%= link_to "Scheduler", scheduler_assignments_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
             <%= link_to "Allocation Overview", new_assignment_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
           </div>
@@ -25,3 +38,6 @@
     </div>
   </div>
 </nav>
+
+
+<script src="https://unpkg.com/@themesberg/flowbite@latest/dist/flowbite.bundle.js"></script>
