@@ -1,15 +1,5 @@
 class PreferencesController < ApplicationController
     def new
-        session[:add_new_preference] = 1 if session[:add_new_preference].nil?
-
-        if current_user.preferences.count != session[:add_new_preference]
-            (session[:add_new_preference] - current_user.preferences.count).times { current_user.preferences.build }
-        end
-    end
-
-    def add_new
-        session[:add_new_preference] += 1
-        redirect_to new_preference_path
     end
 
     def create
@@ -22,13 +12,7 @@ class PreferencesController < ApplicationController
             redirect_to preferences_path
         end
     end
-      
-    def update
-        preference = current_user.preferences.find(params[:id])
-        preference.update!(preference_params)
-        redirect_to preferences_path, notice: 'Preference updated successfully.'
-    end
-    
+     
     def destroy
         preference = current_user.preferences.find(params[:id])
         preference.destroy

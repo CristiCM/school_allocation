@@ -8,13 +8,23 @@
 
 if Rails.env.development?
 
-    # USER CREATION
+    # This seed is ment to make the environment allocation ready.
 
+    # Admin accounts: 1
     # Admin email: admin@admin.com
     # Admin password: 123456
 
-    # Student emails: studentX@student.com -> X = (1-6)
+    # Student accounts: 6
+    # Student emails: studentX@student.com => X = (1-6)
     # Student passwords: student
+
+    # Populates School/Track/Specialization models(equiv import data by admin).
+    
+    # Populates SchoolSpecialization model(equiv creation of school specializations by admin).
+
+    # Populates Preferences model(equiv creation of preferences by each student).
+
+    # USER CREATION
 
     users_data = [
         { email: 'admin@admin.com', password: '123456', role: 'admin'},
@@ -143,4 +153,7 @@ if Rails.env.development?
             Preference.create!(user_id: user.id, school_specialization_id: school_specializations[index].id, priority: index + 1)
         end
     end
+
+    # JOB RECORD CREATION
+    Job.create!
 end

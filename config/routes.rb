@@ -12,21 +12,10 @@ Rails.application.routes.draw do
 
   resources :school_specialization_import , controller: 'schools_creation_import', only: [:new, :create]
 
-  resources :preferences, only: [:new, :create, :destroy] do
-    collection do
-      get 'add_new'
-    end
-  end
+  resources :preferences, only: [:new, :create, :destroy]
 
-  resources :assignments, only: [:new] do
-    collection do
-      get 'scheduler'
-      post 'update_notification'
-      post 'update_allocation'
-      delete 'delete_notification'
-    end
-  end
-
+  resources :assignments, only: [:new, :create, :destroy, :index]
+  
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
 

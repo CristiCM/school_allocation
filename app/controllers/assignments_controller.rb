@@ -1,8 +1,12 @@
 class AssignmentsController < ApplicationController
+    before_action :verify_admin
     def new
     end
 
-    def update_notification
+    def index
+    end
+
+    def create
         job = Job.first_or_create
   
         if params[:job]["first_notification"]
@@ -16,37 +20,31 @@ class AssignmentsController < ApplicationController
           date_time = ActiveSupport::TimeZone['Bucharest'].parse(params[:job]["second_notification"]).utc
           old_jid = job.second_notification_jid
           job.update(second_notification_jid: update_notification_job(old_jid, date_time, "second_notification"), second_notification_time: date_time.in_time_zone('Bucharest'))
-  
+        elsif params[:job]["allocation_date"]
+          date_time = ActiveSupport::TimeZone['Bucharest'].parse(params[:job]["allocation_date"]).utc
+          old_jid = job.allocation_date_jid
+          sorted_students_ids = User.get_allocation_sorted_student_ids
+          job.update(allocation_date_jid: update_allocation_job(old_jid, date_time, sorted_students_ids), allocation_time: date_time.in_time_zone('Bucharest'))
         end
         
-        redirect_to scheduler_assignments_path
+        redirect_to new_assignment_path
     end
   
-    def delete_notification
-        job_record = Job.first
+    def destroy
+        job_record = Job.find(params[:id])
         return unless !job_record.nil?
   
-        if params[:first_notification]
+        if params[:type] == 'first_notification'
           delete_notification_job(job_record.first_notification_jid)
           job_record.update(first_notification_jid: nil, first_notification_time: nil)
-        elsif params[:second_notification]
+        elsif params[:type] == 'second_notification'
           delete_notification_job(job_record.second_notification_jid)
           job_record.update(second_notification_jid: nil, second_notification_time: nil)
+        elsif params[:type] == 'allocation_date'
+
         end
   
-        redirect_to scheduler_assignments_path
-    end
-
-    def update_allocation
-      job = Job.first_or_create
-
-      date_time = ActiveSupport::TimeZone['Bucharest'].parse(params[:job]["allocation_date"]).utc
-      old_jid = job.allocation_date_jid
-      sorted_students_ids = User.get_allocation_sorted_student_ids
-
-      job.update(allocation_date_jid: update_allocation_job(old_jid, date_time, sorted_students_ids), allocation_time: date_time.in_time_zone('Bucharest'))
-
-      redirect_to scheduler_assignments_path
+        redirect_to new_assignment_path
     end
 
     private
