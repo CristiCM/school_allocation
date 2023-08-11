@@ -3,9 +3,7 @@
 <table>
   <% SchoolSpecialization.all.each do |school_specialization| %>
     <tr class="mb-1">
-      <td class="px-6 py-4"><%= school_specialization.school.name %></td>
-      <td class="px-6 py-4"><%= school_specialization.track.name %></td>
-      <td class="px-6 py-4"><%= school_specialization.specialization.name %></td>
+      <td class="px-6 py-4"><%= school_specialization.display_name %></td>
       <td class="px-6 py-4"><%= school_specialization.spots_available %></td>
       <td class="px-6 py-4"> <%= button_to "Edit", edit_school_specialization_path(school_specialization), method: :get %></td>
     </tr>

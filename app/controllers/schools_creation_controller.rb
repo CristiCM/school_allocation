@@ -1,5 +1,6 @@
 class SchoolsCreationController < ApplicationController
     before_action :verify_admin
+    
     def new
       @school_specialization = SchoolSpecialization.new
     end
@@ -34,17 +35,7 @@ class SchoolsCreationController < ApplicationController
     def import
       Rails.logger.info "Importing file..."
       begin
-        raise "Not a CSV file" if File.extname(params[:file].path) != '.csv'
-  
-        spreadsheet = Roo::Spreadsheet.open(params[:file].path)
-        header = spreadsheet.row(1)
-  
-        raise "Invalid headers" unless header.sort == ["school", "track", "specialization"].sort
-  
-        School.import(params[:file])
-        Track.import(params[:file])
-        Specialization.import(params[:file])
-  
+        DataImporter.new(params[:file]).call
         redirect_to new_school_specialization_path, notice: "Data imported successfully"
       rescue => e
         flash[:alert] = "Import failed: #{e.message}"
@@ -57,7 +48,6 @@ class SchoolsCreationController < ApplicationController
     end 
 
     def edit_all
-      @school_specializations = SchoolSpecialization.all
     end
 
     def import_data
