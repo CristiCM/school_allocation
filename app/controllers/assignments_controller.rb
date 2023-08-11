@@ -42,7 +42,7 @@ class AssignmentsController < ApplicationController
 
       date_time = ActiveSupport::TimeZone['Bucharest'].parse(params[:job]["allocation_date"]).utc
       old_jid = job.allocation_date_jid
-      sorted_students_ids = get_sorted_students_ids_array()
+      sorted_students_ids = User.get_allocation_sorted_student_ids
 
       job.update(allocation_date_jid: update_allocation_job(old_jid, date_time, sorted_students_ids), allocation_time: date_time.in_time_zone('Bucharest'))
 
@@ -69,46 +69,5 @@ class AssignmentsController < ApplicationController
       job = queue.find_job(old_jid)
       job.delete if job
       AllocationWorker.perform_at(new_time, sorted_students)
-    end
-
-
-    def get_sorted_students_ids_array
-      students_only = User.where(role: 'student').to_a
-
-      students_only.sort! do |a, b|
-        criteria_a = [
-          0.2 * a[:graduation_average] + 0.8 * a[:admission_average],
-          a[:admission_average],
-          a[:graduation_average],
-          a[:ro_grade],
-          a[:mathematics_grade],
-          check_for_mother_tongue_tiebraker(a, b) ? a[:mother_tongue_grade] : 0
-        ]
-
-        criteria_b = [
-          0.2 * b[:graduation_average] + 0.8 * b[:admission_average],
-          b[:admission_average],
-          b[:graduation_average],
-          b[:ro_grade],
-          b[:mathematics_grade],
-          check_for_mother_tongue_tiebraker(b, a) ? b[:mother_tongue_grade] : 0
-        ]
-
-        logger.debug "Criteria for #{a[:email]}: #{criteria_a}"
-        logger.debug "Criteria for #{b[:email]}: #{criteria_b}"
-
-        logger.debug "Comparing #{a[:email]} and #{b[:email]} results in #{criteria_a <=> criteria_b}"
-
-        criteria_b <=> criteria_a
-      end
-
-      puts "#{students_only.map(&:email)}"
-
-      students_only.map(&:id)
-    end
-
-    def check_for_mother_tongue_tiebraker(user_a, user_b)
-      return !user_a[:mother_tongue].blank? && !user_b[:mother_tongue].blank? &&
-      !user_a[:mother_tongue_grade].nil? && !user_b[:mother_tongue_grade].nil?
     end
 end
