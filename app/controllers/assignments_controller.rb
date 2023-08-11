@@ -42,7 +42,7 @@ class AssignmentsController < ApplicationController
 
       date_time = ActiveSupport::TimeZone['Bucharest'].parse(params[:job]["allocation_date"]).utc
       old_jid = job.allocation_date_jid
-      sorted_students_ids = get_sorted_students_ids_array
+      sorted_students_ids = get_sorted_students_ids_array()
 
       job.update(allocation_date_jid: update_allocation_job(old_jid, date_time, sorted_students_ids), allocation_time: date_time.in_time_zone('Bucharest'))
 
@@ -73,9 +73,9 @@ class AssignmentsController < ApplicationController
 
 
     def get_sorted_students_ids_array
-      students_only = User.select { |user| user[:role] == 'student'}
+      students_only = User.where(role: 'student').to_a
 
-      students_only.sort do |a, b|
+      students_only.sort! do |a, b|
         criteria_a = [
           0.2 * a[:graduation_average] + 0.8 * a[:admission_average],
           a[:admission_average],
@@ -94,8 +94,15 @@ class AssignmentsController < ApplicationController
           check_for_mother_tongue_tiebraker(b, a) ? b[:mother_tongue_grade] : 0
         ]
 
-        criteria_a <=> criteria_b
+        logger.debug "Criteria for #{a[:email]}: #{criteria_a}"
+        logger.debug "Criteria for #{b[:email]}: #{criteria_b}"
+
+        logger.debug "Comparing #{a[:email]} and #{b[:email]} results in #{criteria_a <=> criteria_b}"
+
+        criteria_b <=> criteria_a
       end
+
+      puts "#{students_only.map(&:email)}"
 
       students_only.map(&:id)
     end
