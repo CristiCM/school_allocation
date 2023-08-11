@@ -80,3 +80,17 @@ gem 'roo'
 gem 'sidekiq'
 
 gem "redis"
+
+gem 'bullet', group: 'development'
+
+group :development, :test do
+  gem 'rspec-rails', '~> 6.0.0'
+end
+
+gem "xmpp4r"
+
+gem 'cancancan'
+
+gem 'faker'
+
+gem "factory_bot", "~> 6.2"
