@@ -1,6 +1,7 @@
 class EmailWorker
     include Sidekiq::Worker
 
+    #TODO: CREATE A NEW MAILER TEMPLATE FOR FIRST/SECOND NOTIFICATION
     def perform(notification_type)
         User.all.each do |user|
             if user.role == "student" && user.preferences.blank?

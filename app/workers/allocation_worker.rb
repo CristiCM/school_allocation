@@ -7,6 +7,8 @@ class AllocationWorker
             user = User.find(id)
             placed = assign_to_preference(user) || assign_to_default(user)
         end
+
+        Job.first.update(allocation_date_jid: nil, allocation_time: nil)
     end
 
     private
