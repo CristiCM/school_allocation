@@ -16,7 +16,7 @@ class JobManager
         worker: AllocationWorker,
         job_jid_attribute: :allocation_date_jid,
         job_time_attribute: :allocation_time,
-        action: nil
+        action: nil  # For allocation the action is the list of student ids.
       }
     }.freeze
   

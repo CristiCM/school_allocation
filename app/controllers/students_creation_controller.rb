@@ -19,14 +19,6 @@ class StudentsCreationController < ApplicationController
       end
     end
 
-    def update
-    end
-
-    def overview
-    end
-
-  
-
     private
 
     def student_params

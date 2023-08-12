@@ -24,7 +24,7 @@ class User < ApplicationRecord
                   mother_tongue_tiebreaker DESC')
       ).map(&:id)
   end
-
+  
   # Arel -> SQL AST (Abstract Syntax Tree) manager for Ruby.
   # Allows you to generate SQL queries programmatically and is used internally by ActiveRecord (the default ORM in Rails) to build queries.
 end

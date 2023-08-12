@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
-  resources :students, controller: 'students_creation', only: [:new, :create, :update]
+  resources :students, controller: 'students_creation', only: [:new, :create]
 
   resources :school_specializations, controller: 'schools_creation', only: [:new, :create, :update, :destroy, :edit, :index]
 
