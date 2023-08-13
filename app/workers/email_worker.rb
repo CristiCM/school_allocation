@@ -15,8 +15,7 @@ class EmailWorker
             job_time_attribute: :second_notification_time
         }
     }
-
-    #TODO: CREATE A NEW MAILER TEMPLATE FOR FIRST/SECOND NOTIFICATION
+    
     def perform(notification_type)
 
         job = Job.first

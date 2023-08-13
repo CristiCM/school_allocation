@@ -1,5 +1,5 @@
 class SchoolsCreationImportController < ApplicationController
-    before_action :verify_admin
+  load_and_authorize_resource :School
     def new
     end
 

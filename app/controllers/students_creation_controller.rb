@@ -1,5 +1,5 @@
 class StudentsCreationController < ApplicationController
-    before_action :verify_admin
+  load_and_authorize_resource :User
     require 'sidekiq/api'
 
     def new

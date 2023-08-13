@@ -1,6 +1,5 @@
 class SchoolsCreationController < ApplicationController
-    before_action :verify_admin
-    
+  load_and_authorize_resource :SchoolSpecialization
     def new
       @school_specialization = SchoolSpecialization.new
     end
