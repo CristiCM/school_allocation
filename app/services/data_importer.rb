@@ -4,13 +4,13 @@ class DataImporter
         @file = file
     end
 
-    def call
-        raise "Not a CSV file" if File.extname(@file.path) != '.csv'
+    def import_csv
+        raise "The file is not in the correct format (.csv)." if File.extname(@file.path) != '.csv'
   
         spreadsheet = Roo::Spreadsheet.open(@file.path)
         header = spreadsheet.row(1)
   
-        raise "Invalid headers" unless header.sort == ["school", "track", "specialization"].sort
+        raise "Invalid spreadsheet headers." unless header.sort == ["school", "track", "specialization"].sort
   
         School.import(@file, 'school')
         Track.import(@file, 'track')

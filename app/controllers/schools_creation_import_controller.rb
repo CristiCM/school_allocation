@@ -6,7 +6,7 @@ class SchoolsCreationImportController < ApplicationController
     def create
         Rails.logger.info "Importing file..."
         begin
-          DataImporter.new(params[:file]).call
+          DataImporter.new(params[:file]).import_csv
           redirect_to new_school_specialization_path
           flash[:success] = "Successfully imported!"
         rescue => e

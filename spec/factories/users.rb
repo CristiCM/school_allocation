@@ -9,5 +9,6 @@ FactoryBot.define do
         mother_tongue { rand < 0.05 ? Faker::Nation.language : nil }
         mother_tongue_grade { rand < 0.05 ? Faker::Number.between(from: 1.0, to: 10.0).round(2) : nil }
         graduation_average { Faker::Number.between(from: 1.0, to: 10.0).round(2) }
+        role { 'student' }
     end
 end

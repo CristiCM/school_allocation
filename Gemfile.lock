@@ -286,6 +286,7 @@ DEPENDENCIES
   redis
   roo
   rspec-rails (~> 6.0.0)
+  rspec-support
   selenium-webdriver
   sidekiq
   sprockets-rails

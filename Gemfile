@@ -87,6 +87,7 @@ end
 
 group :development, :test do
   gem 'rspec-rails', '~> 6.0.0'
+  gem 'rspec-support'
 end
 
 group :development, :test do
