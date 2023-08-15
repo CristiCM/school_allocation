@@ -8,9 +8,11 @@ class SchoolsCreationController < ApplicationController
       @school_specialization = SchoolSpecialization.new(school_specialization_params)
       
       if @school_specialization.save
-         redirect_to new_school_specialization_path, notice: "Added successfully!"
+        flash[:success] = 'SchoolSpecialization instance created'
+        redirect_to new_school_specialization_path
       else
-        render :new, notice: "Failed."
+        flash[:alert] = 'Instance creation failed!'
+        redirect_to new_school_specialization_path
       end
     end
 
@@ -18,9 +20,11 @@ class SchoolsCreationController < ApplicationController
       puts params.inspect
       @school_specialization = SchoolSpecialization.find(params[:id])
       if @school_specialization.update(school_specialization_params)
-        conditional_redirect("Updated successfully")
+        flash[:success] = 'Updated successfully!'
+        conditional_redirect
       else
-        render :edit, notice: "Update failed."
+        flash[:alert] = 'Update failed!'
+        conditional_redirect
       end
     end
     
@@ -40,11 +44,11 @@ class SchoolsCreationController < ApplicationController
 
     private
 
-    def conditional_redirect(notice)
+    def conditional_redirect
       if request.referrer.include?('edit')
-        redirect_to school_specializations_path, notice: notice
+        redirect_to school_specializations_path
       else
-        redirect_to new_school_specialization_path, notice: notice
+        redirect_to new_school_specialization_path
       end
     end
 
