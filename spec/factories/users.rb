@@ -2,13 +2,12 @@ FactoryBot.define do
     factory :user do
         email { Faker::Internet.email }
         password { 'password12345'}
-        admission_average { Faker::Number.between(from: 1.0, to: 10.0).round(2) }
-        en_average { Faker::Number.between(from: 1.0, to: 10.0).round(2) }
-        ro_grade { Faker::Number.between(from: 1.0, to: 10.0).round(2) }
-        mathematics_grade { Faker::Number.between(from: 1.0, to: 10.0).round(2) }
-        mother_tongue { rand < 0.05 ? Faker::Nation.language : nil }
-        mother_tongue_grade { rand < 0.05 ? Faker::Number.between(from: 1.0, to: 10.0).round(2) : nil }
-        graduation_average { Faker::Number.between(from: 1.0, to: 10.0).round(2) }
+        admission_average { 9.00 }
+        graduation_average { 8.50 }
+        ro_grade { 7.80 }
+        mathematics_grade { 9.50 }
+        mother_tongue { 'German' }
+        mother_tongue_grade { 8.00 }
         role { 'student' }
     end
 end

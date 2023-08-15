@@ -27,6 +27,6 @@ class AssignmentsController < ApplicationController
   end
 
   def job_deletion_params
-    params.permit(:id, :type)
+    params.permit(:id, :type) # id is only passed to allow deletion
   end
 end
