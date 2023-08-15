@@ -102,3 +102,6 @@ gem 'faker'
 
 gem 'racc', '1.7.1'
 
+group :test do
+  gem 'rails-controller-testing'
+end

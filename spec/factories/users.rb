@@ -3,6 +3,7 @@ FactoryBot.define do
         email { Faker::Internet.email }
         password { 'password12345'}
         admission_average { 9.00 }
+        en_average { 8.80 }
         graduation_average { 8.50 }
         ro_grade { 7.80 }
         mathematics_grade { 9.50 }
