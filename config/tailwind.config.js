@@ -8,6 +8,12 @@ module.exports = {
     './app/views/**/*.{erb,haml,html,slim}'
   ],
   theme: {
+    colors: {
+      "sap-black": "#222831",
+      "sap-grey": "#393E46",
+      "sap-blue": "#00ADB5",
+      "sap-white": "#EEEEEE",
+    },
     extend: {
       fontFamily: {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
