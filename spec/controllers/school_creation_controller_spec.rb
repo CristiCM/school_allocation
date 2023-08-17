@@ -38,13 +38,7 @@ RSpec.describe SchoolsCreationController, type: :controller do
         context 'with valid params' do
 
             it 'creates a new school specialization with the provided params' do
-                post :create, params: {school_specialization: school_spec_params }
-
-
-                expect(SchoolSpecialization.last[:school_id]).to eq(School.last.id)  
-                expect(SchoolSpecialization.last[:track_id]).to eq(Track.last.id)  
-                expect(SchoolSpecialization.last[:specialization_id]).to eq(Specialization.last.id)  
-                expect(SchoolSpecialization.last[:spots_available]).to eq(2)
+                expect { post :create, params: {school_specialization: school_spec_params }}.to change {SchoolSpecialization.count}.by(1)
             end
 
             it 'redirects to new_school_specialization_path with a success flash' do

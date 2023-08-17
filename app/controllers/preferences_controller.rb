@@ -9,14 +9,14 @@ class PreferencesController < ApplicationController
             flash[:success] = 'Preference was successfully created.'
             redirect_to preferences_path
         rescue ActiveRecord::RecordInvalid
-            flash[:error] = "You have already chosen this specialization"
+            flash[:alert] = 'You have already chosen this specialization.'
             redirect_to preferences_path
         end
     end
      
     def destroy
-        preference = current_user.preferences.find(params[:id])
-        preference.destroy
+        @preference = current_user.preferences.find(params[:id])
+        @preference.destroy
         update_priority_after_deletion
         flash[:success] = 'Preference was successfully removed.'
         redirect_to preferences_path
