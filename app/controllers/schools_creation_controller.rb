@@ -17,7 +17,6 @@ class SchoolsCreationController < ApplicationController
     end
 
     def update
-      puts params.inspect
       @school_specialization = SchoolSpecialization.find(params[:id])
       if @school_specialization.update(school_specialization_params)
         flash[:success] = 'Updated successfully!'
@@ -32,7 +31,8 @@ class SchoolsCreationController < ApplicationController
       @school_specialization = SchoolSpecialization.find(params[:id])
       @school_specialization.destroy
     
-      conditional_redirect("Record was successfully deleted.")
+      flash[:success] = 'Record was successfully deleted.'
+      conditional_redirect
     end    
 
     def edit
@@ -45,12 +45,13 @@ class SchoolsCreationController < ApplicationController
     private
 
     def conditional_redirect
-      if request.referrer.include?('edit')
+      if request.referrer && request.referrer.include?('edit')
         redirect_to school_specializations_path
       else
         redirect_to new_school_specialization_path
       end
     end
+    
 
     def school_specialization_params
       params.require(:school_specialization).permit(:school_id, :track_id, :specialization_id, :spots_available)
