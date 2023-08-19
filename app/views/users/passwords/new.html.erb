@@ -5,12 +5,12 @@
     <%= render "users/shared/error_messages", resource: resource %>
 
     <div class="field mb-6">
-      <%= f.label :email, class: "block text-sm font-medium leading-5 text-gray-700" %><br />
+      <%= f.label :email, class: "block text-sm font-medium text-gray-700" %><br />
       <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1", placeholder: "email@provider.com" %>
     </div>
 
     <div class="actions mb-4">
-      <%= f.submit "Send me reset password instructions", class: "py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-block" %>
+      <%= f.submit "Send email", class: "text-center w-32 h-10 py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-sap-white focus:outline-none bg-sap-grey rounded-lg border border-gray-200 hover:bg-sap-black hover:text-sap-blue focus:z-10 focus:ring-4 inline-block" %>
     </div>
   <% end %>
 

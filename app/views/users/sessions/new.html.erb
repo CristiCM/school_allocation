@@ -1,5 +1,5 @@
 <div class="w-full max-w-xs mx-auto mt-8 mb-8">
-  <h2 class="mb-8 text-center text-2xl font-extrabold text-gray-900">Log in</h2>
+  <h2 class="mb-8 text-center text-2xl font-extrabold text-sap-black">Log in</h2>
   <%= form_for(resource, as: resource_name, url: session_path(resource_name), class: "space-y-8") do |f| %>
     <div class="mb-3">
       <%= f.label :email, class: "block text-sm font-medium text-gray-700" %>
@@ -12,7 +12,7 @@
     </div>
 
     <div class="mb-3">
-      <%= f.submit "Log in", class: "py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" %>
+      <%= f.submit "Log in", class: "text-center w-32 h-10 py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-sap-white focus:outline-none bg-sap-grey rounded-lg border border-gray-200 hover:bg-sap-black hover:text-sap-blue focus:z-10 focus:ring-4 inline-block" %>
     </div>
   <% end %>
 

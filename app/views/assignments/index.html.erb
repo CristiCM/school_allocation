@@ -1,7 +1,7 @@
-<h2 class="mt-10 mb-6 text-2xl font-extrabold text-gray-900">Allocation results:</h2>
+<h2 class="mt-10 mb-6 text-2xl font-extrabold text-sap-black text-center">Allocation results</h2>
 
 <div class="mt-10 relative overflow-x-auto shadow-md sm:rounded-lg">
-  <table class="w-full text-sm text-left text-sap-grey">
+  <table class="w-full text-sm text-left text-sap-white bg-sap-grey">
     <thead class="text-xs text-sap-white uppercase bg-sap-black">
        <tr>
           <th scope="col" class="px-6 py-3 text-center">
@@ -38,7 +38,7 @@
      </thead>
        <tbody>
           <% Assignment.includes(user: [], school_specialization: [:school, :track]).each do |assignment| %>
-            <tr class="bg-sap-gray border-b  hover:bg-sap-grey hover:text-sap-blue">
+            <tr class="bg-sap-gray border-b">
               <th scope="row" class="px-6 py-4 font-medium">
                 <%= assignment.user.email %>
               </th>

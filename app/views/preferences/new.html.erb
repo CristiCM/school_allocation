@@ -1,16 +1,18 @@
-<h2 class="mt-10 mb-2 text-2xl font-extrabold text-gray-900">Choose your preferences:</h2>
+<h2 class="mt-10 mb-2 text-2xl font-extrabold text-sap-grey text-center">Choose your preferences</h2>
 
 <%= form_with model: Preference.new, url: preferences_path, method: :post, local: true do |form| %>
-  <%= form.collection_select(:school_specialization_id, SchoolSpecialization.all, :id, :display_name, { prompt: "Add a new preference:" }, { class: "mt-10 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1" }) %>
+  <%= form.collection_select(:school_specialization_id, SchoolSpecialization.all, :id, :display_name, { prompt: "Add a new preference:" }, { class: "mb-2 mt-10 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1" }) %>
   <%= form.hidden_field :priority, value: current_user.preferences.count + 1 %>
-  <%= form.submit "Add Preference", class: "mt-10 py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-block" %>
+  <%= form.submit "Add Preference", class: "text-center py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-sap-white focus:outline-none bg-sap-grey rounded-lg border border-gray-200 hover:bg-sap-black hover:text-sap-blue focus:z-10 focus:ring-4 inline-block" %>
 <% end %>
 
+<h2 class="mt-10 mb-2 text-2xl font-extrabold text-sap-grey text-center">Your priority list</h2>
+
 <div class="mt-10 relative overflow-x-auto shadow-md sm:rounded-lg">
-  <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+  <table class="w-full text-sm text-left text-sap-white">
+    <thead class="text-xs text-sap-white uppercase bg-sap-black">
        <tr>
-          <th scope="col" class="px-6 py-3 text-center">
+          <th scope="col" class="px-6 py-3 text-left">
             Preference
           </th>
           <th scope="col" class="px-6 py-3 text-center">
@@ -23,13 +25,13 @@
        <tbody>
           <% current_user.preferences.each do |preference|%>
               <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                  <th scope="row" class="px-6 py-4 font-medium text-sap-white whitespace-nowrap bg-sap-grey">
                       <%= SchoolSpecialization.find(preference.school_specialization_id).display_name if preference.school_specialization_id.present? %>
                   </th>
-                  <td class="px-6 py-4 text-center">
+                  <td class="px-6 py-4 text-center bg-sap-grey">
                       <%= preference.priority %>
                   </td>
-                  <td class="px-6 py-4">
+                  <td class="px-6 py-4 bg-sap-grey">
                       <% if !preference.id.nil? %>
                         <%= button_to 'Delete', preference_path(preference), method: :delete %>
                       <% end %>

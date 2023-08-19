@@ -1,18 +1,20 @@
+
 <% if !current_user.nil? && current_user.role == "student" %>
+  <h2 class="mt-10 mb-2 text-2xl font-extrabold text-sap-black text-center">Your grades</h2>
   <div class="mt-10 relative overflow-x-auto shadow-md sm:rounded-lg">
-      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <table class="w-full text-sm text-left text-sap-white">
+          <thead class="text-xs text-sap-white uppercase bg-sap-black">
               <tr>
-                  <th scope="col" class="px-6 py-3">
+                  <th scope="col" class="px-6 py-3 text-center">
                       Grade category
                   </th>
-                  <th scope="col" class="px-6 py-3">
+                  <th scope="col" class="px-6 py-3 text-center">
                       Grade
                   </th>
               </tr>
           </thead>
           <tbody>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <tr class="bg-sap-grey border-b text-center">
                   <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       Admission average
                   </th>
@@ -20,7 +22,7 @@
                       <%= current_user.admission_average %>
                   </td>
               </tr>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <tr class="bg-sap-grey border-b text-center">
                   <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       English average
                   </th>
@@ -28,7 +30,7 @@
                       <%= current_user.en_average %>
                   </td>
               </tr>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <tr class="bg-sap-grey border-b text-center">
                   <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       Romanian grade
                   </th>
@@ -36,7 +38,7 @@
                       <%= current_user.ro_grade %>
                   </td>
               </tr>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <tr class="bg-sap-grey border-b text-center">
                   <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       Mathematics grade
                   </th>
@@ -44,7 +46,7 @@
                       <%= current_user.mathematics_grade %>
                   </td>
               </tr>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <tr class="bg-sap-grey border-b text-center">
                   <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       Mother tongue
                   </th>
@@ -52,7 +54,7 @@
                       <%= current_user.mother_tongue.nil? ? "-" : current_user.mother_tongue %>
                   </td>
               </tr>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <tr class="bg-sap-grey border-b text-center">
                   <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       Mother tongue grade
                   </th>
@@ -60,7 +62,7 @@
                       <%= current_user.mother_tongue_grade.nil? ? "-" : current_user.mother_tongue_grade %>
                   </td>
               </tr>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <tr class="bg-sap-grey border-b text-center">
                   <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       Graduation average
                   </th>
@@ -73,10 +75,10 @@
       </table>
   </div>
 
-    <h2 class="mt-10 mb-2 text-2xl font-extrabold text-gray-900">Your preferences:</h2>
+    <h2 class="mt-10 mb-2 text-2xl font-extrabold text-sap-black text-center">Your preferences</h2>
       <div class="mt-10 relative overflow-x-auto shadow-md sm:rounded-lg">
-      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <table class="w-full text-sm text-left text-sap-white">
+          <thead class="text-xs text-gray-700 uppercase bg-sap-black">
               <tr>
                   <th scope="col" class="px-6 py-3">
                       Preference
@@ -88,7 +90,7 @@
           </thead>
           <tbody>
           <% current_user.preferences.each do |preference|%>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <tr class="bg-white border-b bg-sap-grey">
                   <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       <%= SchoolSpecialization.find(preference.school_specialization_id).display_name if preference.school_specialization_id.present? %>
                   </th>
