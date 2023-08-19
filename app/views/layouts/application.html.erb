@@ -12,9 +12,9 @@
     <%= favicon_link_tag 'favicon.ico' %>
   </head>
 
-  <body>
+  <body class="min-w-sm">
     <%= render partial: "/shared/navbar"%>
-    <main class="container mx-auto mt-25 px-5">
+    <main class="<%= yield(:main_classes) || 'container mx-auto mt-25 px-5' %>">
 
       <% if flash[:alert] %>
         <div class="pt-10 font-bold text-center text-sap-blue">

@@ -1,3 +1,4 @@
+<% content_for :main_classes, 'container mx-auto mt-25 px-5' %>
 
 <% if !current_user.nil? && current_user.role == "student" %>
   <h2 class="mt-10 mb-2 text-2xl font-extrabold text-sap-black text-center">Your grades</h2>
@@ -102,13 +103,13 @@
           </tbody>
       </table>
 <% elsif !current_user.nil? && current_user.role == "admin" %>
-    <div class="max-w-screen-xl mx-auto px-5 bg-sap-blue3 min-h-sceen mt-10">
+    <div class="max-w-screen-xl mx-auto px-5 bg-sap-blue3 min-h-screen mt-10">
         <div class="flex flex-col items-center">
             <h2 class="font-bold text-3xl mt-5 tracking-tight">
                 HOW TO
             </h2>
             <p class="text-neutral-500 text-lg mt-3">
-                Frequenty asked questions
+                A quick step by step description of the process
             </p>
         </div>
         <div class="grid divide-y divide-neutral-200 max-w-xl mx-auto mt-8">

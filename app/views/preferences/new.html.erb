@@ -1,3 +1,5 @@
+<% content_for :main_classes, 'container mx-auto mt-25 px-5' %>
+
 <h2 class="mt-10 mb-2 text-2xl font-extrabold text-sap-grey text-center">Choose your preferences</h2>
 
 <%= form_with model: Preference.new, url: preferences_path, method: :post, local: true do |form| %>

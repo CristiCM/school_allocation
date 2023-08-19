@@ -8,6 +8,11 @@ module.exports = {
     './app/views/**/*.{erb,haml,html,slim}'
   ],
   theme: {
+    screens: {
+      sm: '640px',
+      md: '935px',
+    },
+    
     colors: {
       "sap-black": "#222831",
       "sap-grey": "#393E46",

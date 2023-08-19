@@ -1,76 +1,77 @@
-<h2 class="mt-10 mb-6 text-2xl font-extrabold text-sap-black text-center">Allocation results</h2>
+<% content_for :main_classes, "w-full mx-auto px-5" %>
 
-<div class="mt-10 relative overflow-x-auto shadow-md sm:rounded-lg">
-  <table class="w-full text-sm text-left text-sap-white bg-sap-grey">
-    <thead class="text-xs text-sap-white uppercase bg-sap-black">
-       <tr>
-          <th scope="col" class="px-6 py-3 text-center">
-            Email
-          </th>
-          <th scope="col" class="px-6 py-3 text-center">
-            Admission average
-          </th>
-          <th scope="col" class="px-6 py-3 text-center">
-            English average
-          </th>
-          <th scope="col" class="px-6 py-3 text-center">
-            Romanian average
-          </th>
-          <th scope="col" class="px-6 py-3 text-center">
-            Mathematics average
-          </th>
-          <th scope="col" class="px-6 py-3 text-center">
-            Mother tongue
-          </th>
-          <th scope="col" class="px-6 py-3 text-center">
-            Mother tongue grade
-          </th>
-          <th scope="col" class="px-6 py-3 text-center">
-            Graduation average
-          </th>
-          <th scope="col" class="px-6 py-3 text-center">
-            School
-          </th>
-          <th scope="col" class="px-6 py-3 text-center">
-            Specialization
-          </th>
-        </tr>
-     </thead>
-       <tbody>
-          <% Assignment.includes(user: [], school_specialization: [:school, :track]).each do |assignment| %>
-            <tr class="bg-sap-gray border-b">
-              <th scope="row" class="px-6 py-4 font-medium">
-                <%= assignment.user.email %>
-              </th>
-              <td class="px-6 py-4 text-center">
-                <%= assignment.user.admission_average %>
-              </td>
-              <td class="px-6 py-4 text-center">
-                <%= assignment.user.en_average %>
-              </td>
-              <td class="px-6 py-4 text-center">
-                <%= assignment.user.ro_grade %>
-              </td>
-              <td class="px-6 py-4 text-center">
-                <%= assignment.user.mathematics_grade %>
-              </td>
-              <td class="px-6 py-4 text-center">
-                <%= assignment.user.mother_tongue.blank? ? "-" : assignment.user.mother_tongue %>
-              </td>
-              <td class="px-6 py-4 text-center">
-                <%= assignment.user.mother_tongue_grade.nil? ? "-" : assignment.user.mother_tongue_grade %>
-              </td>
-              <td class="px-6 py-4 text-center">
-                <%= assignment.user.graduation_average %>
-              </td>
-              <td class="px-6 py-4 text-center">
-                <%= assignment.school_specialization.school.name %>
-              </td>
-              <td class="px-6 py-4 text-center">
-                <%= assignment.school_specialization.track.name %>
-              </td>
-            </tr>
-          <% end %>
-    </tbody>
-  </table>
-</div>
+<h2 class="mt-10 mb-6 text-2xl font-extrabold text-sap-black text-center">Allocation results</h2>
+  <div class="mt-10 relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-full text-sm text-left text-sap-white bg-sap-grey">
+      <thead class="text-xs text-sap-white uppercase bg-sap-black">
+        <tr>
+            <th scope="col" class="px-3 py-3 text-center">
+              Email
+            </th>
+            <th scope="col" class="px-3 py-3 text-center">
+              Admission average
+            </th>
+            <th scope="col" class="px-3 py-3 text-center">
+              English average
+            </th>
+            <th scope="col" class="px-3 py-3 text-center">
+              Romanian average
+            </th>
+            <th scope="col" class="px-3 py-3 text-center">
+              Mathematics average
+            </th>
+            <th scope="col" class="px-3 py-3 text-center">
+              Mother tongue
+            </th>
+            <th scope="col" class="px-3 py-3 text-center">
+              Mother tongue grade
+            </th>
+            <th scope="col" class="px-3 py-3 text-center">
+              Graduation average
+            </th>
+            <th scope="col" class="px-3 py-3 text-center">
+              School
+            </th>
+            <th scope="col" class="px-3 py-3 text-center">
+              Specialization
+            </th>
+          </tr>
+      </thead>
+        <tbody>
+            <% Assignment.includes(user: [], school_specialization: [:school, :track]).each do |assignment| %>
+              <tr class="bg-sap-gray border-b">
+                <th scope="row" class="px-3 py-4 font-medium">
+                  <%= assignment.user.email %>
+                </th>
+                <td class="px-3 py-4 text-center">
+                  <%= assignment.user.admission_average %>
+                </td>
+                <td class="px-3 py-4 text-center">
+                  <%= assignment.user.en_average %>
+                </td>
+                <td class="px-3 py-4 text-center">
+                  <%= assignment.user.ro_grade %>
+                </td>
+                <td class="px-3 py-4 text-center">
+                  <%= assignment.user.mathematics_grade %>
+                </td>
+                <td class="px-3 py-4 text-center">
+                  <%= assignment.user.mother_tongue.blank? ? "-" : assignment.user.mother_tongue %>
+                </td>
+                <td class="px-3 py-4 text-center">
+                  <%= assignment.user.mother_tongue_grade.nil? ? "-" : assignment.user.mother_tongue_grade %>
+                </td>
+                <td class="px-3 py-4 text-center">
+                  <%= assignment.user.graduation_average %>
+                </td>
+                <td class="px-3 py-4 text-center">
+                  <%= assignment.school_specialization.school.name %>
+                </td>
+                <td class="px-3 py-4 text-center">
+                  <%= assignment.school_specialization.track.name %>
+                </td>
+              </tr>
+            <% end %>
+      </tbody>
+    </table>
+  </div>
