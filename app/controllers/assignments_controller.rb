@@ -8,24 +8,24 @@ class AssignmentsController < ApplicationController
 
   def create
     job_manager = JobManager.new(job_creation_params)
+
     if job_manager.create
       flash[:success] = 'Job created successfully!'
-      redirect_to new_assignment_path
     else
       flash[:alert] = 'Please select a date first!'
-      redirect_to new_assignment_path
     end
+
+    redirect_to new_assignment_path
   end
   
   def destroy
     job_manager = JobManager.new(job_deletion_params)
     if job_manager.destroy
       flash[:success] = 'Job deleted successfully!'
-      redirect_to new_assignment_path
     else
       flash[:alert] = "There's nothing to delete!"
-      redirect_to new_assignment_path
     end
+    redirect_to new_assignment_path
   end
 
   private

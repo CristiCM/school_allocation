@@ -8,8 +8,6 @@ RSpec.describe AssignmentsController, type: :controller do
     before do
         sign_in admin
         allow(JobManager).to receive(:new).and_return(job_manager)
-        allow(job_manager).to receive(:create)
-        allow(job_manager).to receive(:destroy)
     end
 
     describe 'GET #new' do
@@ -29,6 +27,10 @@ RSpec.describe AssignmentsController, type: :controller do
     describe 'POST #create' do
         let(:fake_params) { {id: 1, type: "SomeType", first_notification: "Dummy", second_notification: "Dummy", allocation_date: "Dummy" } }
 
+        before do
+            allow(job_manager).to receive(:create)
+        end
+
         it 'creates a new JobManager and calls the create method' do
             post :create, params: { job: fake_params }
             
@@ -36,12 +38,32 @@ RSpec.describe AssignmentsController, type: :controller do
             expect(job_manager).to have_received(:create)
         end
 
-        it 'redirects to new_assignment_path with a success flash' do
-            post :create, params: { job: fake_params }
+        context 'with valid params' do
+            before do
+                allow(job_manager).to receive(:create).and_return(true)
+            end
 
+            it 'it displays a success flash message' do
+                post :create, params: { job: fake_params }
+                expect(flash[:success]).to eq('Job created successfully!')
+            end
+        end
+
+        context 'with invalid params' do
+            before do
+                allow(job_manager).to receive(:create).and_return(false)
+            end
+
+            it 'it displays a alert flash message' do
+                post :create, params: { job: fake_params }
+                expect(flash[:alert]).to eq('Please select a date first!')
+            end
+        end
+
+        it 'redirects to new_assignment_path' do
+            post :create, params: { job: fake_params }
             expect(response).to redirect_to(new_assignment_path)
-            expect(flash[:success]).to eq('Job created successfully!')
-        end    
+        end
     end
 
     describe 'DELETE #destroy' do
@@ -50,6 +72,7 @@ RSpec.describe AssignmentsController, type: :controller do
     
         before do
             allow(Assignment).to receive(:find).and_return(fake_assignment)
+            allow(job_manager).to receive(:destroy)
         end
 
         it 'creates a new JobManager and calls the destroy method' do
@@ -59,11 +82,31 @@ RSpec.describe AssignmentsController, type: :controller do
             expect(job_manager).to have_received(:destroy)
         end
 
-        it 'redirects to new_assignment_path with success flash' do
-            delete :destroy, params: fake_params
+        context "with valid params" do
+            before do
+                allow(job_manager).to receive(:destroy).and_return(true)
+            end
 
+            it 'redirects to new_assignment_path with success flash' do
+                delete :destroy, params: fake_params
+                expect(flash[:success]).to eq('Job deleted successfully!')
+            end
+        end
+
+        context "with invalid params" do
+            before do
+                allow(job_manager).to receive(:destroy).and_return(false)
+            end
+
+            it 'redirects to new_assignment_path with success flash' do
+                delete :destroy, params: fake_params
+                expect(flash[:alert]).to eq("There's nothing to delete!")
+            end
+        end
+        
+        it 'redirects to new_assignment_path' do
+            delete :destroy, params: fake_params
             expect(response).to redirect_to(new_assignment_path)
-            expect(flash[:success]).to eq('Job deleted successfully!')
         end
     end
 end

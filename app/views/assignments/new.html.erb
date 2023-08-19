@@ -43,7 +43,7 @@
            so it won't compete for horizontal space with the above div -->
       <div class="flex"> <!-- This will arrange the buttons side by side -->
         <%= f.submit "Save date", class: "text-center w-32 h-10 py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-sap-white focus:outline-none bg-sap-grey rounded-lg border border-gray-200 hover:bg-sap-black hover:text-sap-blue focus:z-10 focus:ring-4 inline-block" %>
-        <%= link_to "Delete", assignment_path(Job.first.id, type: 'first_notification'), method: :delete, data: { turbo_action: 'replace', turbo_method: 'delete' }, class: "text-center w-32 h-10 py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-sap-white focus:outline-none bg-sap-grey rounded-lg border border-gray-200 hover:bg-sap-black hover:text-sap-blue focus:z-10 focus:ring-4 inline-block" %>
+        <%= link_to "Delete", assignment_path(Job.first.id, type: :first_notification), method: :delete, data: { turbo_action: 'replace', turbo_method: 'delete' }, class: "text-center w-32 h-10 py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-sap-white focus:outline-none bg-sap-grey rounded-lg border border-gray-200 hover:bg-sap-black hover:text-sap-blue focus:z-10 focus:ring-4 inline-block" %>
       </div>
       
     <% end %>
@@ -59,7 +59,7 @@
 
     <div class="flex">
     <%= f.submit "Save date", class: "text-center w-32 h-10 py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-sap-white focus:outline-none bg-sap-grey rounded-lg border border-gray-200 hover:bg-sap-black hover:text-sap-blue focus:z-10 focus:ring-4 inline-block" %>
-  <%= link_to "Delete", assignment_path(Job.first.id, type: 'second_notification'), method: :delete, data: { turbo_action: 'replace', turbo_method: 'delete' }, class: "text-center w-32 h-10 py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-sap-white focus:outline-none bg-sap-grey rounded-lg border border-gray-200 hover:bg-sap-black hover:text-sap-blue focus:z-10 focus:ring-4 inline-block" %>
+  <%= link_to "Delete", assignment_path(Job.first.id, type: :second_notification), method: :delete, data: { turbo_action: 'replace', turbo_method: 'delete' }, class: "text-center w-32 h-10 py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-sap-white focus:outline-none bg-sap-grey rounded-lg border border-gray-200 hover:bg-sap-black hover:text-sap-blue focus:z-10 focus:ring-4 inline-block" %>
 <% end %>
 </div>
 </div>
@@ -75,7 +75,7 @@
     </div>
   <div class="flex">
     <%= f.submit "Save date", class: "text-center w-32 h-10 py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-sap-white focus:outline-none bg-sap-grey rounded-lg border border-gray-200 hover:bg-sap-black hover:text-sap-blue focus:z-10 focus:ring-4 inline-block" %>
-    <%= link_to "Delete", assignment_path(Job.first.id, type: 'allocation_date'), method: :delete, data: { turbo_action: 'replace', turbo_method: 'delete' }, class: "text-center w-32 h-10 py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-sap-white focus:outline-none bg-sap-grey rounded-lg border border-gray-200 hover:bg-sap-black hover:text-sap-blue focus:z-10 focus:ring-4 inline-block" %>
+    <%= link_to "Delete", assignment_path(Job.first.id, type: :allocation_date), method: :delete, data: { turbo_action: 'replace', turbo_method: 'delete' }, class: "text-center w-32 h-10 py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-sap-white focus:outline-none bg-sap-grey rounded-lg border border-gray-200 hover:bg-sap-black hover:text-sap-blue focus:z-10 focus:ring-4 inline-block" %>
     <% end %>
   </div>
 </div>
