@@ -1,5 +1,5 @@
 require 'rails_helper'
-#TODO: FIX TESTS HERE:
+#TODO: ADD_TESTS
 
 RSpec.describe AssignmentsController, type: :controller do
     let!(:admin) { FactoryBot.create(:user, role: 'admin') }

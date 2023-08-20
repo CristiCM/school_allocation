@@ -1,4 +1,6 @@
 class SchoolSpecialization < ApplicationRecord
+  has_many :assignments
+  has_many :preferences
   belongs_to :school
   belongs_to :track
   belongs_to :specialization

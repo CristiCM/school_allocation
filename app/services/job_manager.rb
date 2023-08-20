@@ -26,12 +26,13 @@ class JobManager
     @params = params
   end
 
+  # TODO ADD_TESTS
   def create
     return false unless at_least_one_date_present?
 
     job = Job.first
     ALL_JOB_ATTRIBUTES.each do |job_key, job_attributes|
-      next unless @params[job_key]
+      next unless @params[job_key] || job.allocation_done?
 
       datetime_bucharest = Time.zone.parse(@params[job_key])
       delete_job(job.send(job_attributes[:job_jid_attribute]))
@@ -43,6 +44,8 @@ class JobManager
         job_attributes[:job_jid_attribute] => new_jid,
         job_attributes[:job_time_attribute] => datetime_bucharest
       )
+
+      job.update(allocation_done: true) if job_attributes[:worker] == AllocationWorker 
     end
 
     true

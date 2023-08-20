@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_03_173344) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_20_155833) do
   create_table "assignments", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "school_specialization_id", null: false
@@ -29,6 +29,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_173344) do
     t.datetime "first_notification_time"
     t.datetime "second_notification_time"
     t.datetime "allocation_time"
+    t.boolean "allocation_done"
   end
 
   create_table "preferences", force: :cascade do |t|

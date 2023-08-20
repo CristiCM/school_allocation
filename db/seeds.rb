@@ -50,7 +50,7 @@ if Rails.env.development?
         {name: 'LICEUL TEORETIC "LUCIAN BLAGA"'},
         {name: 'LICEUL TEORETIC "MIHAI EMINESCU"'},
         {name: 'LICEUL UNITARIAN "JANOS ZSIGMOND"'},
-        {name: 'SEMINARUL TEOLOGIC ORTODOX'},
+        {name: 'SEMINARUL TEOLOGIC ORTDOX'},
         {name: 'COLEGIUL NATIONAL "GEORGE COSBUC"'},
         {name: 'LICEUL TEORETIC "VICTOR BABES"'},
         {name: 'LICEUL TEORETIC "EUGEN PORA"'},
