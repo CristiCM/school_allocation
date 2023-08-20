@@ -22,6 +22,19 @@ class StudentsCreationController < ApplicationController
     end
   end
 
+  def update
+  end
+
+  def destroy
+  end
+
+  def edit
+  end
+
+  def index
+
+  end
+
   private
 
   def student_params

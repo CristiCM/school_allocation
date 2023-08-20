@@ -1,7 +1,7 @@
 class SchoolSpecialization < ApplicationRecord
-  belongs_to :school, dependent: :destroy
-  belongs_to :track, dependent: :destroy
-  belongs_to :specialization, dependent: :destroy
+  belongs_to :school
+  belongs_to :track
+  belongs_to :specialization
 
   validates :school_id, :track_id, :specialization_id, presence: true
   validates :spots_available, presence: true, numericality: { greater_than: 0, only_integer: true }

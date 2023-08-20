@@ -196,4 +196,55 @@
             </div>
         </div>
     </div>
+
+<%else%>
+
+
+<div class="bg-white dark:bg-gray-900 mb-40">
+    <div class="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16">
+        <h1 class="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">The Right High School Shapes Your Future</h1>
+        <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48 dark:text-gray-400">Choosing the right high school is a critical step in your educational journey. We guide you through this process, ensuring you find the perfect fit for your aspirations and potential.</p>
+        <div class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
+            <%= link_to "Get started", new_user_session_path, class: "mt-10 text-center w-32 h-10 py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-sap-white focus:outline-none bg-sap-grey rounded-lg border border-gray-200 hover:bg-sap-black hover:text-sap-blue focus:z-10 focus:ring-4 inline-block"%>
+        </div>
+    </div>
+</div>
+
+
+<ol class="items-center sm:flex">
+    <li class="relative mb-6 sm:mb-0">
+        <div class="flex items-center">
+            <!-- SVG ... -->
+        </div>
+        <div class="mt-3 sm:pr-8">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">High School Exploration</h3>
+            <time class="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">Starts in August</time>
+            <p class="text-base font-normal text-gray-500 dark:text-gray-400">Discover the diverse range of high schools available, understand their strengths, and identify where you might thrive.</p>
+        </div>
+    </li>
+
+    <li class="relative mb-6 sm:mb-0">
+        <div class="flex items-center">
+            <!-- SVG ... -->
+        </div>
+        <div class="mt-3 sm:pr-8">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Application Prep</h3>
+            <time class="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">Begins in September</time>
+            <p class="text-base font-normal text-gray-500 dark:text-gray-400">From essays to interviews, prepare effectively to put your best foot forward in every high school application.</p>
+        </div>
+    </li>
+
+    <li class="relative mb-6 sm:mb-0">
+        <div class="flex items-center">
+            <!-- SVG ... -->
+        </div>
+        <div class="mt-3 sm:pr-8">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Decision Time</h3>
+            <time class="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">End of November</time>
+            <p class="text-base font-normal text-gray-500 dark:text-gray-400">Receive admission results, understand your options, and make an informed choice for your future.</p>
+        </div>
+    </li>
+</ol>
+
+
 <% end %> 

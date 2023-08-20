@@ -28,10 +28,13 @@ class SchoolsCreationController < ApplicationController
     end
     
     def destroy
-      @school_specialization = SchoolSpecialization.find(params[:id])
-      @school_specialization.destroy
-    
-      flash[:success] = 'Record was successfully deleted.'
+      begin
+        @school_specialization = SchoolSpecialization.find(params[:id])
+        @school_specialization.destroy
+        flash[:success] = 'Record was successfully deleted.'
+      rescue
+        flash[:alert] = 'Delete failed: Students have that specialization selected.'
+      end
       conditional_redirect
     end    
 
@@ -45,7 +48,7 @@ class SchoolsCreationController < ApplicationController
     private
 
     def conditional_redirect
-      if request.referrer && request.referrer.include?('edit')
+      if request.referrer && request.referrer.include?('edit') || request.referrer && request.referrer.include?('specializations')
         redirect_to school_specializations_path
       else
         redirect_to new_school_specialization_path

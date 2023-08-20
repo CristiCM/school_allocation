@@ -14,6 +14,8 @@
             </th>
             <th>
             </th>
+            <th>
+            </th>
         </tr>
      </thead>
        <tbody>
@@ -22,6 +24,7 @@
                 <td class="px-6 py-4"><%= school_specialization.display_name %></td>
                 <td class="px-6 py-4 text-center"><%= school_specialization.spots_available %></td>
                 <td class="px-6 py-4"> <%= button_to "Edit", edit_school_specialization_path(school_specialization), method: :get %></td>
+                <td class="px-6 py-4"> <%= button_to 'Delete', school_specialization_path(school_specialization), method: :delete %></td>
               </tr>
           <% end %>
     </tbody>

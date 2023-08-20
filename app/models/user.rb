@@ -5,7 +5,11 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
   validates :email, presence: true, uniqueness: true
-  validates :admission_average, :en_average, :ro_grade, :mathematics_grade, :graduation_average, presence: true
+  validates :admission_average, :en_average, :ro_grade, :mathematics_grade, :graduation_average, presence: true, if: :student?
+
+  def student?
+    role == 'student'
+  end
   
   def self.get_allocation_sorted_student_ids
     User.select("

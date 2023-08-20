@@ -44,8 +44,9 @@
     <%= form.number_field :graduation_average, step: :any, placeholder: "9.56" ,class: "px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1" %>
     </div>
 
-    <div class="mb-4">
+    <div class="mb-4 flex">
       <%= form.submit class: "text-center w-32 h-10 py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-sap-white focus:outline-none bg-sap-grey rounded-lg border border-gray-200 hover:bg-sap-black hover:text-sap-blue focus:z-10 focus:ring-4 inline-block" %>
+      <%= link_to "All students", students_path, method: :get, class: "text-center w-32 h-10 py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-sap-white focus:outline-none bg-sap-grey rounded-lg border border-gray-200 hover:bg-sap-black hover:text-sap-blue focus:z-10 focus:ring-4 inline-block"%>
     </div>
 
   <% end %>
