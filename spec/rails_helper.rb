@@ -1,3 +1,8 @@
+require 'simplecov'
+SimpleCov.start 'rails' do
+  add_filter %w[app/assets app/channels app/helpers app/jobs app/mailers app/views]
+end
+
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
 require 'sidekiq/testing'
