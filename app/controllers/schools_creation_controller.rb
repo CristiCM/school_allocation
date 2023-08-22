@@ -9,22 +9,20 @@ class SchoolsCreationController < ApplicationController
       
       if @school_specialization.save
         flash[:success] = 'SchoolSpecialization instance created'
-        redirect_to new_school_specialization_path
       else
         flash[:alert] = 'Instance creation failed!'
-        redirect_to new_school_specialization_path
       end
+      redirect_to new_school_specialization_path
     end
 
     def update
       @school_specialization = SchoolSpecialization.find(params[:id])
       if @school_specialization.update(school_specialization_params)
         flash[:success] = 'Updated successfully!'
-        conditional_redirect
       else
         flash[:alert] = 'Update failed!'
-        conditional_redirect
       end
+      conditional_redirect
     end
     
     def destroy

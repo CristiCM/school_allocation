@@ -26,11 +26,14 @@ class AllocationWorker
             end
         end
 
-        puts "#{user.email} allocation failed!"
         false
     end
 
     def assign_to_default(user)
-        Assignment.create(user_id: user.id, school_specialization_id: UNASSIGNED_SPECIALIZATION_ID)
-    end
+        if SchoolSpecialization.find_by(id: UNASSIGNED_SPECIALIZATION_ID).nil?
+          SchoolSpecialization.create!(id: UNASSIGNED_SPECIALIZATION_ID, school: School.first, track: Track.first, specialization: Specialization.first, spots_available: 404)
+        end
+
+        Assignment.create!(user_id: user.id, school_specialization_id: UNASSIGNED_SPECIALIZATION_ID)
+    end    
 end

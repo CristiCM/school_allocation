@@ -6,5 +6,6 @@ FactoryBot.define do
         second_notification_time { Faker::Time.between_dates(from: Date.today + 10, to: Date.today + 20) }
         allocation_date_jid { Faker::String.random(length: 6)}
         allocation_time { Faker::Time.between_dates(from: Date.today + 10, to: Date.today + 20)}
+        allocation_done { false}
     end
 end

@@ -137,6 +137,18 @@ RSpec.describe SchoolsCreationController, type: :controller do
             expect(response).to redirect_to(new_school_specialization_path)
             expect(flash[:success]).to eq('Record was successfully deleted.')
         end
+
+        context 'the specialization is selected by a user' do
+            let!(:preference) { create(:preference) }
+
+            it 'fails to delete school specialization that is referenced in a preference' do
+                expect {
+                  delete :destroy, params: { id: preference.school_specialization_id }
+                }.not_to change(SchoolSpecialization, :count)
+          
+                expect(flash[:alert]).to eq('Delete failed: Students have that specialization selected.')
+            end
+        end
     end
 
     describe 'GET #index' do
@@ -158,6 +170,26 @@ RSpec.describe SchoolsCreationController, type: :controller do
         it 'renders the edit template' do
             get :edit, params: { id: new_school_spec_record.id }
             expect(response).to render_template(:edit)
+        end
+    end
+    
+    describe '#conditional_redirect' do
+        let!(:school_spec_record) { FactoryBot.create(:school_specialization) }
+    
+        context 'when referrer contains "edit"' do
+            before do
+                request.env["HTTP_REFERER"] = edit_school_specialization_path(school_spec_record)
+            end
+            
+            it 'redirects to school_specializations_path after update' do
+                patch :update, params: { id: school_spec_record.id, school_specialization: school_spec_params }
+                expect(response).to redirect_to(school_specializations_path)
+            end
+            
+            it 'redirects to school_specializations_path after destroy' do
+                delete :destroy, params: { id: school_spec_record.id }
+                expect(response).to redirect_to(school_specializations_path)
+            end
         end
     end
 end

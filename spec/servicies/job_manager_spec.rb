@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe JobManager do
-  FactoryBot.create(:job)
+  let!(:job) { FactoryBot.create(:job, allocation_done: false) }
 
   describe "#create" do
     context 'with invalid params (no data present)' do

@@ -60,33 +60,28 @@ RSpec.describe PreferencesController, type: :controller do
     end
 
     describe 'DELETE #destroy' do
-
-        before do
-            Preference.create!(user_id: user.id, school_specialization_id: school_spec_record.id, priority: 1)
-        end
-    
+        let!(:preference1) { create(:preference, user: user, priority: 1 ) }
+        let!(:preference2) { create(:preference, user: user, priority: 2 ) }
+        let!(:preference3) { create(:preference, user: user, priority: 3 ) }
 
         it 'pulls the specific record by bet id and assigns it to a instance variable' do
-            last_pref_id = Preference.last.id
-            delete :destroy, params: { id: Preference.last.id }
+            last_pref_id = preference2.id
+            delete :destroy, params: { id: last_pref_id }
             expect(assigns(:preference).id).to eq(last_pref_id)
         end
           
         it 'deletes the record from the table' do
-            expect {delete :destroy, params: { id: Preference.last.id }}.to change {Preference.count}.by(-1)
-        end
-
-        before do
-            allow(controller).to receive(:update_priority_after_deletion)
+            expect {delete :destroy, params: { id: preference2.id }}.to change {Preference.count}.by(-1)
         end
 
         it 'calls the update_priority_after_deletion method to reassign the preferences the right priority' do
-            delete :destroy, params: { id: Preference.last.id }
-            expect(controller).to have_received(:update_priority_after_deletion)
+            delete :destroy, params: { id: preference2.id }
+            preference3.reload
+            expect(preference3.priority).to eq(2)
         end
 
         it 'redirects to preferences_path with a success flash' do
-            delete :destroy, params: { id: Preference.last.id }
+            delete :destroy, params: { id: preference2.id }
             expect(response).to redirect_to(preferences_path)
             expect(flash[:success]).to eq('Preference was successfully removed.')
         end

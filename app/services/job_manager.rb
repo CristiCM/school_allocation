@@ -26,7 +26,6 @@ class JobManager
     @params = params
   end
 
-  # TODO ADD_TESTS
   def create
     return false unless at_least_one_date_present?
 

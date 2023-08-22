@@ -20,7 +20,6 @@ class StudentsCreationController < ApplicationController
     redirect_to new_student_path
   end
 
-  # TODO ADD_TESTS
   def update
     @student = User.find(params[:id])
     if @student.update(student_params)
@@ -31,24 +30,15 @@ class StudentsCreationController < ApplicationController
     redirect_to students_path
   end
 
-  # TODO ADD_TESTS
   def destroy
     @student = User.find(params[:id])
+    
     @student.destroy
     flash[:success] = 'User was successfully deleted.'
+    
     redirect_to students_path
-
-    # @student = User.find(params[:id])
-    # begin
-    #   @student.destroy
-    #   flash[:success] = 'User was successfully deleted.'
-    # rescue => exception
-    #   flash[:alert] = 'Failed: The user has selected preferences.'
-    # end
-    # redirect_to students_path
   end
 
-  # TODO ADD_TESTS
   def edit
     @student = User.find(params[:id])
   end

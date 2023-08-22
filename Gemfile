@@ -107,3 +107,7 @@ group :test do
 end
 
 gem 'simplecov', require: false, group: :test
+
+group :test do
+  gem 'database_cleaner'
+end

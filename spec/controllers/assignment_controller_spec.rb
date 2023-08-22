@@ -1,9 +1,10 @@
 require 'rails_helper'
-#TODO: ADD_TESTS
 
 RSpec.describe AssignmentsController, type: :controller do
     let!(:admin) { FactoryBot.create(:user, role: 'admin') }
     let!(:job_manager) { double('JobManager') }
+    let!(:job) { FactoryBot.create(:job, allocation_done: false) }
+
 
     before do
         sign_in admin
@@ -36,6 +37,14 @@ RSpec.describe AssignmentsController, type: :controller do
             
             expect(JobManager).to have_received(:new)
             expect(job_manager).to have_received(:create)
+        end
+
+        context 'when the allocation is already done' do
+            it 'displays a alert flash message' do
+                Job.first.update( allocation_done: true )
+                post :create, params: { job: fake_params }
+                expect(flash[:alert]).to eq('The allocation is already done!')
+            end  
         end
 
         context 'with valid params' do

@@ -2,13 +2,13 @@ class EmailWorker
     include Sidekiq::Worker
 
     ALL_NOTIFICATION_ATTRIBUTES = {
-        "first_notification" =>
+        first_notification:
         {
             email_template: :first_notification_email,
             job_jid_attribute: :first_notification_jid,
             job_time_attribute: :first_notification_time
         },
-        "second_notification" =>
+        second_notification:
         {
             email_template: :second_notification_email,
             job_jid_attribute: :second_notification_jid,
@@ -22,7 +22,7 @@ class EmailWorker
         students_without_preferences = get_all_students_with_missing_preferences
 
         ALL_NOTIFICATION_ATTRIBUTES.each do |job_key, job_attributes|
-            next unless job_key == notification_type
+            next unless job_key == notification_type.to_sym
 
             students_without_preferences.each do |user|
                 UserMailer.send(job_attributes[:email_template], user).deliver

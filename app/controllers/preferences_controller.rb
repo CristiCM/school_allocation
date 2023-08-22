@@ -17,8 +17,11 @@ class PreferencesController < ApplicationController
     def destroy
         @preference = current_user.preferences.find(params[:id])
         @preference.destroy
+
         update_priority_after_deletion
+        
         flash[:success] = 'Preference was successfully removed.'
+        
         redirect_to preferences_path
     end
     

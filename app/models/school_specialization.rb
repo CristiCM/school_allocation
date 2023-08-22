@@ -9,8 +9,6 @@ class SchoolSpecialization < ApplicationRecord
   validates :spots_available, presence: true, numericality: { greater_than: 0, only_integer: true }
 
   def display_name
-    "#{School.find(school_id).name}\t|\t
-     #{Track.find(track_id).name}\t|\t
-     #{Specialization.find(specialization_id).name}"
+    "#{School.find(school_id).name}\t\t\t|\t\t\t#{Track.find(track_id).name}\t\t\t|\t\t\t#{Specialization.find(specialization_id).name}"
   end
 end

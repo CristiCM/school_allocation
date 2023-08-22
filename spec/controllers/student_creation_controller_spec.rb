@@ -2,7 +2,9 @@ require 'rails_helper'
 # Needed to add config.include Devise::Test::ControllerHelpers, type: :controller
 RSpec.describe StudentsCreationController, type: :controller do
 
-    let(:admin) { FactoryBot.create(:user, role: 'admin')}
+    let(:admin) { create(:user, role: 'admin')}
+    let(:user) { create(:user) }
+
 
     let(:student_params) do
         {
@@ -41,10 +43,7 @@ RSpec.describe StudentsCreationController, type: :controller do
         context 'with valid params' do
             
             it 'creates a new user with the provided params' do
-                post :create, params: { user: student_params }
-                expect(User.last.email).to eq(student_params[:email])
-                expect(User.last.mother_tongue).to eq(student_params[:mother_tongue])
-                expect(User.last.role).to eq('student')
+                expect { post :create, params: { user: student_params } }.to change {User.count}.by(1)
             end
 
             it 'assigns a random password' do
@@ -86,6 +85,74 @@ RSpec.describe StudentsCreationController, type: :controller do
                 expect(response).to redirect_to(new_student_path)
                 expect(flash[:alert]).to eq('User creation failed!')
             end
+        end
+    end
+
+    describe 'PATCH #update' do
+
+        context 'with valid params' do
+
+            it 'pulls the specific record by bet id and assigns it to a instance variable' do
+                patch :update, params: { id: user.id, user: student_params }
+                expect(assigns(:student).id).to eq(user.id)
+            end
+
+            it 'updates the student record' do
+                old_email = user.email
+                expect {
+                    patch :update, params: { id: user.id, user: student_params }
+                    user.reload
+                  }.to change { user.email }.from(old_email).to('teststudent@student.com')
+            end
+            
+            it 'redirects to students_path with a success flash' do
+                patch :update, params: { id: user.id, user: student_params }
+                expect(flash[:success]).to eq('User updated successfully.')
+                expect(response).to redirect_to(students_path)
+            end
+        end
+
+        context 'with invalid params' do
+
+            it 'redirects to students_path with a alert flash' do
+                patch :update, params: { id: user.id, user: student_params.merge(ro_grade: nil) }
+                expect(flash[:alert]).to eq('User update failed!')
+                expect(response).to redirect_to(students_path)
+            end
+        end
+    end
+
+    describe 'DELETE #destroy' do
+
+        context 'with valid params' do
+
+            it 'pulls the specific record by bet id and assigns it to a instance variable' do
+                delete :destroy, params: { id: user.id }
+                expect(assigns(:student).id).to eq(user.id)
+            end
+
+            it 'deletes the student record' do
+                old_email = user.email
+                expect {delete :destroy, params: { id: user.id }}.to change { User.count }.by(-1)
+            end
+            
+            it 'redirects to students_path with a success flash' do
+                delete :destroy, params: { id: user.id }
+                expect(flash[:success]).to eq('User was successfully deleted.')
+                expect(response).to redirect_to(students_path)
+            end
+        end
+    end
+
+    describe 'GET #edit' do
+        it 'pulls the specific record by bet id and assigns it to a instance variable' do
+            get :edit, params: { id: user.id }
+            expect(assigns(:student).id).to eq(user.id)
+        end
+
+        it 'it renders the #edit view' do
+            get :edit, params: { id: user.id }
+            expect(assigns(:student).id).to eq(user.id)
         end
     end
 end

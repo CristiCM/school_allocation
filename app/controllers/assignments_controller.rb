@@ -9,7 +9,6 @@ class AssignmentsController < ApplicationController
   def create
     job_manager = JobManager.new(job_creation_params)
 
-    #TODO_Add_Tests
     if Job.first.allocation_done?
       flash[:alert] = 'The allocation is already done!'
     elsif job_manager.create
