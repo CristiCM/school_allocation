@@ -15,6 +15,7 @@ module.exports = {
     
     colors: {
       "sap-black": "#222831",
+      "sap-red": "#b91c1c",
       "sap-grey": "#393E46",
       "sap-blue": "#00ADB5",
       "sap-white": "#EEEEEE",

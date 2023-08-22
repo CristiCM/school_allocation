@@ -15,6 +15,8 @@ Rails.application.routes.draw do
   resources :preferences, only: [:new, :create, :destroy, :index]
 
   resources :assignments, only: [:new, :create, :destroy, :index]
+
+  resources :assignments_reset, only: [:destroy]
   
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'

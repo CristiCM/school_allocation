@@ -86,4 +86,11 @@ RSpec.describe PreferencesController, type: :controller do
             expect(flash[:success]).to eq('Preference was successfully removed.')
         end
     end
+
+    describe 'GET #index' do
+        it 'renders the preferences_path template' do
+            get :index
+            expect(response).to render_template(:index)
+        end
+    end  
 end

@@ -75,3 +75,5 @@
       </tbody>
     </table>
   </div>
+
+  <%= link_to "Reset allocation", assignments_reset_path(id: "dummy"), method: :delete, data: { turbo_action: 'replace', turbo_method: 'delete', turbo_confirm: 'Are you sure? Changes are permanent!' }, class: "mt-10 text-center w-42 h-10 py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-sap-white focus:outline-none bg-sap-red rounded-lg border border-gray-200 hover:bg-sap-black hover:text-sap-blue focus:z-10 focus:ring-4 inline-block" %>
