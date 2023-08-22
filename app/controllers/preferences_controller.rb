@@ -24,6 +24,9 @@ class PreferencesController < ApplicationController
         
         redirect_to preferences_path
     end
+
+    def index
+    end
     
     private
     

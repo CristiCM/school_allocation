@@ -29,7 +29,11 @@
           <% end %>
 
           <% if can? :manage, Preference %>
-            <%= link_to "Choose school preference", new_preference_path, class: "text-sap-white hover:text-sap-blue rounded-md px-3 py-2 text-sm font-medium" %>
+            <%= link_to "Choose school preferences", new_preference_path, class: "text-sap-white hover:text-sap-blue rounded-md px-3 py-2 text-sm font-medium" %>
+          <% end %>
+
+          <% if can? :manage, Preference %>
+            <%= link_to "Grades and preferences", preferences_path, class: "text-sap-white hover:text-sap-blue rounded-md px-3 py-2 text-sm font-medium" %>
           <% end %>
         </div>
       </div>

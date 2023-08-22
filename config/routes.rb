@@ -12,7 +12,7 @@ Rails.application.routes.draw do
 
   resources :school_specialization_import , controller: 'schools_creation_import', only: [:new, :create]
 
-  resources :preferences, only: [:new, :create, :destroy]
+  resources :preferences, only: [:new, :create, :destroy, :index]
 
   resources :assignments, only: [:new, :create, :destroy, :index]
   
