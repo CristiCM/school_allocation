@@ -1,0 +1,23 @@
+Hi <%= @user.email %>,
+
+The repartisation process is finished.
+
+<% if @assigned %>
+
+Congratulations, you were assigned to:
+
+<%= @allocation_information %>
+
+
+
+
+<% else %>
+
+Sadly you did not make it but don't worry, you will soon find information related to the new allocation that will happen in a few months.
+
+<% end %>
+
+You can find more information by clicking the following link: <%= new_user_session_url %>
+
+Best regards,
+School Admissions 2023

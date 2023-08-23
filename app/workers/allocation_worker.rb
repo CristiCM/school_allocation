@@ -9,6 +9,7 @@ class AllocationWorker
         end
 
         Job.first.update(allocation_date_jid: nil, allocation_time: nil)
+        EmailWorker.perform_async("allocation_result_notification_email")
     end
 
     private
@@ -21,7 +22,6 @@ class AllocationWorker
                     Assignment.create(user_id: user.id, school_specialization_id: specialization.id)
                     specialization.decrement!(:spots_available)
                 end
-                puts "#{user.email} allocation done!"
                 return true
             end
         end

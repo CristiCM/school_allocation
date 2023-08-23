@@ -44,7 +44,7 @@ class JobManager
         job_attributes[:job_time_attribute] => datetime_bucharest
       )
 
-      job.update(allocation_done: true) if job_attributes[:worker] == AllocationWorker 
+      job.update(allocation_done: true) if job_attributes[:worker] == AllocationWorker
     end
 
     true
