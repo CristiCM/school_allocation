@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_20_155833) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_23_121959) do
   create_table "assignments", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "school_specialization_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "unassigned", default: false, null: false
     t.index ["school_specialization_id"], name: "index_assignments_on_school_specialization_id"
     t.index ["user_id"], name: "index_assignments_on_user_id"
   end
@@ -29,7 +30,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_20_155833) do
     t.datetime "first_notification_time"
     t.datetime "second_notification_time"
     t.datetime "allocation_time"
-    t.boolean "allocation_done"
+    t.boolean "allocation_done", default: false, null: false
   end
 
   create_table "preferences", force: :cascade do |t|

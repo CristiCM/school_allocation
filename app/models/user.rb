@@ -13,6 +13,8 @@ class User < ApplicationRecord
     role == 'student'
   end
   
+  # Arel -> SQL AST (Abstract Syntax Tree) manager for Ruby.
+  # Allows you to generate SQL queries programmatically and is used internally by ActiveRecord (the default ORM in Rails) to build queries.
   def self.get_allocation_sorted_student_ids
     User.select("
         users.*,
@@ -33,6 +35,9 @@ class User < ApplicationRecord
       ).map(&:id)
   end
   
-  # Arel -> SQL AST (Abstract Syntax Tree) manager for Ruby.
-  # Allows you to generate SQL queries programmatically and is used internally by ActiveRecord (the default ORM in Rails) to build queries.
+  def self.students_without_preferences
+    left_joins(:preferences)
+      .where(role: 'student')
+      .where(preferences: { id: nil })
+  end
 end

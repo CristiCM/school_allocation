@@ -43,7 +43,7 @@ RSpec.describe AllocationWorker, type: :worker do
         AllocationWorker.new.perform([student1.id, student2.id, student3.id])
 
         expect(Assignment.find_by(user: student3)).not_to be_nil 
-        expect(Assignment.find_by(user: student3).school_specialization_id).to eq(-404)  
+        expect(Assignment.find_by(user: student3).unassigned).to eq(true)  
       end
     end
   end

@@ -1,0 +1,32 @@
+<div class="mt-32 relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-full text-sm text-left text-sap-white">
+        <thead class="text-xs text-sap-white uppercase bg-sap-black">
+            <tr>
+                <th scope="col" class="px-6 py-3 text-center">
+                    School
+                </th>
+                <th scope="col" class="px-6 py-3 text-center">
+                    Track
+                </th>
+                <th scope="col" class="px-6 py-3 text-center">
+                    Specializations
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <% assignment = Assignment.find_by(user_id: current_user.id) %>
+            <% school_specialization = SchoolSpecialization.find_by(id: assignment&.school_specialization_id) %>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <th scope="row" class="px-6 py-4 font-medium text-sap-white whitespace-nowrap bg-sap-grey text-center">
+                    <%= school_specialization.display_school if school_specialization %>
+                </th>
+                <td scope="row" class="px-6 py-4 font-medium text-sap-white whitespace-nowrap bg-sap-grey text-center">
+                    <%= school_specialization.display_track if school_specialization %>
+                </td>
+                <td scope="row" class="px-6 py-4 font-medium text-sap-white whitespace-nowrap bg-sap-grey text-center">
+                    <%= school_specialization.display_specialization if school_specialization %>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
