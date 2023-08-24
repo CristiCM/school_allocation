@@ -6,15 +6,27 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
-  resources :students, controller: 'students_creation', only: [:new, :create, :update, :destroy, :index, :edit]
+  resources :students, controller: 'students_creation', only: [:new, :create, :update, :destroy, :index, :edit] do
+    collection do
+      get :download
+    end
+  end
 
-  resources :school_specializations, controller: 'schools_creation', only: [:new, :create, :update, :destroy, :edit, :index]
+  resources :school_specializations, controller: 'schools_creation', only: [:new, :create, :update, :destroy, :edit, :index] do
+    collection do
+      get :download
+    end
+  end
 
   resources :school_specialization_import , controller: 'schools_creation_import', only: [:new, :create]
 
   resources :preferences, only: [:new, :create, :destroy, :index]
 
-  resources :assignments, only: [:new, :create, :destroy, :index]
+  resources :assignments, only: [:new, :create, :destroy, :index] do
+    collection do
+      get :download
+    end
+  end
 
   resources :assignments_reset, only: [:destroy]
   

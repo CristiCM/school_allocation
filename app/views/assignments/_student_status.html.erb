@@ -1,4 +1,4 @@
-<h2 class="mt-10 mb-6 text-2xl font-extrabold text-sap-black text-center">Student preference status</h2>
+<h2 class="mt-10 mb-10 mb-6 text-2xl font-extrabold text-sap-black text-center">Students without preferences selected</h2>
 
 <div class="mt-10 relative overflow-x-auto shadow-md sm:rounded-lg">
   <table class="w-full text-sm text-left text-sap-white">
@@ -13,16 +13,17 @@
         </tr>
      </thead>
        <tbody>
-          <% User.includes(:preferences).where(role: 'student').each do |user|%>
+          <% @users.each do |user|%>
               <tr class="bg-sap-grey border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                   <th scope="row" class="text-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       <%= user.email %>
                   </th>
                   <td class="px-6 py-4 text-center">
-                      <%= user.preferences.blank? ? "NOT OK" : "OK" %>
+                      NOT OK
                   </td>
               </tr>
           <% end %>
     </tbody>
   </table>
+  <%= will_paginate @users, class: "bg-sap-grey text-sap-white text-center text-base" %>
 </div>

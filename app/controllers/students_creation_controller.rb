@@ -48,8 +48,19 @@ class StudentsCreationController < ApplicationController
     @order = params[:order] || 'DESC'
     @users = User.where(role: 'student')
                         .order("#{@sort_by} #{@order}")
-                        .paginate(page: params[:page], per_page: 12)
+                        .paginate(page: params[:page], per_page: 10)
 
+  end
+
+  def download
+    @sort_by = params[:sort_by] || 'users.created_at'
+    @order = params[:order] || 'DESC'
+
+    @users = User.where(role: 'student').order("#{@sort_by} #{@order}")
+
+    respond_to do |format|
+      format.xlsx { render xlsx: "download", filename: "students.xlsx" }
+    end
   end
 
   private

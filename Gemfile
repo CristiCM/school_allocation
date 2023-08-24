@@ -113,3 +113,6 @@ group :test do
 end
 
 gem 'will_paginate'
+
+gem 'caxlsx'
+gem 'caxlsx_rails'

@@ -1,15 +1,9 @@
 class AssignmentsController < ApplicationController
   load_and_authorize_resource
   def new
-  end
-
-  def index
-    @sort_by = params[:sort_by] || 'users.admission_average'
-    @order = params[:order] || 'DESC'
-    @assignments = Assignment.includes(user: [], school_specialization: [:school, :track, :specialization])
-                            .joins(:user)
-                            .order("#{@sort_by} #{@order}")
-                            .paginate(page: params[:page], per_page: 10)
+    @users = User.left_outer_joins(:preferences)
+             .where(preferences: { id: nil }, role: 'student')
+             .paginate(page: params[:page], per_page: 10)
   end
 
   def create
@@ -35,6 +29,28 @@ class AssignmentsController < ApplicationController
     end
     redirect_to new_assignment_path
   end
+
+  def index
+    @sort_by = params[:sort_by] || 'users.admission_average'
+    @order = params[:order] || 'DESC'
+    @assignments = Assignment.includes(user: [], school_specialization: [:school, :track, :specialization])
+                            .joins(:user)
+                            .order("#{@sort_by} #{@order}")
+                            .paginate(page: params[:page], per_page: 10)
+  end
+
+  def download
+    @sort_by = params[:sort_by] || 'users.admission_average'
+    @order = params[:order] || 'DESC'
+    
+    @assignments = Assignment.includes(user: [], school_specialization: [:school, :track, :specialization])
+                            .joins(:user)
+                            .order("#{@sort_by} #{@order}")
+
+    respond_to do |format|
+      format.xlsx { render xlsx: "download", filename: "assignments.xlsx" }
+    end
+  end  
 
   private
 
