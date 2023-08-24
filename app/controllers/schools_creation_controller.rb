@@ -41,6 +41,12 @@ class SchoolsCreationController < ApplicationController
     end 
 
     def index
+      @sort_by = params[:sort_by] || 'school_specializations.spots_available'
+      @order = params[:order] || 'DESC'
+      unassigned_school = School.find_by(name: "Unassigned School")
+      @school_specializations = SchoolSpecialization.where.not(school_id: unassigned_school.id)
+                                                    .order("#{@sort_by} #{@order}")
+                                                    .paginate(page: params[:page], per_page: 12)
     end
 
     private

@@ -6,41 +6,44 @@
       <thead class="text-xs text-sap-white uppercase bg-sap-black">
         <tr>
             <th scope="col" class="px-3 py-3 text-center">
-              Email
+              <%= link_to "Email", assignments_path(sort_by: "users.email", order: (@sort_by == 'users.email' && @order == 'DESC' ? 'ASC' : 'DESC')), class: "hover:text-sap-blue" %>
             </th>
             <th scope="col" class="px-3 py-3 text-center">
               <%= link_to "Admission average", assignments_path(sort_by: "users.admission_average", order: (@sort_by == 'users.admission_average' && @order == 'DESC' ? 'ASC' : 'DESC')), class: "hover:text-sap-blue" %>
             </th>
             <th scope="col" class="px-3 py-3 text-center">
-              English average
+              <%= link_to "English average", assignments_path(sort_by: "users.en_average", order: (@sort_by == 'users.en_average' && @order == 'DESC' ? 'ASC' : 'DESC')), class: "hover:text-sap-blue" %>
             </th>
             <th scope="col" class="px-3 py-3 text-center">
-              Romanian average
+              <%= link_to "Romanian grade", assignments_path(sort_by: "users.ro_grade", order: (@sort_by == 'users.ro_grade' && @order == 'DESC' ? 'ASC' : 'DESC')), class: "hover:text-sap-blue" %>
             </th>
             <th scope="col" class="px-3 py-3 text-center">
-              Mathematics average
+              <%= link_to "Mathematics grade", assignments_path(sort_by: "users.mathematics_grade", order: (@sort_by == 'users.mathematics_grade' && @order == 'DESC' ? 'ASC' : 'DESC')), class: "hover:text-sap-blue" %>
             </th>
             <th scope="col" class="px-3 py-3 text-center">
-              Mother tongue
+              <%= link_to "Mother tongue", assignments_path(sort_by: "users.mother_tongue", order: (@sort_by == 'users.mother_tongue' && @order == 'DESC' ? 'ASC' : 'DESC')), class: "hover:text-sap-blue" %>
             </th>
             <th scope="col" class="px-3 py-3 text-center">
-              Mother tongue grade
+              <%= link_to "Mother tongue grade", assignments_path(sort_by: "users.mother_tongue_grade", order: (@sort_by == 'users.mother_tongue_grade' && @order == 'DESC' ? 'ASC' : 'DESC')), class: "hover:text-sap-blue" %>
             </th>
             <th scope="col" class="px-3 py-3 text-center">
-              Graduation average
+              <%= link_to "Graduation average", assignments_path(sort_by: "users.graduation_average", order: (@sort_by == 'users.graduation_average' && @order == 'DESC' ? 'ASC' : 'DESC')), class: "hover:text-sap-blue" %>
             </th>
             <th scope="col" class="px-3 py-3 text-center">
-              School
+              <%= link_to "School", assignments_path(sort_by: "schools.name", order: (@sort_by == 'schools.name' && @order == 'DESC' ? 'ASC' : 'DESC')), class: "hover:text-sap-blue" %>
             </th>
             <th scope="col" class="px-3 py-3 text-center">
-              Specialization
+              <%= link_to "Track", assignments_path(sort_by: "tracks.name", order: (@sort_by == 'tracks.name' && @order == 'DESC' ? 'ASC' : 'DESC')), class: "hover:text-sap-blue" %>
+            </th>
+            <th scope="col" class="px-3 py-3 text-center">
+              <%= link_to "Specialization", assignments_path(sort_by: "specializations.name", order: (@sort_by == 'specializations.name' && @order == 'DESC' ? 'ASC' : 'DESC')), class: "hover:text-sap-blue" %>
             </th>
           </tr>
       </thead>
         <tbody>
             <% @assignments.each do |assignment| %>
               <tr class="bg-sap-gray border-b">
-                <th scope="row" class="px-3 py-4 font-medium">
+                <th scope="row" class="px-3 py-4 font-medium text-center">
                   <%= assignment.user.email %>
                 </th>
                 <td class="px-3 py-4 text-center">
@@ -69,6 +72,9 @@
                 </td>
                 <td class="px-3 py-4 text-center">
                   <%= assignment.school_specialization.track.name %>
+                </td>
+                <td class="px-3 py-4 text-center">
+                  <%= assignment.school_specialization.specialization.name %>
                 </td>
               </tr>
             <% end %>

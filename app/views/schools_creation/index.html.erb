@@ -1,16 +1,16 @@
 <% content_for :main_classes, 'container mx-auto mt-25 px-5' %>
 
-<h2 class="mt-10 mb-6 text-2xl font-extrabold text-sap-black text-center">School specialization records</h2>
+<h2 class="mt-10 mb-6 text-2xl font-extrabold text-sap-black text-center">School option records</h2>
 
 <div class="mt-10 relative overflow-x-auto shadow-md sm:rounded-lg">
   <table class="w-full text-sm text-left text-sap-white">
     <thead class="text-xs text-sap-white uppercase bg-sap-black">
        <tr>
-          <th scope="col" class="px-6 py-3 text-left">
-            Specialization
+          <th scope="col" class="px-6 py-3 text-center">
+            Options
           </th>
           <th scope="col" class="px-6 py-3 text-center">
-            Available Spots
+            <%= link_to "Available spots", school_specializations_path(sort_by: 'school_specializations.spots_available', order: (@sort_by == 'school_specializations.spots_available' && @order == 'DESC' ? 'ASC' : 'DESC')) , class: "hover:text-sap-blue"%>
             </th>
             <th>
             </th>
@@ -19,9 +19,9 @@
         </tr>
      </thead>
        <tbody>
-          <% SchoolSpecialization.all.each do |school_specialization|%>
-              <tr class="bg-sap-grey border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <td class="px-6 py-4"><%= school_specialization.display_name %></td>
+          <% @school_specializations.each do |school_specialization|%>
+              <tr class="bg-sap-grey border-b">
+                <td class="px-6 py-4 text-left"><%= school_specialization.display_name %></td>
                 <td class="px-6 py-4 text-center"><%= school_specialization.spots_available %></td>
                 <td class="px-6 py-4"> <%= button_to "Edit", edit_school_specialization_path(school_specialization), method: :get %></td>
                 <td class="px-6 py-4"> <%= button_to 'Delete', school_specialization_path(school_specialization), method: :delete %></td>
@@ -29,5 +29,6 @@
           <% end %>
     </tbody>
   </table>
+  <% will_paginate @school_specializations, class: "bg-sap-grey text-sap-white text-center text-base" %>
   </div>
 

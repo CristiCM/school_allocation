@@ -6,7 +6,7 @@ class AssignmentsController < ApplicationController
   def index
     @sort_by = params[:sort_by] || 'users.admission_average'
     @order = params[:order] || 'DESC'
-    @assignments = Assignment.includes(user: [], school_specialization: [:school, :track])
+    @assignments = Assignment.includes(user: [], school_specialization: [:school, :track, :specialization])
                             .joins(:user)
                             .order("#{@sort_by} #{@order}")
                             .paginate(page: params[:page], per_page: 10)

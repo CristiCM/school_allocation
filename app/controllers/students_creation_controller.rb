@@ -44,6 +44,11 @@ class StudentsCreationController < ApplicationController
   end
 
   def index
+    @sort_by = params[:sort_by] || 'users.created_at'
+    @order = params[:order] || 'DESC'
+    @users = User.where(role: 'student')
+                        .order("#{@sort_by} #{@order}")
+                        .paginate(page: params[:page], per_page: 12)
 
   end
 

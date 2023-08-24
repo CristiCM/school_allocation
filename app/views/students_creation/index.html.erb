@@ -7,10 +7,10 @@
     <thead class="text-xs text-sap-white uppercase bg-sap-black">
        <tr>
           <th scope="col" class="px-6 py-3 text-center">
-            User Email
+            <%= link_to "Email", students_path(sort_by: 'users.email', order: (@sort_by == 'users.email' && @order == 'DESC' ? 'ASC' : 'DESC')), class: "hover:text-sap-blue" %>
           </th>
           <th scope="col" class="px-6 py-3 text-center">
-            Creation time
+            <%= link_to "Creation time", students_path(sort_by: 'users.created_at', order: (@sort_by == 'users.created_at' && @order == 'DESC' ? 'ASC' : 'DESC')), class: "hover:text-sap-blue" %>
           </th>
           <th>
           </th>
@@ -19,9 +19,9 @@
         </tr>
      </thead>
        <tbody>
-          <% User.where(role: 'student').each do |user|%>
-              <tr class="bg-sap-grey border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  <th scope="row" class="text-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+          <% @users.each do |user|%>
+              <tr class="bg-sap-grey border-b">
+                  <th scope="row" class="text-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                       <%= user.email %>
                   </th>
                   <td class="px-6 py-4 text-center">
@@ -37,4 +37,5 @@
           <% end %>
     </tbody>
   </table>
+  <%= will_paginate @users, class: "bg-sap-grey text-sap-white text-center text-base" %>
 </div>

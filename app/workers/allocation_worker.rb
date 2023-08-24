@@ -30,8 +30,9 @@ class AllocationWorker
         school = School.find_or_create_by(name: "Unassigned School")
         track = Track.find_or_create_by(name: "Unassigned Track")
         specialization = Specialization.find_or_create_by(name: "Unassigned Specialization")
-        school_specialization = SchoolSpecialization.find_or_create_by(school_id: school.id, track_id: track.id, specialization_id: specialization.id, spots_available: 99999)
-
+        school_specialization = SchoolSpecialization.find_or_create_by(school_id: school.id, track_id: track.id, specialization_id: specialization.id)
+        school_specialization.update(spots_available: 99999) unless school_specialization.spots_available == 99999
+        
         Assignment.create!(user_id: user.id, school_specialization_id: school_specialization.id, unassigned: true)
     end    
 end
