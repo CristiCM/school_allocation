@@ -1,5 +1,9 @@
 class SchoolsCreationController < ApplicationController
   load_and_authorize_resource :SchoolSpecialization
+
+  before_action :set_sorting_params, only: [:index, :download]
+  before_action :set_school_specializations, only: [:index, :download]
+
     def new
       @school_specialization = SchoolSpecialization.new
     end
@@ -40,43 +44,38 @@ class SchoolsCreationController < ApplicationController
       @school_specialization = SchoolSpecialization.find(params[:id])
     end 
 
-    #TODO: REFACTOR
     def index
-      @sort_by = params[:sort_by] || 'school_specializations.spots_available'
-      @order = params[:order] || 'DESC'
-      
-      unassigned_school = School.find_by(name: "Unassigned School")
-    
-      if unassigned_school
-        @school_specializations = SchoolSpecialization.where.not(school_id: unassigned_school.id)
-                                                      .order("#{@sort_by} #{@order}")
-                                                      .paginate(page: params[:page], per_page: 10)
-      else
-        @school_specializations = SchoolSpecialization.order("#{@sort_by} #{@order}")
-                                                      .paginate(page: params[:page], per_page: 10)
-      end
+      @school_specializations = apply_pagination(@school_specializations)
     end
     
-
     def download
-      @sort_by = params[:sort_by] || 'school_specializations.spots_available'
-      @order = params[:order] || 'DESC'
-      unassigned_school = School.find_by(name: "Unassigned School")
-
-      if unassigned_school
-        @school_specializations = SchoolSpecialization.where.not(school_id: unassigned_school.id)
-                                                    .order("#{@sort_by} #{@order}")
-      else
-        @school_specializations = SchoolSpecialization.order("#{@sort_by} #{@order}")
-                                                      .paginate(page: params[:page], per_page: 10)
-      end
-
       respond_to do |format|
         format.xlsx { render xlsx: "download", filename: "School Specializations.xlsx" }
       end
     end
 
     private
+
+    def set_sorting_params
+      @sort_by = params[:sort_by] || 'school_specializations.spots_available'
+      @order = params[:order] || 'DESC'
+    end
+    
+    def set_school_specializations
+      unassigned_school = School.find_by(name: "Unassigned School")
+    
+      if unassigned_school
+        @school_specializations = SchoolSpecialization.where.not(school_id: unassigned_school.id)
+      else
+        @school_specializations = SchoolSpecialization.all
+      end
+    
+      @school_specializations.order!("#{@sort_by} #{@order}")
+    end
+    
+    def apply_pagination(school_specializations)
+      school_specializations.paginate(page: params[:page], per_page: 10)
+    end
 
     def conditional_redirect
       if request.referrer && request.referrer.include?('edit') || request.referrer && request.referrer.include?('specializations')
