@@ -117,3 +117,6 @@ gem 'will_paginate'
 
 gem 'caxlsx'
 gem 'caxlsx_rails'
+
+gem 'rexml', '~> 3.2'
+
