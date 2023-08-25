@@ -40,23 +40,37 @@ class SchoolsCreationController < ApplicationController
       @school_specialization = SchoolSpecialization.find(params[:id])
     end 
 
+    #TODO: REFACTOR
     def index
       @sort_by = params[:sort_by] || 'school_specializations.spots_available'
       @order = params[:order] || 'DESC'
+      
       unassigned_school = School.find_by(name: "Unassigned School")
-      @school_specializations = SchoolSpecialization.where.not(school_id: unassigned_school.id)
-                                                    .order("#{@sort_by} #{@order}")
-                                                    .paginate(page: params[:page], per_page: 10)
+    
+      if unassigned_school
+        @school_specializations = SchoolSpecialization.where.not(school_id: unassigned_school.id)
+                                                      .order("#{@sort_by} #{@order}")
+                                                      .paginate(page: params[:page], per_page: 10)
+      else
+        @school_specializations = SchoolSpecialization.order("#{@sort_by} #{@order}")
+                                                      .paginate(page: params[:page], per_page: 10)
+      end
     end
+    
 
     def download
       @sort_by = params[:sort_by] || 'school_specializations.spots_available'
       @order = params[:order] || 'DESC'
       unassigned_school = School.find_by(name: "Unassigned School")
 
-      @school_specializations = SchoolSpecialization.where.not(school_id: unassigned_school.id)
+      if unassigned_school
+        @school_specializations = SchoolSpecialization.where.not(school_id: unassigned_school.id)
                                                     .order("#{@sort_by} #{@order}")
-  
+      else
+        @school_specializations = SchoolSpecialization.order("#{@sort_by} #{@order}")
+                                                      .paginate(page: params[:page], per_page: 10)
+      end
+
       respond_to do |format|
         format.xlsx { render xlsx: "download", filename: "School Specializations.xlsx" }
       end
