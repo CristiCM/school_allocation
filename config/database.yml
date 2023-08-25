@@ -24,9 +24,9 @@ production:
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  host: ec2-52-215-68-14.eu-west-1.compute.amazonaws.com
-  database: d9f7h906qp3a0a
-  username: zgknabbxkbykop
-  password: 664c9edfe01e279df6162edb52f8233a093297fa29a2a14e08d969e39ae6067a
+  host: <%= ENV["DATABASE_HOST"] %>
+  database: <%= ENV["DATABASE_NAME"] %>
+  username: <%= ENV["DATABASE_USER"] %>
+  password: ENV["DATABASE_PASSWORD"] %>
   port: 5432
 
