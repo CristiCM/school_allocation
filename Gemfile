@@ -91,7 +91,7 @@ group :development, :test do
   gem 'rspec-support'
 end
 
-group :development, :test do
+group :production, :development, :test do
   gem 'factory_bot_rails'
 end
 
