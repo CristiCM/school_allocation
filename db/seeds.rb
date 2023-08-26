@@ -9,21 +9,13 @@
 if Rails.env.development? || Rails.env.production?  
     # This seed is ment to make the environment allocation ready.
 
-    # Admin accounts: 1
-    # Admin email: admin@admin.com
-    # Admin password: 123456
-
-    # Populates School/Track/Specialization models(equiv import data by admin).
-    
-    # Populates SchoolSpecialization model(equiv creation of school specializations by admin).
-
-    # Populates Preferences model(equiv creation of preferences by each student).
-
-    # SCHOOL, TRACK, SPECIALIZATION CREATION
-
     FactoryBot.create_list(:school_specialization, 6)
 
     # USER CREATION
+
+    # Admin accounts: 1
+    # Admin email: admin@admin.com
+    # Admin password: 123456
 
     User.create(email: 'admin@admin.com', password: '123456', role: 'admin')
 
