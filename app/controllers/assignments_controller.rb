@@ -1,5 +1,8 @@
 class AssignmentsController < ApplicationController
+  skip_load_resource only: :destroy
   load_and_authorize_resource
+  
+
   
   before_action :set_sorting_params, only: [:index, :download]
   before_action :set_assignments, only: [:index, :download]

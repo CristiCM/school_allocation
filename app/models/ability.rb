@@ -15,18 +15,3 @@ class Ability
     end
   end
 end
-
-
-# You can single out one method and use custom auth.
-# Instead of load_and_authorize_resource you need to go for authorize_resources.
-
-# can :action_name, some_Model
-
-# authorize! :action_name, some_Model  in controller
-
-# When multiple user resources are shown and you want them to interact only with 
-# the ones created by them you need to specify that as:
-
-# can :update, Article do |article|
-#   article.user == user
-# end
