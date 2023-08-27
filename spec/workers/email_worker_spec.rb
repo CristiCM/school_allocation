@@ -40,5 +40,26 @@ RSpec.describe EmailWorker, type: :worker do
         expect(job.second_notification_time).to be_nil
       end
     end
+
+    context "with allocation_result_notification_email" do
+      
+      let!(:assignments) { create_list(:assignment, 3) }
+
+      before do
+        allow(UserMailer).to receive_message_chain(:allocation_result_notification_email, :deliver)
+      end
+      
+      it 'sends an email for each assignment' do
+        EmailWorker.new().perform(:allocation_result_notification_email)
+
+        assignments.each do |assignment|
+          user = assignment.user
+          allocation_information = assignment.school_specialization
+
+          expect(UserMailer).to have_received(:allocation_result_notification_email).with(user, !assignment.unassigned, allocation_information.display_name)
+        end
+      end
+    end
+
   end
 end

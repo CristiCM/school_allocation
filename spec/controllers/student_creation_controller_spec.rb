@@ -155,4 +155,69 @@ RSpec.describe StudentsCreationController, type: :controller do
             expect(assigns(:student).id).to eq(user.id)
         end
     end
+
+    describe 'GET #index' do
+        let!(:users) { create_list(:user, 30) }
+
+        context 'default sorting' do
+
+            before do
+                get :index
+            end
+
+            it 'sets default sorting parameters' do
+                expect(assigns(:sort_by)).to eq('users.created_at')
+                expect(assigns(:order)).to eq('DESC')
+            end
+
+            it 'grabs and orders the users' do
+                expect(assigns(:users)).to eq((users.sort_by(&:created_at)).reverse.first(10))
+            end
+
+            it 'paginates users' do
+                # a simple count uses a SQL query and returns everything from assignments
+                # not keeping count of the pagination so a .to_a is used.
+                expect(assigns(:users).to_a.count).to eq(10)
+            end
+
+            it 'renders the index template' do
+                expect(response).to render_template(:index)
+            end
+        end
+
+        context 'custom sorting' do
+
+            let(:sort_by) { 'users.email' }
+            let(:order) { 'ASC' }
+
+            before do
+                get :index, params: { sort_by: sort_by, order: order }
+            end
+
+            it 'sets custom sorting parameters' do
+                expect(assigns(:sort_by)).to eq(sort_by)
+                expect(assigns(:order)).to eq(order)
+            end
+
+            it 'grabs and orders the users' do
+                expect(assigns(:users)).to eq((users.sort_by(&:email)).first(10))
+            end
+
+            it 'paginates users limiting them to 10' do
+                expect(assigns(:users).to_a.count).to eq(10)
+            end
+
+            it 'renders the index template' do
+                expect(response).to render_template(:index)
+            end
+        end
+    end
+    
+    describe 'GET #download' do
+        let!(:users) { create_list(:user, 30) }
+        it 'returns a successful response' do
+            get :download, format: :xlsx
+            expect(response).to be_successful
+        end
+    end
 end

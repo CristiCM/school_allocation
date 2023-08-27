@@ -47,7 +47,7 @@ class EmailWorker
         Assignment.all.each do |assignment|
             user = assignment.user
             allocation_information = assignment.school_specialization
-            UserMailer.allocation_result_notification_email(user, assignment.school_specialization_id == 404, allocation_information.display_name).deliver
+            UserMailer.allocation_result_notification_email(user, !assignment.unassigned, allocation_information.display_name).deliver
         end
     end
 end

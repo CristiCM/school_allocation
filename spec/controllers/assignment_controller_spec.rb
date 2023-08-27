@@ -12,16 +12,20 @@ RSpec.describe AssignmentsController, type: :controller do
     end
 
     describe 'GET #new' do
+
+        let!(:first_user) { create(:user)}
+        let!(:second_user) { create(:user)}
+
+        it 'creates a @users instance variable with all preferenceless students' do
+            get :new
+
+            expect(assigns(:users).first.id).to eq(first_user.id)
+            expect(assigns(:users).last.id).to eq(second_user.id)
+        end
+
         it 'renders the new template' do
             get :new
             expect(response).to render_template(:new)
-        end
-    end
-
-    describe 'GET #index' do
-        it 'renders the index template' do
-            get :index
-            expect(response).to render_template(:index)
         end
     end
 
@@ -116,6 +120,78 @@ RSpec.describe AssignmentsController, type: :controller do
         it 'redirects to new_assignment_path' do
             delete :destroy, params: fake_params
             expect(response).to redirect_to(new_assignment_path)
+        end
+    end
+    
+    describe 'GET #index' do
+        # SINGLE ATTRIBUTE SORTING SO FROM TIME TO TIME, IF TIEBRAKERS == IT MIGHT
+        # BE A ORDER ISSUE.
+        
+        let!(:assignments) {create_list(:assignment, 30)}
+
+        context 'default sorting' do
+
+            before do
+                get :index
+            end
+
+            it 'sets default sorting parameters' do
+                expect(assigns(:sort_by)).to eq('users.admission_average')
+                expect(assigns(:order)).to eq('DESC')
+            end
+
+            it 'grabs and orders the assignments' do
+                expect(assigns(:assignments)).to eq((assignments.sort_by { |a| a.user.admission_average }).reverse.first(10))
+            end
+
+            it 'paginates assignments' do
+                # a simple count uses a SQL query and returns everything from assignments
+                # not keeping count of the pagination so a .to_a is used.
+                expect(assigns(:assignments).to_a.count).to eq(10)
+            end
+
+            it 'renders the index template' do
+                expect(response).to render_template(:index)
+            end
+        end
+
+        context 'custom sorting' do
+
+            let(:sort_by) { 'users.ro_grade' }
+            let(:order) { 'ASC' }
+
+            before do
+                get :index, params: { sort_by: sort_by, order: order }
+            end
+
+            it 'sets custom sorting parameters' do
+                expect(assigns(:sort_by)).to eq(sort_by)
+                expect(assigns(:order)).to eq(order)
+            end
+
+            it 'grabs and orders the assignments' do
+                expect(assigns(:assignments)).to eq((assignments.sort_by { |a| a.user.ro_grade }).first(10))
+            end
+
+            it 'paginates assignments limiting them to 10' do
+                expect(assigns(:assignments).to_a.count).to eq(10)
+            end
+
+            it 'renders the index template' do
+                expect(response).to render_template(:index)
+            end
+        end
+    end
+
+    describe 'GET #download' do
+
+        let!(:assignments) { create_list(:assignment, 10) }
+        before do
+            get :download, format: :xlsx
+        end
+
+        it 'returns a succesful response' do
+            expect(response).to be_successful
         end
     end
 end

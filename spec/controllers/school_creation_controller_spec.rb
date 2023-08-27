@@ -151,14 +151,6 @@ RSpec.describe SchoolsCreationController, type: :controller do
         end
     end
 
-    describe 'GET #index' do
-
-        it 'renders the index template' do
-            get :index
-            expect(response).to render_template(:index)
-        end
-    end
-
     describe 'GET #edit' do
         let!(:new_school_spec_record) { FactoryBot.create(:school_specialization) }
 
@@ -190,6 +182,89 @@ RSpec.describe SchoolsCreationController, type: :controller do
                 delete :destroy, params: { id: school_spec_record.id }
                 expect(response).to redirect_to(school_specializations_path)
             end
+        end
+    end
+
+    describe 'GET #index' do
+
+        let!(:school_specializations) do
+            start_value = (SchoolSpecialization.maximum(:spots_available) || 20) + 1
+            create_list(:school_specialization, 20).each_with_index do |ss, index|
+                ss.update(spots_available: start_value + index)
+            end
+        end
+
+        let!(:school) { create(:school, name: 'Unassigned School')}
+        let!(:unassigned_school_specialization) { create(:school_specialization, school_id: school.id) }
+
+        context 'default sorting' do
+            before do
+                get :index
+            end
+
+            it 'sets the default sorting parameters' do
+                expect(assigns(:sort_by)).to eq('school_specializations.spots_available')
+                expect(assigns(:order)).to eq('DESC')
+            end
+
+            it 'removes the unassigned record from the to be displayed specializations' do
+                expect(assigns(:school_specializations).any? { |ss| ss.id == unassigned_school_specialization.id}).to be_falsey
+            end
+
+            it 'grabs and orders the specializations by spots available' do
+                school_specializations.delete(unassigned_school_specialization)
+                expect(assigns(:school_specializations)).to eq((school_specializations.sort_by(&:spots_available)).reverse.first(10))
+            end
+            
+            it 'paginates the specializations and limits them to 10' do
+                expect(assigns(:school_specializations).to_a.count).to eq(10)
+            end
+
+
+            it 'renders the index template' do
+                get :index
+                expect(response).to render_template(:index)
+            end
+        end
+
+        context 'custom sorting' do
+            let(:order) { 'ASC' }
+            
+            before do
+                get :index, params: { order: order }
+            end
+
+            it 'sets the custom sorting parameters' do
+                expect(assigns(:sort_by)).to eq('school_specializations.spots_available')
+                expect(assigns(:order)).to eq('ASC')
+            end
+
+            it 'removes the unassigned record from the to be displayed specializations' do
+                expect(assigns(:school_specializations).any? { |ss| ss.id == unassigned_school_specialization.id}).to be_falsey
+            end
+
+            it 'grabs and orders the specializations' do
+                school_specializations.delete(unassigned_school_specialization)
+                expect(assigns(:school_specializations)).to eq(school_specializations.sort_by(&:spots_available).first(10))
+            end
+
+            it 'paginates the specializations and limits them to 10' do
+                expect(assigns(:school_specializations).to_a.count).to eq(10)
+            end
+
+            it 'renders the index template' do
+                get :index
+                expect(response).to render_template(:index)
+            end
+        end
+    end
+
+    describe 'GET #download' do
+        let!(:school_specializations) { create_list(:school_specialization, 20) }
+
+        it 'returns a successful response' do
+            get :download, format: :xlsx
+            expect(response).to be_successful
         end
     end
 end
