@@ -116,3 +116,5 @@ gem 'will_paginate'
 
 gem 'caxlsx'
 gem 'caxlsx_rails'
+
+gem 'rack-cors'
