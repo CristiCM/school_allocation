@@ -36,6 +36,7 @@ Rails.application.routes.draw do
   # API ROUTES UNDER API V1 SCOPE
   namespace :api do
     namespace :v1 do
+      
       root 'homes#new'
 
       devise_for :users, controllers: {
