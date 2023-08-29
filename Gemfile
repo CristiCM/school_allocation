@@ -118,3 +118,9 @@ gem 'caxlsx'
 gem 'caxlsx_rails'
 
 gem 'rack-cors'
+
+gem 'devise-jwt'
+
+gem 'dotenv-rails', groups: [:development, :test]
+
+gem 'fast_jsonapi'

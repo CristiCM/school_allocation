@@ -2,26 +2,28 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const UserList = () => {
+
+
   const [users, setUsers] = useState([]);
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
+  const fetchData = async () => {
+    try{
         const response = await axios.get('http://localhost:3000/api/v1/');
         setUsers(response.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
     }
+    catch(e){
+        console.error('Error fetching data:', e);
+    }
+  }
 
-    fetchData();
-  }, []);
+  useEffect(() => { fetchData(); }, []);
 
   return (
     <ul>
-      {users.map(user => (
-        <li key={user.id}>{user.email}</li>
-      ))}
+      {users.map(user => ( 
+      <li> 
+        {user.email}, {user.role}, {user.ro_grade !== null ? user.ro_grade : 'N/A'} 
+      </li> ))}
     </ul>
   );
 };
