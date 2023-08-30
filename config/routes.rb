@@ -4,7 +4,8 @@ Rails.application.routes.draw do
 
   devise_for :users, controllers: {
     sessions: 'users/sessions',
-    passwords: 'users/passwords'
+    passwords: 'users/passwords',
+    registrations: 'users/registrations'
   }
 
   resources :students, controller: 'students_creation', only: [:new, :create, :update, :destroy, :index, :edit] do
