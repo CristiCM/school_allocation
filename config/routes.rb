@@ -3,7 +3,8 @@ Rails.application.routes.draw do
   root 'homes#new'
 
   devise_for :users, controllers: {
-    sessions: 'users/sessions'
+    sessions: 'users/sessions',
+    passwords: 'users/passwords'
   }
 
   resources :students, controller: 'students_creation', only: [:new, :create, :update, :destroy, :index, :edit] do

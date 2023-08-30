@@ -1,34 +1,34 @@
-# frozen_string_literal: true
-
 class Users::PasswordsController < Devise::PasswordsController
-  # GET /resource/password/new
-  # def new
-  #   super
-  # end
+  skip_before_action :verify_authenticity_token
+  
+  respond_to :json
 
-  # POST /resource/password
-  # def create
-  #   super
-  # end
+  private
 
-  # GET /resource/password/edit?reset_password_token=abcdef
-  # def edit
-  #   super
-  # end
-
-  # PUT /resource/password
-  # def update
-  #   super
-  # end
-
-  # protected
-
-  # def after_resetting_password_path_for(resource)
-  #   super(resource)
-  # end
-
-  # The path used after sending reset password instructions
-  # def after_sending_reset_password_instructions_path_for(resource_name)
-  #   super(resource_name)
-  # end
+  def respond_with(resource, options = {})
+    case action_name
+    when 'create'
+      if resource.respond_to?(:errors) && !resource.errors.empty?
+        render json: {
+          status: { code: 401, message: resource.errors.full_messages.join(', ') }
+        }, status: :unauthorized
+      else
+        render json: {
+          status: { code: 200, message: 'Password reset instructions sent successfully.' }
+        }, status: :ok
+      end
+    when 'update'
+      if resource.errors.empty?
+        render json: {
+          status: { code: 200, message: 'Password updated.' }
+        }, status: :ok
+      else
+        render json: {
+          status: { code: 401, message: resource.errors.full_messages }
+        }, status: :unauthorized
+      end
+    else
+      super
+    end
+  end
 end
