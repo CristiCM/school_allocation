@@ -1,6 +1,14 @@
 class PreferencesController < ApplicationController
     load_and_authorize_resource
+    before_action :set_preferences
+
+    #TODO: Create Preferences serializer and continue from #create
     def new
+        if @preferences.any?
+            render_success("Student preferences.", :ok,  {preferences: @preferences})
+        else
+            render_error("Student has no preferences.", :no_content)
+        end
     end
 
     def create
@@ -38,5 +46,9 @@ class PreferencesController < ApplicationController
         current_user.preferences.order(:priority).each_with_index do |preference, index|
         preference.update(priority: index + 1)
         end
+    end
+
+    def set_preferences
+        @preferences = current_user.preferences
     end
 end
