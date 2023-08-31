@@ -1,39 +1,39 @@
 class PreferencesController < ApplicationController
+    skip_load_resource only: :destroy
     load_and_authorize_resource
     before_action :set_preferences
 
-    #TODO: Create Preferences serializer and continue from #create
-    def new
-        if @preferences.any?
-            render_success("Student preferences.", :ok,  {preferences: @preferences})
-        else
-            render_error("Student has no preferences.", :no_content)
-        end
-    end
-
     def create
-        begin
-            current_user.preferences.create!(preference_params)
-            flash[:success] = 'Preference was successfully created.'
-            redirect_to preferences_path
-        rescue ActiveRecord::RecordInvalid
-            flash[:alert] = 'You have already chosen this specialization.'
-            redirect_to preferences_path
+        @preference = current_user.preferences.build(preference_params)
+
+        if @preference.save
+            render_success("Preference was successfully created.", :created, {preference: @preference})
+        else
+            render_error(@preference.errors.full_messages.join(', '), :bad_request)
         end
     end
      
     def destroy
-        @preference = current_user.preferences.find(params[:id])
-        @preference.destroy
-
-        update_priority_after_deletion
+        @preference = @preferences.find_by(id: params[:id])
         
-        flash[:success] = 'Preference was successfully removed.'
-        
-        redirect_to preferences_path
+        if !@preference
+            render_error("Invalid record id!", :not_found)
+        elsif @preference.destroy
+            update_priority_after_deletion
+            render_success("Preference successfully destroyed!", :ok)
+        else
+            render_error(@preference.errors.full_messages.join(', '), :bad_request)
+        end
     end
+    
 
     def index
+        if @preferences.any?
+            data = PreferenceSerializer.new(@preferences).serializable_hash[:data].map {|data| data[:attributes]}
+            render_success("Student preferences.", :ok,  data)
+        else
+            render_error("Student has no preferences.", :no_content)
+        end
     end
     
     private
