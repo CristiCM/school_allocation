@@ -10,7 +10,9 @@ class User < ApplicationRecord
 
   validates :email, presence: true, uniqueness: true
   validates :admission_average, :en_average, :ro_grade, :mathematics_grade, :graduation_average, presence: true, if: :student?
-
+  validates :admission_average, :en_average, :ro_grade, :mathematics_grade, :graduation_average, numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 10 }
+  validates :mother_tongue_grade, numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 10 }, allow_nil: true
+  
   def jwt_payload
     super
   end

@@ -7,55 +7,62 @@ class StudentsCreationController < ApplicationController
   require 'sidekiq/api'
 
   def new
-    @student = User.new
+    students = User.where(role: 'student')
+
+    if students.any?
+      data = UserSerializer.new(students).serializable_hash[:data].map {|data| data[:attributes]}
+      render_success("Student records.", :ok, data)
+    else
+      render_error("There are no student records.", :no_content)
+    end
   end
 
   def create
-    @student = User.new(student_params)
-    @student.password = SecureRandom.hex
-    @student.role = "student"
+    @student = User.new(student_params.merge(password: SecureRandom.hex, role: 'student'))
 
     if @student.save
       @student.send_reset_password_instructions
-      flash[:success] = 'User created successfully.'
+      render_success("Student created successfully!", :created, {student: @student})
     else
-      flash[:alert] = 'User creation failed!'
+      render_error(@student.errors.full_messages.join(', '), :not_acceptable)
     end
-    redirect_to new_student_path
   end
 
   def update
-    @student = User.find(params[:id])
-    if @student.update(student_params)
-      flash[:success] = 'User updated successfully.'
+    @student = User.find_by(params[:id])
+
+    if !@student
+      render_error("Invalid record id!", :not_found)
+    elsif @student.update(student_params)
+      render_success("Student updated successfully!", :ok, {student: @student})
     else
-      flash[:alert] = 'User update failed!'
+      render_error(@student.errors.full_messages.join(', '), :bad_request)
     end
-    redirect_to students_path
   end
 
   def destroy
-    @student = User.find(params[:id])
+    @student = User.find_by(params[:id])
     
-    @student.destroy
-    flash[:success] = 'User was successfully deleted.'
-    
-    redirect_to students_path
+    if !@student
+      render_error("Invalid record id!", :not_found)
+    elsif @student.destroy
+      render_success("Student deleted successfully!", :ok)
+    else
+      render_error(@sutdent.errors.full_messages.join(', '), :bad_request)
+    end
   end
-
-  def edit
-    @student = User.find(params[:id])
-  end
-
+  
+  # Can receive params: :sort_by, :order, :page(pagination)
   def index
     @users = apply_pagination(@users)
-
+    data = {students: UserSerializer.new(@users).serializable_hash[:data].map {|data| data[:attributes]}}
+    render_success("Students, sorted, ordered, paginated", :ok, data)
   end
 
+  # Can receive params: :sort_by, :order
   def download
-    respond_to do |format|
-      format.xlsx { render xlsx: "download", filename: "students.xlsx" }
-    end
+    data = ExcelGenerator.generate_for_student_creation(@users)
+    send_data data, filename: "Students.xlsx", type: Mime::Type.lookup_by_extension('xlsx').to_s
   end
 
   private

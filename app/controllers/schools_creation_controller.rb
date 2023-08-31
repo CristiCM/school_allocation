@@ -27,7 +27,7 @@ class SchoolsCreationController < ApplicationController
       elsif @school_specialization.save
         render_success("Specialization created!", :created, {school_specialization: @school_specialization})
       else
-        render_error("Specialization creation failed!", :bad_request)
+        render_error(@school_specialization.errors.full_messages.join(', '), :bad_request)
       end
     end
 
@@ -39,7 +39,7 @@ class SchoolsCreationController < ApplicationController
       elsif @school_specialization.update(school_specialization_params)
         render_success("Specialization updated!", :ok, {school_specialization: @school_specialization})
       else
-        render_error("Update failed!", :bad_request)
+        render_error(@school_specialization.errors.full_messages.join(', '), :bad_request)
       end
     end
     
@@ -67,7 +67,7 @@ class SchoolsCreationController < ApplicationController
     # Can receive params: :order
     def download
       data = ExcelGenerator.generate_for_school_specializations(@school_specializations)
-      send_data data, filename: "School Specializations.xlsx", type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      send_data data, filename: "School Specializations.xlsx", type: Mime::Type.lookup_by_extension('xlsx').to_s
     end
     
 
