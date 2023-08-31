@@ -1,63 +1,80 @@
 class SchoolsCreationController < ApplicationController
   load_and_authorize_resource :SchoolSpecialization
-
   before_action :set_sorting_params, only: [:index, :download]
   before_action :set_school_specializations, only: [:index, :download]
+  PAGINATION_RECORD_NUMBER = 10
 
     def new
-      @school_specialization = SchoolSpecialization.new
-    end
 
+      data = {
+        schools: SchoolSerializer.new(School.all).serializable_hash[:data].map { |data| data[:attributes] },
+        tracks: TrackSerializer.new(Track.all).serializable_hash[:data].map { |data| data[:attributes] },
+        specializations: SpecializationSerializer.new(Specialization.all).serializable_hash[:data].map { |data| data[:attributes] }
+      }
+
+      if !School.any? || !Track.any? || !Specialization.any?
+        render_success("School, Track, Spec records.", :partial_content, data)
+      else
+        render_success("School, Track, Spec records.", :ok, data)
+      end
+    end
+  
     def create
       @school_specialization = SchoolSpecialization.new(school_specialization_params)
       
-      if @school_specialization.save
-        flash[:success] = 'SchoolSpecialization instance created'
+      if SchoolSpecialization.exists?(school_id: school_specialization_params[:school_id], track_id: school_specialization_params[:track_id], specialization_id: school_specialization_params[:specialization_id])
+        render_error("Specialization already exists!", :conflict)
+      elsif @school_specialization.save
+        render_success("Specialization created!", :created, {school_specialization: @school_specialization})
       else
-        flash[:alert] = 'Instance creation failed!'
+        render_error("Specialization creation failed!", :bad_request)
       end
-      redirect_to new_school_specialization_path
     end
 
     def update
-      @school_specialization = SchoolSpecialization.find(params[:id])
-      if @school_specialization.update(school_specialization_params)
-        flash[:success] = 'Updated successfully!'
+      @school_specialization = SchoolSpecialization.find_by(params[:id])
+
+      if !@school_specialization
+        render_error("Invalid record id!", :not_found)
+      elsif @school_specialization.update(school_specialization_params)
+        render_success("Specialization updated!", :ok, {school_specialization: @school_specialization})
       else
-        flash[:alert] = 'Update failed!'
+        render_error("Update failed!", :bad_request)
       end
-      conditional_redirect
     end
     
     def destroy
+      @school_specialization = SchoolSpecialization.find_by(params[:id])
+      
       begin
-        @school_specialization = SchoolSpecialization.find(params[:id])
-        @school_specialization.destroy
-        flash[:success] = 'Record was successfully deleted.'
+        if !@school_specialization
+          render_error("invalid record id!", :not_found)
+        elsif @school_specialization.destroy
+          render_success("Record deleted succesfully!", :ok)
+        end
       rescue
-        flash[:alert] = 'Delete failed: Students have that specialization selected.'
+        render_error("Delete failed: Students have that specialization selected.", :forbidden)
       end
-      conditional_redirect
-    end    
+    end
 
-    def edit
-      @school_specialization = SchoolSpecialization.find(params[:id])
-    end 
-
+    # Can receive params: :order, :page(pagination)
     def index
       @school_specializations = apply_pagination(@school_specializations)
+      data = {school_specializations: SchoolSpecializationSerializer.new(@school_specializations).serializable_hash[:data].map {|data| data[:attributes]}}
+      render_success("School Specializations, ordered and paginated.", :ok, data)
+    end
+
+    # Can receive params: :order
+    def download
+      data = ExcelGenerator.generate_for_school_specializations(@school_specializations)
+      send_data data, filename: "School Specializations.xlsx", type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     end
     
-    def download
-      respond_to do |format|
-        format.xlsx { render xlsx: "download", filename: "School Specializations.xlsx" }
-      end
-    end
 
     private
 
     def set_sorting_params
-      @sort_by = params[:sort_by] || 'school_specializations.spots_available'
+      @sort_by = 'school_specializations.spots_available'
       @order = params[:order] || 'DESC'
     end
     
@@ -74,17 +91,8 @@ class SchoolsCreationController < ApplicationController
     end
     
     def apply_pagination(school_specializations)
-      school_specializations.paginate(page: params[:page], per_page: 10)
-    end
-
-    def conditional_redirect
-      if request.referrer && request.referrer.include?('edit') || request.referrer && request.referrer.include?('specializations')
-        redirect_to school_specializations_path
-      else
-        redirect_to new_school_specialization_path
-      end
-    end
-    
+      school_specializations.paginate(page: params[:page], per_page: PAGINATION_RECORD_NUMBER)
+    end   
 
     def school_specialization_params
       params.require(:school_specialization).permit(:school_id, :track_id, :specialization_id, :spots_available)
