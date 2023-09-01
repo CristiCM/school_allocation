@@ -24,13 +24,15 @@ Rails.application.routes.draw do
 
   resources :preferences, only: [:new, :create, :destroy, :index]
 
-  resources :assignments, only: [:new, :create, :destroy, :index] do
+  resources :assignments, only: [:new, :index] do
     collection do
       get :download
     end
   end
 
   resources :assignments_reset, only: [:destroy]
+
+  resources :jobs, only: [:create, :destroy, :show]
   
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'

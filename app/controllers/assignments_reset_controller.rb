@@ -1,4 +1,5 @@
 class AssignmentsResetController < ApplicationController
+    skip_load_resource only: :destroy
     load_and_authorize_resource :Assignment
 
     def destroy
