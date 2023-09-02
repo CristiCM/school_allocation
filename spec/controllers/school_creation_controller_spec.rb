@@ -1,17 +1,17 @@
 require 'rails_helper'
 
 RSpec.describe SchoolsCreationController, type: :controller do
-    let(:admin) { FactoryBot.create(:user, role: 'admin') }
+    let(:admin) { create(:user, role: 'admin') }
 
-    let!(:school) { FactoryBot.create(:school)}
-    let!(:track) { FactoryBot.create(:track)}
-    let!(:specialization) { FactoryBot.create(:specialization)}
+    let!(:school) { create(:school)}
+    let!(:track) { create(:track)}
+    let!(:specialization) { create(:specialization)}
 
     let(:school_spec_params) do 
         {
-            school_id: School.last.id, 
-            track_id: Track.last.id,
-            specialization_id: Specialization.last.id,
+            school_id: school.id, 
+            track_id: track.id,
+            specialization_id: specialization.id,
             spots_available: 2
         }
     end
@@ -21,30 +21,96 @@ RSpec.describe SchoolsCreationController, type: :controller do
     end
 
     describe 'GET #new' do
-        
-        it 'renders the new template' do
-            get :new
-            expect(response).to render_template(:new)
+        context 'if all are present School/Track/Spec' do
+
+            it 'returns a 200 status' do
+                get :new
+                expect(response).to have_http_status(200)
+            end
+
+            it 'returns schools with the proper attributes and matching ids' do
+                get :new
+                parsed_response = JSON.parse(response.body)
+                first_school = parsed_response["data"]["schools"].first
+
+                expect(first_school.keys).to match_array([
+                    "id",
+                    "name",
+                    "created_at"
+                ])
+
+                expect(first_school["id"]).to eq(school.id)
+            end
+
+            it 'returns tracks with the proper attributes and matching ids' do
+                get :new
+                parsed_response = JSON.parse(response.body)
+                first_track = parsed_response["data"]["tracks"].first
+
+                expect(first_track.keys).to match_array([
+                    "id",
+                    "name",
+                    "created_at"
+                ])
+
+                expect(first_track["id"]).to eq(track.id)
+            end
+
+            it 'returns schools with the proper attributes and matching ids' do
+                get :new
+                parsed_response = JSON.parse(response.body)
+                first_specialization = parsed_response["data"]["specializations"].first
+
+                expect(first_specialization.keys).to match_array([
+                    "id",
+                    "name",
+                    "created_at"
+                ])
+
+                expect(first_specialization["id"]).to eq(specialization.id)
+            end
         end
 
-        it 'initializes a new SchoolSpecialization instance' do
-            get :new
-            expect(assigns(:school_specialization)).to be_a_new(SchoolSpecialization)
+        context 'if any of the 3, School/Track/Spec are missing' do
+            before do
+                School.destroy_all
+            end
+
+            it 'returns a 206 status' do
+                get :new
+                expect(response).to have_http_status(206)
+            end
         end
     end
 
     describe 'POST #create' do
         
+        it 'creates a new school specialization with the provided params' do
+            expect { post :create, params: {school_specialization: school_spec_params }}.to change {SchoolSpecialization.count}.by(1)
+        end
+
         context 'with valid params' do
 
-            it 'creates a new school specialization with the provided params' do
-                expect { post :create, params: {school_specialization: school_spec_params }}.to change {SchoolSpecialization.count}.by(1)
+            it 'returns a 201 status' do
+                post :create, params: {school_specialization: school_spec_params}
+                expect(response).to have_http_status(201)
             end
 
-            it 'redirects to new_school_specialization_path with a success flash' do
-                post :create, params: {school_specialization: school_spec_params }
-                expect(response).to redirect_to(new_school_specialization_path)
-                expect(flash[:success]).to eq('SchoolSpecialization instance created')
+            it 'returns the school_specialization with proper attributes and matching id' do
+                post :create, params: {school_specialization: school_spec_params}
+                parsed_response = JSON.parse(response.body)
+                school_specialization = parsed_response["data"]["school_specialization"]
+
+                expect(school_specialization.keys).to match_array([
+                    "id",
+                    "school_id",
+                    "track_id",
+                    "specialization_id",
+                    "spots_available",
+                    "created_at"
+                ])
+
+                expect(school_specialization["id"]).to eq(SchoolSpecialization.last.id)
             end
         end
 
@@ -54,17 +120,32 @@ RSpec.describe SchoolsCreationController, type: :controller do
                 school_spec_params[:spots_available] = -10
             end
 
-            it 'redirects to new_school_specialization_path with a alert flash' do
+            it 'returns a 400 status' do
                 post :create, params: { school_specialization: school_spec_params }
-                expect(response).to redirect_to(new_school_specialization_path)
-                expect(flash[:alert]).to eq('Instance creation failed!')
+                expect(response).to have_http_status(400)
             end
-        end    
+        end
+
+        context 'if the school_specialization already exists' do
+            before do
+                SchoolSpecialization.create(school_spec_params)
+            end
+
+            it 'returns a 409 status' do
+                post :create, params: { school_specialization: school_spec_params }
+                expect(response).to have_http_status(409)
+            end
+        end
     end
 
+    #TODO: CONTINUE FROM HERE
     describe 'PATCH #update' do
+        let!(:school_spec_record) { create(:school_specialization) }
 
-        let!(:school_spec_record) { FactoryBot.create(:school_specialization)}
+        it 'pulls the specific record by bet id and assigns it to a instance variable' do
+            patch :update, params: { id: school_spec_record.id, school_specialization: school_spec_params }
+            expect(assigns(:school_specialization).id).to eq(school_spec_record.id)
+        end
 
         context 'with valid params' do
             

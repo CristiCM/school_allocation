@@ -20,15 +20,13 @@ class PreferencesController < ApplicationController
         elsif @preference.destroy
             update_priority_after_deletion
             render_success("Preference successfully destroyed!", :ok)
-        else
-            render_error(@preference.errors.full_messages.to_sentence, :bad_request)
         end
     end
     
 
     def index
         if @preferences.any?
-            data = PreferenceSerializer.new(@preferences).serializable_hash[:data].map {|data| data[:attributes]}
+            data = { preferences: PreferenceSerializer.new(@preferences).serializable_hash[:data].map {|data| data[:attributes]} }
             render_success("Student preferences.", :ok,  data)
         else
             render_error("Student has no preferences.", :ok)

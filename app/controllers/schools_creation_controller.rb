@@ -25,7 +25,8 @@ class SchoolsCreationController < ApplicationController
       if SchoolSpecialization.exists?(school_id: school_specialization_params[:school_id], track_id: school_specialization_params[:track_id], specialization_id: school_specialization_params[:specialization_id])
         render_error("Specialization already exists!", :conflict)
       elsif @school_specialization.save
-        render_success("Specialization created!", :created, {school_specialization: @school_specialization})
+        data = {school_specialization: SchoolSpecializationSerializer.new(@school_specialization).serializable_hash[:data][:attributes]}
+        render_success("Specialization created!", :created, data)
       else
         render_error(@school_specialization.errors.full_messages.to_sentence, :bad_request)
       end
@@ -37,7 +38,8 @@ class SchoolsCreationController < ApplicationController
       if !@school_specialization
         render_error("Invalid record id!", :not_found)
       elsif @school_specialization.update(school_specialization_params)
-        render_success("Specialization updated!", :ok, {school_specialization: @school_specialization})
+        data = {school_specialization: SchoolSpecializationSerializer.new(@school_specialization).serializable_hash[:data][:attributes]}
+        render_success("Specialization updated!", :ok, data)
       else
         render_error(@school_specialization.errors.full_messages.to_sentence, :bad_request)
       end

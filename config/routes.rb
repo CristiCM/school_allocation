@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
   get '/current_user', to: 'current_user#index'
-  root 'homes#new'
-
+ 
   devise_for :users, controllers: {
     sessions: 'users/sessions',
     passwords: 'users/passwords',
