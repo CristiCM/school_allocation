@@ -19,6 +19,14 @@ class ApplicationController < ActionController::Base
         status: {code: Rack::Utils::SYMBOL_TO_STATUS_CODE[status], message: message}
       }, status: status
     end
+
+    def set_job
+      @job = Job.first
+      unless @job
+        render_error("Job record does not exist", :not_found)
+        return
+      end
+    end
 end
 
 

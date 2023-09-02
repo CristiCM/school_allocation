@@ -27,7 +27,7 @@ class SchoolsCreationController < ApplicationController
       elsif @school_specialization.save
         render_success("Specialization created!", :created, {school_specialization: @school_specialization})
       else
-        render_error(@school_specialization.errors.full_messages.join(', '), :bad_request)
+        render_error(@school_specialization.errors.full_messages.to_sentence, :bad_request)
       end
     end
 
@@ -39,7 +39,7 @@ class SchoolsCreationController < ApplicationController
       elsif @school_specialization.update(school_specialization_params)
         render_success("Specialization updated!", :ok, {school_specialization: @school_specialization})
       else
-        render_error(@school_specialization.errors.full_messages.join(', '), :bad_request)
+        render_error(@school_specialization.errors.full_messages.to_sentence, :bad_request)
       end
     end
     

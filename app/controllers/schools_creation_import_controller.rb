@@ -1,18 +1,13 @@
 class SchoolsCreationImportController < ApplicationController
-  load_and_authorize_resource :School
+  authorize_resource :School
 
     def create
-        Rails.logger.info "Importing file..."
         begin
           DataImporter.new(params[:file]).import_csv
 
-          render json: {
-                status: {code: 200, message: "Successfully imported!"}
-                }, status: :ok
+          render_success("Successfully imported!", :ok)
         rescue => e
-          render json: {
-            status: {code: 401, message: "Import failed: #{e.message}"}
-          }, status: :failed
+          render_error("Import failed: #{e.message}", :bad_request)
         end
     end
 end

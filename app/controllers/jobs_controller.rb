@@ -1,48 +1,45 @@
 class JobsController < ApplicationController
-  skip_load_resource only: :destroy
-  load_and_authorize_resource
-  def create
-    job_manager = JobManager.new(job_params)
+  skip_before_action :verify_authenticity_token
+  authorize_resource
+  before_action :set_job
 
-    if Job.first.allocation_done?
-      flash[:alert] = 'The allocation is already done!'
+  def create
+    job_manager = JobManager.new(creation_params)
+
+    if @job.allocation_done?
+      render_error("The allocation is already done!", :unprocessable_entity)
     elsif job_manager.create
-      flash[:success] = 'Job created successfully!'
+      render_success("Job created successfully!", :created, JobSerializer.new(@job.reload).serializable_hash[:data][:attributes])
     else
-      flash[:alert] = 'Please select a date first!'
+      render_error("Job creation failed: Bad params.", :bad_request)
     end
   end
+
+
 
   def destroy
-    @job = Job.find_by(id: params[:id])
-
-    if !@job
-      render_error("Invalid record id!", :not_found)
-      return
-    end
-    
-    job_manager = JobManager.new(job_params.merge(id: params[:id]))
+    job_manager = JobManager.new(destroy_params)
       
     if job_manager.destroy
-      render_success("Job deleted successfully!", :ok, JobSerializer.new(job).serializable_hash[:data][:attributes])
+      render_success("Job deleted successfully!", :ok, JobSerializer.new(@job.reload).serializable_hash[:data][:attributes])
     else
-      render_error(@job.errors.full_message.join(', '), :bad_request)
+      render_error(@job.errors.full_messages.to_sentence, :bad_request)
     end
   end
 
-  def show
-    job = Job.find_by(id: params[:id])
 
-    if !job
-      render_error("Invalid record id!", :bad_request)
-    else
-      render_success("Job time information.", :ok, JobSerializer.new(job).serializable_hash[:data][:attributes])
-    end
+
+  def show
+    render_success("Job time information.", :ok, JobSerializer.new(@job).serializable_hash[:data][:attributes])
   end
 
   private
-  def job_params
+
+  def creation_params
+    params.require(:job).permit(:first_notification, :second_notification, :allocation_date)
+  end
+  
+  def destroy_params
     params.require(:job).permit(:type)
-    #, :first_notification, :second_notification, :allocation_date
   end
 end

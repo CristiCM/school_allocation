@@ -24,42 +24,40 @@ class JobManager
 
   def initialize(params)
     @params = params
+    @job = Job.first
   end
 
   def create
-    return false unless at_least_one_date_present?
+    return false unless validate_job_params?
 
-    job = Job.first
     ALL_JOB_ATTRIBUTES.each do |job_key, job_attributes|
-      next unless @params[job_key] || job.allocation_done?
+      next unless @params[job_key]
+
 
       datetime_bucharest = Time.zone.parse(@params[job_key])
-      delete_job(job.send(job_attributes[:job_jid_attribute]))
+      delete_job(@job.send(job_attributes[:job_jid_attribute]))
 
       action = job_attributes[:action] || User.get_allocation_sorted_student_ids
       new_jid = job_attributes[:worker].perform_at(datetime_bucharest.utc, action)
 
-      job.update(
+      @job.update(
         job_attributes[:job_jid_attribute] => new_jid,
         job_attributes[:job_time_attribute] => datetime_bucharest
       )
-
-      job.update(allocation_done: true) if job_attributes[:worker] == AllocationWorker
     end
 
     true
   end
 
   def destroy
-    job = Job.first
     # even if the type: is given a symbol in the view, the URL changes it to a string.
     job_key = @params[:type].to_sym
     job_attributes = ALL_JOB_ATTRIBUTES[job_key]
 
     return false unless job_attributes
 
-    delete_job(job.send(job_attributes[:job_jid_attribute]))
-    job.update(
+    delete_job(@job.send(job_attributes[:job_jid_attribute]))
+    @job.update(
       job_attributes[:job_jid_attribute] => nil,
       job_attributes[:job_time_attribute] => nil
     )
@@ -69,8 +67,12 @@ class JobManager
 
   private
 
-  def at_least_one_date_present?
-    REQUIRED_DATE_PARAMS.any? { |param| @params[param].present? }
+  def validate_job_params?
+    REQUIRED_DATE_PARAMS.any? { |param| @params[param].present? && valid_datetime?(@params[param]) }
+  end
+
+  def valid_datetime?(date_time)
+    !Time.zone.parse(date_time).nil?
   end
 
   def delete_job(jid)

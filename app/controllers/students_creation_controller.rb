@@ -2,19 +2,17 @@ class StudentsCreationController < ApplicationController
   load_and_authorize_resource :User
 
   before_action :set_sorting_params, only: [:index, :download]
-  before_action :set_students, only: [:index, :download]
+  before_action :set_students, only: [:new, :index, :download]
   before_action :set_student, only: [:update, :destroy]
 
   require 'sidekiq/api'
 
   def new
-    students = User.where(role: 'student')
-
-    if students.any?
-      data = UserSerializer.new(students).serializable_hash[:data].map {|data| data[:attributes]}
+    if @students.any?
+      data = UserSerializer.new(@students).serializable_hash[:data].map {|data| data[:attributes]}
       render_success("Student records.", :ok, data)
     else
-      render_error("There are no student records.", :no_content)
+      render_error("There are no student records.", :ok)
     end
   end
 
@@ -25,7 +23,7 @@ class StudentsCreationController < ApplicationController
       @student.send_reset_password_instructions
       render_success("Student created successfully!", :created, {student: @student})
     else
-      render_error(@student.errors.full_messages.join(', '), :bad_request)
+      render_error(@student.errors.full_messages.to_sentence, :bad_request)
     end
   end
 
@@ -33,7 +31,7 @@ class StudentsCreationController < ApplicationController
     if @student.update(student_params)
       render_success("Student updated successfully!", :ok, {student: @student})
     else
-      render_error(@student.errors.full_messages.join(', '), :bad_request)
+      render_error(@student.errors.full_messages.to_sentence, :bad_request)
     end
   end
 
@@ -41,7 +39,7 @@ class StudentsCreationController < ApplicationController
     if @student.destroy
       render_success("Student deleted successfully!", :ok)
     else
-      render_error(@sutdent.errors.full_messages.join(', '), :bad_request)
+      render_error(@student.errors.full_messages.to_sentence, :bad_request)
     end
   end
   
@@ -62,8 +60,7 @@ class StudentsCreationController < ApplicationController
 
   def set_student
     @student = User.find_by(id: params[:id])
-    rescue ActiveRecord::RecordNotFound
-      render_error("Invalid record id!", :not_found)
+    render_error("Invalid record id!", :not_found) if !@student
   end
 
   def set_students

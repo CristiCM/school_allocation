@@ -1,6 +1,5 @@
 class PreferencesController < ApplicationController
-    skip_load_resource only: :destroy
-    load_and_authorize_resource
+    authorize_resource
     before_action :set_preferences
 
     def create
@@ -9,7 +8,7 @@ class PreferencesController < ApplicationController
         if @preference.save
             render_success("Preference was successfully created.", :created, {preference: @preference})
         else
-            render_error(@preference.errors.full_messages.join(', '), :bad_request)
+            render_error(@preference.errors.full_messages.to_sentence, :bad_request)
         end
     end
      
@@ -22,7 +21,7 @@ class PreferencesController < ApplicationController
             update_priority_after_deletion
             render_success("Preference successfully destroyed!", :ok)
         else
-            render_error(@preference.errors.full_messages.join(', '), :bad_request)
+            render_error(@preference.errors.full_messages.to_sentence, :bad_request)
         end
     end
     
@@ -32,7 +31,7 @@ class PreferencesController < ApplicationController
             data = PreferenceSerializer.new(@preferences).serializable_hash[:data].map {|data| data[:attributes]}
             render_success("Student preferences.", :ok,  data)
         else
-            render_error("Student has no preferences.", :no_content)
+            render_error("Student has no preferences.", :ok)
         end
     end
     
