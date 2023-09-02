@@ -7,12 +7,9 @@ RSpec.describe ApplicationController, type: :controller do
 
   describe 'unauthorized requests' do
     
-    it 'redirects you back to the root_path with a flash alert' do
-
-      get :index
-
-      expect(flash[:alert]).to eq('You do not have access to this page.')
-      expect(response).to redirect_to(root_path)
-    end  
+    it 'returns a 403 status' do
+      get :index 
+      expect(response).to have_http_status(403)
+    end
   end
 end

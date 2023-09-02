@@ -8,7 +8,7 @@ class AssignmentsController < ApplicationController
   # No-Preferences Students, Allows params[:page]
   def new
     data = UserSerializer.new(@students).serializable_hash[:data].map {|data| data[:attributes]}
-    if !@students
+    if @students.empty?
       render_success("All students have preferences!", :no_content, data)
     else
       render_success("Students with no preferences!", :ok, data)
@@ -25,7 +25,12 @@ class AssignmentsController < ApplicationController
         }
       end
     }
-    render_success("Assignments", :ok, data)
+
+    if @assignments.empty?
+      render_success("There are no assignments", :no_content, data)
+    else
+      render_success("List of assignments", :ok, data)
+    end
   end
   
 

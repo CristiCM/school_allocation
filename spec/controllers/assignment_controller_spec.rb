@@ -13,185 +13,185 @@ RSpec.describe AssignmentsController, type: :controller do
 
     describe 'GET #new' do
 
-        let!(:first_user) { create(:user)}
-        let!(:second_user) { create(:user)}
+        context "when all students have preferences" do
+            let(:preferences) { create_list(:preference, 30)}
 
-        it 'creates a @users instance variable with all preferenceless students' do
-            get :new
-
-            expect(assigns(:users).first.id).to eq(first_user.id)
-            expect(assigns(:users).last.id).to eq(second_user.id)
-        end
-
-        it 'renders the new template' do
-            get :new
-            expect(response).to render_template(:new)
-        end
-    end
-
-    describe 'POST #create' do
-        let(:fake_params) { {id: 1, type: "SomeType", first_notification: "Dummy", second_notification: "Dummy", allocation_date: "Dummy" } }
-
-        before do
-            allow(job_manager).to receive(:create)
-        end
-
-        it 'creates a new JobManager and calls the create method' do
-            post :create, params: { job: fake_params }
-            
-            expect(JobManager).to have_received(:new)
-            expect(job_manager).to have_received(:create)
-        end
-
-        context 'when the allocation is already done' do
-            it 'displays a alert flash message' do
-                Job.first.update( allocation_done: true )
-                post :create, params: { job: fake_params }
-                expect(flash[:alert]).to eq('The allocation is already done!')
-            end  
-        end
-
-        context 'with valid params' do
             before do
-                allow(job_manager).to receive(:create).and_return(true)
+                get :new
             end
 
-            it 'it displays a success flash message' do
-                post :create, params: { job: fake_params }
-                expect(flash[:success]).to eq('Job created successfully!')
+            it 'returns a 204 status' do
+                expect(response).to have_http_status(204)
+            end
+
+            it 'returns a empty students array' do
+                parsed_response = JSON.parse(response.body)
+                expect(parsed_response["students"]).to eq(nil)
             end
         end
 
-        context 'with invalid params' do
+        context 'when no-preference stundents exist' do
+            let!(:users) { create_list(:user, 20) }
+
             before do
-                allow(job_manager).to receive(:create).and_return(false)
+                get :new
             end
 
-            it 'it displays a alert flash message' do
-                post :create, params: { job: fake_params }
-                expect(flash[:alert]).to eq('Please select a date first!')
-            end
-        end
-
-        it 'redirects to new_assignment_path' do
-            post :create, params: { job: fake_params }
-            expect(response).to redirect_to(new_assignment_path)
-        end
-    end
-
-    describe 'DELETE #destroy' do
-        let(:fake_assignment) { double('Assignment') }
-        let(:fake_params) { { id: 1, type: "SomeType" } }
-    
-        before do
-            allow(Assignment).to receive(:find).and_return(fake_assignment)
-            allow(job_manager).to receive(:destroy)
-        end
-
-        it 'creates a new JobManager and calls the destroy method' do
-            delete :destroy, params: fake_params
-
-            expect(JobManager).to have_received(:new)
-            expect(job_manager).to have_received(:destroy)
-        end
-
-        context "with valid params" do
-            before do
-                allow(job_manager).to receive(:destroy).and_return(true)
+            it 'returns a 200 status' do
+                expect(response).to have_http_status(200)
             end
 
-            it 'redirects to new_assignment_path with success flash' do
-                delete :destroy, params: fake_params
-                expect(flash[:success]).to eq('Job deleted successfully!')
-            end
-        end
-
-        context "with invalid params" do
-            before do
-                allow(job_manager).to receive(:destroy).and_return(false)
+            it 'returns students paginated with a limit of 10' do
+                parsed_response = JSON.parse(response.body)
+                expect(parsed_response["data"].size).to eq(10)
             end
 
-            it 'redirects to new_assignment_path with success flash' do
-                delete :destroy, params: fake_params
-                expect(flash[:alert]).to eq("There's nothing to delete!")
+            it 'returns users with required attributes' do
+                parsed_response = JSON.parse(response.body)
+                attribute_array = [
+                    "id",
+                    "email",
+                    "created_at",
+                    "admission_average",
+                    "en_average",
+                    "ro_grade",
+                    "mathematics_grade",
+                    "mother_tongue",
+                    "mother_tongue_grade",
+                    "graduation_average",
+                    "role",
+                    "jti"
+                ]
+                expect(parsed_response["data"].first.keys).to match_array(attribute_array)
             end
-        end
-        
-        it 'redirects to new_assignment_path' do
-            delete :destroy, params: fake_params
-            expect(response).to redirect_to(new_assignment_path)
         end
     end
     
     describe 'GET #index' do
-        # SINGLE ATTRIBUTE SORTING SO FROM TIME TO TIME, IF TIEBRAKERS == IT MIGHT
-        # BE A ORDER ISSUE.
-        
-        let!(:assignments) {create_list(:assignment, 30)}
 
-        context 'default sorting' do
-
+        context 'when there are no assingments' do
             before do
                 get :index
             end
 
-            it 'sets default sorting parameters' do
+            it 'returns a 204 status' do
+                expect(response).to have_http_status(204)
+            end
+        end
+
+        context 'when assignments exist and the sorting is default' do
+            let!(:assignments) { create_list(:assignment, 20)}
+            
+            before do
+                get :index
+            end
+
+            it 'returns a 200 status' do
+                expect(response).to have_http_status(200)
+            end
+
+            it 'returns assignments paginated with a limit of 10' do
+                parsed_response = JSON.parse(response.body)
+                expect(parsed_response["data"]["assignments"].size).to eq(10)
+            end
+
+            it 'returns assignment with required attributes' do
+                parsed_response = JSON.parse(response.body)
+                first_assignment = parsed_response["data"]["assignments"].first["assignment"]
+                expect(first_assignment.keys).to match_array([
+                    "id",
+                    "user_id",
+                    "school_specialization_id",
+                    "created_at",
+                    "unassigned"
+                ])
+            end
+
+            it 'returns user with required attributes' do
+                parsed_response = JSON.parse(response.body)
+                first_user = parsed_response["data"]["assignments"].first["user"]
+
+                expect(first_user.keys).to match_array([
+                    "id",
+                    "email",
+                    "created_at",
+                    "admission_average",
+                    "en_average",
+                    "ro_grade",
+                    "mathematics_grade",
+                    "mother_tongue",
+                    "mother_tongue_grade",
+                    "graduation_average",
+                    "role",
+                    "jti"
+                ])
+            end
+
+            it 'returns matching user/assignment' do
+                parsed_response = JSON.parse(response.body)
+                first_assignment = parsed_response["data"]["assignments"].first["assignment"]
+                first_user = parsed_response["data"]["assignments"].first["user"]
+
+                expect(first_assignment["user_id"]).to eq(first_user["id"])
+            end
+
+            it 'sets the proper default sorting and ordering params' do
                 expect(assigns(:sort_by)).to eq('users.admission_average')
                 expect(assigns(:order)).to eq('DESC')
             end
 
-            it 'grabs and orders the assignments' do
-                expect(assigns(:assignments)).to eq((assignments.sort_by { |a| a.user.admission_average }).reverse.first(10))
-            end
+            it 'orders the assignments correctly new' do
+                parsed_response = JSON.parse(response.body)
+                response_assignment_ids = parsed_response["data"]["assignments"].map { |entry| entry["assignment"]["id"] }
+                
+                correct_assignments = assignments.sort_by { |assignment| assignment.user.admission_average }.reverse.first(10)
+                correct_assignments_ids = correct_assignments.map {|assignment| assignment["id"]}
 
-            it 'paginates assignments' do
-                # a simple count uses a SQL query and returns everything from assignments
-                # not keeping count of the pagination so a .to_a is used.
-                expect(assigns(:assignments).to_a.count).to eq(10)
-            end
-
-            it 'renders the index template' do
-                expect(response).to render_template(:index)
-            end
-        end
-
-        context 'custom sorting' do
-
-            let(:sort_by) { 'users.ro_grade' }
-            let(:order) { 'ASC' }
-
-            before do
-                get :index, params: { sort_by: sort_by, order: order }
-            end
-
-            it 'sets custom sorting parameters' do
-                expect(assigns(:sort_by)).to eq(sort_by)
-                expect(assigns(:order)).to eq(order)
-            end
-
-            it 'grabs and orders the assignments' do
-                expect(assigns(:assignments)).to eq((assignments.sort_by { |a| a.user.ro_grade }).first(10))
-            end
-
-            it 'paginates assignments limiting them to 10' do
-                expect(assigns(:assignments).to_a.count).to eq(10)
-            end
-
-            it 'renders the index template' do
-                expect(response).to render_template(:index)
+                expect(correct_assignments_ids).to eq(response_assignment_ids)
             end
         end
     end
 
-    describe 'GET #download' do
+        context 'when assignments exist and the sorting is custom' do
+            let!(:assignments) { create_list(:assignment, 20)}
+            
+            before do
+                get :index, params: { sort_by: 'users.ro_grade', order: 'ASC'}
+            end
 
-        let!(:assignments) { create_list(:assignment, 10) }
-        before do
-            get :download, format: :xlsx
+            it 'sets the proper default sorting and ordering params' do
+                expect(assigns(:sort_by)).to eq('users.ro_grade')
+                expect(assigns(:order)).to eq('ASC')
+            end
+
+            it 'orders the assignments correctly new' do
+                parsed_response = JSON.parse(response.body)
+                response_assignment_ids = parsed_response["data"]["assignments"].map { |entry| entry["assignment"]["id"] }
+                
+                correct_assignments = assignments.sort_by { |assignment| assignment.user.ro_grade }.first(10)
+                correct_assignments_ids = correct_assignments.map {|assignment| assignment["id"]}
+
+                expect(correct_assignments_ids).to eq(response_assignment_ids)
+            end
         end
 
-        it 'returns a succesful response' do
-            expect(response).to be_successful
+    describe 'GET #download' do
+        let!(:assignments) { create_list(:assignment, 30) }
+
+        before do
+            get :download
+        end
+
+        it 'returns a 200 OK status' do
+            expect(response).to have_http_status(200)
+        end
+
+        it 'returns the correct content type' do
+            expect(response.content_type).to eq(Mime::Type.lookup_by_extension('xlsx').to_s)
+        end
+
+        it 'returns the expected content disposition (filename)' do
+            expect(response.headers['Content-Disposition']).to include("Assignments.xlsx")
         end
     end
 end
