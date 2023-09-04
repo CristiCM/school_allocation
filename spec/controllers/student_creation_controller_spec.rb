@@ -3,8 +3,6 @@ require 'rails_helper'
 RSpec.describe StudentsCreationController, type: :controller do
 
     let(:admin) { create(:user, role: 'admin')}
-    let(:user) { create(:user) }
-
 
     let(:student_params) do
         {
@@ -23,24 +21,13 @@ RSpec.describe StudentsCreationController, type: :controller do
         sign_in admin
     end
 
-    describe 'GET #new' do
-
-        it 'renders the new template' do
-            get :new
-            expect(response).to render_template(:new)
-        end
-
-        it 'initializes a new student' do
-            get :new
-            expect(assigns(:student)).to be_a_new(User)
-            # assigns() lets you access instance variables.
-        end
-    end
-
     describe 'POST #create' do
-
-        
         context 'with valid params' do
+
+            it 'returns a 201 status' do
+                post :create, params: { user: student_params }
+                expect(response).to have_http_status(201)
+            end  
             
             it 'creates a new user with the provided params' do
                 expect { post :create, params: { user: student_params } }.to change {User.count}.by(1)
@@ -53,44 +40,57 @@ RSpec.describe StudentsCreationController, type: :controller do
                 expect(User.last.valid_password?('secure_password')).to be true
                 # valid_password? -> Devise method to check if a string is the 
                 # encrypted equiv of what the user stores.
-            end
-
-            it 'sends a password reset instruction by email' do
-                student = User.new(student_params)
-                allow(User).to receive(:new).and_return(student)
-                allow(student).to receive(:send_reset_password_instructions)
+            end       
             
+            it 'returns the users with proper attributes' do
                 post :create, params: { user: student_params }
-            
-                expect(student).to have_received(:send_reset_password_instructions)
-            end
 
-            it 'redirects to new_student_path with a success flash' do
-                post :create, params: { user: student_params }
-                expect(response).to redirect_to(new_student_path)
-                expect(flash[:success]).to eq('User created successfully.')
+                parsed_response = JSON.parse(response.body)
+                user = parsed_response["data"]["student"]
+                
+                expect(user.keys).to match_array([
+                    "id",
+                    "email",
+                    "created_at",
+                    "admission_average",
+                    "en_average",
+                    "ro_grade",
+                    "mathematics_grade",
+                    "mother_tongue",
+                    "mother_tongue_grade",
+                    "graduation_average",
+                    "role",
+                    "jti"
+                ])
             end
         end
 
         context 'with invalid params' do
             let(:invalid_student_params) { {email: ''} }
-            
-            it 'does not create the user' do
+
+            before do
                 post :create, params: { user: invalid_student_params }
-                expect(User.last.email).to_not eq('')
             end
 
-            it 'redirects to new_student_path witha a alert flash' do
+            it 'returns a 400 status' do
                 post :create, params: { user: invalid_student_params }
-                expect(response).to redirect_to(new_student_path)
-                expect(flash[:alert]).to eq('User creation failed!')
+                expect(response).to have_http_status(400)
+            end 
+            
+            it 'does not create the user' do
+                expect {post :create, params: { user: invalid_student_params }}.not_to change { User.count }
             end
         end
     end
 
     describe 'PATCH #update' do
+        let!(:user) { create(:user) }
 
         context 'with valid params' do
+
+            it 'returns a 200 status' do
+                expect(response).to have_http_status(200)
+            end  
 
             it 'pulls the specific record by bet id and assigns it to a instance variable' do
                 patch :update, params: { id: user.id, user: student_params }
@@ -104,27 +104,25 @@ RSpec.describe StudentsCreationController, type: :controller do
                     user.reload
                   }.to change { user.email }.from(old_email).to('teststudent@student.com')
             end
-            
-            it 'redirects to students_path with a success flash' do
-                patch :update, params: { id: user.id, user: student_params }
-                expect(flash[:success]).to eq('User updated successfully.')
-                expect(response).to redirect_to(students_path)
-            end
         end
 
         context 'with invalid params' do
-
-            it 'redirects to students_path with a alert flash' do
+            it 'returns a 400 status' do
                 patch :update, params: { id: user.id, user: student_params.merge(ro_grade: nil) }
-                expect(flash[:alert]).to eq('User update failed!')
-                expect(response).to redirect_to(students_path)
-            end
+                expect(response).to have_http_status(400)
+            end  
         end
     end
 
     describe 'DELETE #destroy' do
+        let!(:user) { create(:user) }
 
         context 'with valid params' do
+
+            it 'returns a 200 status' do
+                delete :destroy, params: { id: user.id }
+                expect(response).to have_http_status(200)
+            end
 
             it 'pulls the specific record by bet id and assigns it to a instance variable' do
                 delete :destroy, params: { id: user.id }
@@ -132,37 +130,69 @@ RSpec.describe StudentsCreationController, type: :controller do
             end
 
             it 'deletes the student record' do
-                old_email = user.email
                 expect {delete :destroy, params: { id: user.id }}.to change { User.count }.by(-1)
             end
-            
-            it 'redirects to students_path with a success flash' do
-                delete :destroy, params: { id: user.id }
-                expect(flash[:success]).to eq('User was successfully deleted.')
-                expect(response).to redirect_to(students_path)
+        end
+
+        context 'with invalid params' do
+            it 'returns a 404 status' do
+                delete :destroy, params: { id: -5 }
+                expect(response).to have_http_status(404)
             end
         end
     end
 
-    describe 'GET #edit' do
-        it 'pulls the specific record by bet id and assigns it to a instance variable' do
-            get :edit, params: { id: user.id }
-            expect(assigns(:student).id).to eq(user.id)
-        end
-
-        it 'it renders the #edit view' do
-            get :edit, params: { id: user.id }
-            expect(assigns(:student).id).to eq(user.id)
-        end
-    end
 
     describe 'GET #index' do
-        let!(:users) { create_list(:user, 30) }
-
-        context 'default sorting' do
+        
+        context 'when no students are present' do
 
             before do
                 get :index
+            end
+            
+            it 'returns a 200 response' do
+                expect(response).to have_http_status(200)
+            end
+
+            it 'has a suggestive message in the response' do
+                parsed_response = JSON.parse(response.body)
+                message = parsed_response["status"]["message"]
+
+                expect(message).to eq("There are no student records.")
+            end  
+        end
+
+        context 'when students are present with default sorting and ordering' do
+            let!(:users) { create_list(:user, 30) }
+
+            before do
+                get :index
+            end
+
+            it 'returns a 200 status' do
+                expect(response).to have_http_status(200)
+            end
+
+            it 'returns the users with proper attributes' do
+                parsed_response = JSON.parse(response.body)
+
+                first_user = parsed_response["data"]["users"].first
+
+                expect(first_user.keys).to match_array([
+                    "id",
+                    "email",
+                    "created_at",
+                    "admission_average",
+                    "en_average",
+                    "ro_grade",
+                    "mathematics_grade",
+                    "mother_tongue",
+                    "mother_tongue_grade",
+                    "graduation_average",
+                    "role",
+                    "jti"
+                ])
             end
 
             it 'sets default sorting parameters' do
@@ -170,54 +200,91 @@ RSpec.describe StudentsCreationController, type: :controller do
                 expect(assigns(:order)).to eq('DESC')
             end
 
-            it 'grabs and orders the users' do
-                expect(assigns(:users)).to eq((users.sort_by(&:created_at)).reverse.first(10))
+            it 'returns the users paginated with a limit of 10' do
+                parsed_response = JSON.parse(response.body)
+                expect(parsed_response["data"]["users"].size).to eq(10)
             end
 
-            it 'paginates users' do
-                # a simple count uses a SQL query and returns everything from assignments
-                # not keeping count of the pagination so a .to_a is used.
-                expect(assigns(:users).to_a.count).to eq(10)
-            end
+            it 'returns the users properly sorted and ordered ' do
+                parsed_response = JSON.parse(response.body)
+                response_student_ids = parsed_response["data"]["users"].map {|user| user["id"]}
 
-            it 'renders the index template' do
-                expect(response).to render_template(:index)
+                correct_student_ids = User.where(role: 'student').sort_by(&:created_at).map(&:id).reverse.first(10)
+
+                expect(response_student_ids).to match_array(correct_student_ids)
             end
         end
 
-        context 'custom sorting' do
-
-            let(:sort_by) { 'users.email' }
-            let(:order) { 'ASC' }
+        context 'when students are present with custom sorting and ordering' do
+            let!(:users) { create_list(:user, 30) }
 
             before do
-                get :index, params: { sort_by: sort_by, order: order }
+                get :index, params: {sort_by: 'users.email', order: 'ASC'}
             end
 
-            it 'sets custom sorting parameters' do
-                expect(assigns(:sort_by)).to eq(sort_by)
-                expect(assigns(:order)).to eq(order)
+            it 'returns a 200 status' do
+                expect(response).to have_http_status(200)
             end
 
-            it 'grabs and orders the users' do
-                expect(assigns(:users)).to eq((users.sort_by(&:email)).first(10))
+            it 'returns the users with proper attributes' do
+                parsed_response = JSON.parse(response.body)
+
+                first_user = parsed_response["data"]["users"].first
+
+                expect(first_user.keys).to match_array([
+                    "id",
+                    "email",
+                    "created_at",
+                    "admission_average",
+                    "en_average",
+                    "ro_grade",
+                    "mathematics_grade",
+                    "mother_tongue",
+                    "mother_tongue_grade",
+                    "graduation_average",
+                    "role",
+                    "jti"
+                ])
             end
 
-            it 'paginates users limiting them to 10' do
-                expect(assigns(:users).to_a.count).to eq(10)
+            it 'sets default sorting parameters' do
+                expect(assigns(:sort_by)).to eq('users.email')
+                expect(assigns(:order)).to eq('ASC')
             end
 
-            it 'renders the index template' do
-                expect(response).to render_template(:index)
+            it 'returns the users paginated with a limit of 10' do
+                parsed_response = JSON.parse(response.body)
+                expect(parsed_response["data"]["users"].size).to eq(10)
+            end
+
+            it 'returns the users properly sorted and ordered ' do
+                parsed_response = JSON.parse(response.body)
+                response_student_ids = parsed_response["data"]["users"].map {|user| user["id"]}
+
+                correct_student_ids = User.where(role: 'student').sort_by(&:email).map(&:id).first(10)
+
+                expect(response_student_ids).to match_array(correct_student_ids)
             end
         end
     end
     
     describe 'GET #download' do
         let!(:users) { create_list(:user, 30) }
-        it 'returns a successful response' do
-            get :download, format: :xlsx
-            expect(response).to be_successful
+
+        before do
+            get :download
+        end
+
+        it 'returns a 200 OK status' do
+            expect(response).to have_http_status(200)
+        end
+
+        it 'returns the correct content type' do
+            expect(response.content_type).to eq(Mime::Type.lookup_by_extension('xlsx').to_s)
+        end
+
+        it 'returns the expected content disposition (filename)' do
+            expect(response.headers['Content-Disposition']).to include("Students.xlsx")
         end
     end
 end

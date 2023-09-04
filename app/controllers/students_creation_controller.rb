@@ -7,21 +7,13 @@ class StudentsCreationController < ApplicationController
 
   require 'sidekiq/api'
 
-  def new
-    if @students.any?
-      data = UserSerializer.new(@students).serializable_hash[:data].map {|data| data[:attributes]}
-      render_success("Student records.", :ok, data)
-    else
-      render_error("There are no student records.", :ok)
-    end
-  end
-
   def create
     @student = User.new(student_params.merge(password: SecureRandom.hex, role: 'student'))
 
     if @student.save
       @student.send_reset_password_instructions
-      render_success("Student created successfully!", :created, {student: @student})
+      data = {student: UserSerializer.new(@student).serializable_hash[:data][:attributes]}
+      render_success("Student created successfully!", :created, data)
     else
       render_error(@student.errors.full_messages.to_sentence, :bad_request)
     end
@@ -39,15 +31,20 @@ class StudentsCreationController < ApplicationController
     if @student.destroy
       render_success("Student deleted successfully!", :ok)
     else
-      render_error(@student.errors.full_messages.to_sentence, :bad_request)
+      render_error(@student.errors.full_messages.to_sentence, :not_found)
     end
   end
   
   # Can receive params: :sort_by, :order, :page(pagination)
   def index
     @students = apply_pagination(@students)
-    data = {students: UserSerializer.new(@students).serializable_hash[:data].map {|data| data[:attributes]}}
-    render_success("Students, sorted, ordered, paginated", :ok, data)
+
+    if @students.any?
+      data = {users: UserSerializer.new(@students).serializable_hash[:data].map {|data| data[:attributes]}}
+      render_success("Students, sorted, ordered, paginated.", :ok, data)
+    else
+      render_error("There are no student records.", :ok)
+    end
   end
 
   # Can receive params: :sort_by, :order
