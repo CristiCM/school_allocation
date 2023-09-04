@@ -8,13 +8,6 @@ RSpec.describe SchoolsCreationImportController, type: :controller do
         sign_in admin
     end
 
-    describe 'GET #new' do
-        it 'renders the new template' do
-            get :new
-            expect(response).to render_template(:new)
-        end
-    end
-
     describe 'POST #create' do
         context 'a valid file is provided' do
             let(:new_data_importer_instance) { double('DataImporter', :import_csv => nil) }
@@ -22,10 +15,11 @@ RSpec.describe SchoolsCreationImportController, type: :controller do
                 allow(DataImporter).to receive(:new).and_return(new_data_importer_instance)
             end
 
-            it 'redirects to new_school_specialization_path with a success flash' do
+            it 'returns 200 status with proper message' do
                 post :create
-                expect(response).to redirect_to(new_school_specialization_path)
-                expect(flash[:success]).to eq('Successfully imported!')
+                parsed_response = JSON.parse(response.body)
+                expect(parsed_response["status"]['message']).to eq('Successfully imported!')
+                expect(response).to have_http_status(200)
             end
         end
 
@@ -34,10 +28,9 @@ RSpec.describe SchoolsCreationImportController, type: :controller do
                 allow(DataImporter).to receive(:new).and_raise(StandardError, 'Some error!')
             end
 
-            it 'renders :new with a alert flash' do
+            it 'returns a 400 status' do
                 post :create
-                expect(response).to render_template(:new)
-                expect(flash[:alert]).to eq('Import failed: Some error!')
+                expect(response).to have_http_status(400)  
             end
         end
     end

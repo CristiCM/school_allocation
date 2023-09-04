@@ -9,9 +9,9 @@ class JobsController < ApplicationController
     if @job.allocation_done?
       render_error("The allocation is already done!", :unprocessable_entity)
     elsif job_manager.create
-      render_success("Job created successfully!", :created, JobSerializer.new(@job.reload).serializable_hash[:data][:attributes])
+      render_success("Job created successfully!", :created, {job: JobSerializer.new(@job.reload).serializable_hash[:data][:attributes]})
     else
-      render_error("Job creation failed: Bad params.", :bad_request)
+      render_error("Job creation failed: Bad params.", :not_found)
     end
   end
 
@@ -21,7 +21,7 @@ class JobsController < ApplicationController
     job_manager = JobManager.new(destroy_params)
       
     if job_manager.destroy
-      render_success("Job deleted successfully!", :ok, JobSerializer.new(@job.reload).serializable_hash[:data][:attributes])
+      render_success("Job deleted successfully!", :ok, {job: JobSerializer.new(@job.reload).serializable_hash[:data][:attributes]})
     else
       render_error(@job.errors.full_messages.to_sentence, :bad_request)
     end
@@ -30,7 +30,7 @@ class JobsController < ApplicationController
 
 
   def show
-    render_success("Job time information.", :ok, JobSerializer.new(@job).serializable_hash[:data][:attributes])
+    render_success("Job time information.", :ok, {job: JobSerializer.new(@job.reload).serializable_hash[:data][:attributes]})
   end
 
   private
@@ -40,6 +40,7 @@ class JobsController < ApplicationController
   end
   
   def destroy_params
-    params.require(:job).permit(:type)
+    params.permit(:id, :type)
   end
+  
 end
