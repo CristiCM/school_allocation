@@ -33,7 +33,7 @@ class SchoolsCreationController < ApplicationController
     end
 
     def update
-      @school_specialization = SchoolSpecialization.find_by(params[:id])
+      @school_specialization = SchoolSpecialization.find_by(id: params[:id])
 
       if !@school_specialization
         render_error("Invalid record id!", :not_found)
@@ -46,7 +46,7 @@ class SchoolsCreationController < ApplicationController
     end
     
     def destroy
-      @school_specialization = SchoolSpecialization.find_by(params[:id])
+      @school_specialization = SchoolSpecialization.find_by(id: params[:id])
       
       begin
         if !@school_specialization
@@ -62,8 +62,13 @@ class SchoolsCreationController < ApplicationController
     # Can receive params: :order, :page(pagination)
     def index
       @school_specializations = apply_pagination(@school_specializations)
-      data = {school_specializations: SchoolSpecializationSerializer.new(@school_specializations).serializable_hash[:data].map {|data| data[:attributes]}}
-      render_success("School Specializations, ordered and paginated.", :ok, data)
+      
+      if @school_specializations.empty?
+        render_success("There are no assignments", :no_content)
+      else
+        data = {school_specializations: SchoolSpecializationSerializer.new(@school_specializations).serializable_hash[:data].map {|data| data[:attributes]}}
+        render_success("School Specializations, ordered and paginated.", :ok, data)
+      end
     end
 
     # Can receive params: :order
@@ -72,7 +77,6 @@ class SchoolsCreationController < ApplicationController
       send_data data, filename: "School Specializations.xlsx", type: Mime::Type.lookup_by_extension('xlsx').to_s
     end
     
-
     private
 
     def set_sorting_params
