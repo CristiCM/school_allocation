@@ -16,8 +16,9 @@ RSpec.describe AllocationWorker, type: :worker do
       create(:preference, user: student1, school_specialization: specialization1, priority: 2)
       create(:preference, user: student2, school_specialization: specialization1, priority: 1)
       create(:preference, user: student3, school_specialization: specialization1, priority: 1)
+      allow(EmailWorker).to receive(:perform_async)
     end
-    #TODO: FIX LAST TESTS ./spec/workers/allocation_worker_spec.rb: 23/32/42
+
     context 'if enough spaces available' do
 
       it "allocates students based on their preferences and available spots" do
