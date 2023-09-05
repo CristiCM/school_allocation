@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+/* An IDEA TODO */
+.loginform
+{
+  width: 60%;
+  display: inline-block;
+  align-items: center;
+}

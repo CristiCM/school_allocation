@@ -8,7 +8,7 @@ const UserList = () => {
 
   const fetchData = async () => {
     try{
-        const response = await axios.get('http://localhost:3000/api/v1/');
+        const response = await axios.get('http://localhost:3000/school_specializations/new');
         setUsers(response.data);
     }
     catch(e){
