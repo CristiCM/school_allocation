@@ -1,5 +1,5 @@
-import NavBar from "../components/NavBar";
-import UserInfoCard from "../components/UserInformationCard";
+import NavBar from "../../components/shared/NavBar";
+import UserInfoCard from "../../components/shared/UserInformationCard";
 
 
 function  Home(){

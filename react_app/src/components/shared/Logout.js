@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import Nav from 'react-bootstrap/Nav';
 function Logout() {
   const navigate = useNavigate();
 
@@ -12,7 +12,7 @@ function Logout() {
       {
         method: 'DELETE',
         headers: {
-            'Authorization': `Bearer ${jwt}`,
+            'Authorization': `${jwt}`,
         }        
       });
       
@@ -35,7 +35,8 @@ function Logout() {
   };
 
   return (
-    <button onClick={handleLogout}>Logout</button>
+    <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+    // <button onClick={handleLogout}>Logout</button>
   );
 }
 

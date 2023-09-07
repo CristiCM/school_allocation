@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { useNavigate } from 'react-router-dom';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,7 +30,8 @@ function LoginForm() {
 
       if (data.status.code === 200) {
         localStorage.setItem('user', JSON.stringify(data.data));
-        localStorage.setItem('jwt', data.data.jti);
+        localStorage.setItem('jwt', response.headers.get('Authorization'));
+        navigate('/')
         alert(data.status.message);
       } else {
         alert('Login failed.');
