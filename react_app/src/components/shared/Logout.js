@@ -1,34 +1,39 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
+import UserContext from '../../pages/shared/UserContext';
+
 function Logout() {
+
   const navigate = useNavigate();
+  const [user, setUser] = useContext(UserContext);
 
   const handleLogout = async () => {
-    const jwt = localStorage.getItem('jwt');
 
     try {
       const response = await fetch('http://localhost:3000/users/sign_out', 
       {
         method: 'DELETE',
         headers: {
-            'Authorization': `${jwt}`,
+            'Authorization': `${user.jwt_token}`,
         }        
       });
       
       const data = await response.json();
 
-      if(data.status.code === 200){
-        localStorage.removeItem('user');
-        localStorage.removeItem('jwt');
+      data.status.code === 200 ? (alert(data.status.message)) : (alert("Failed to log out."))
 
-        navigate('/');
+      navigate('/');
 
-        alert(data.status.message);
-      } else {
-        alert("Failed to log out.");
-      }
-      
+      localStorage.removeItem('data');
+      localStorage.removeItem('jwt_token');
+
+      setUser({
+        data: null,
+        jwt_token: null,
+        refresh_token: null
+      });
+
     } catch (error) {
       console.error('Failed to log out:', error);
     }

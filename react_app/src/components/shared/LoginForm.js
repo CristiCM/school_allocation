@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useNavigate } from 'react-router-dom';
+import UserContext from '../../pages/shared/UserContext';
 
 function LoginForm() {
+  const [, setUser] = useContext(UserContext)
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -29,8 +31,16 @@ function LoginForm() {
       const data = await response.json();
 
       if (data.status.code === 200) {
-        localStorage.setItem('user', JSON.stringify(data.data));
-        localStorage.setItem('jwt', response.headers.get('Authorization'));
+        //...prevState => ({ for updating only a few elements and keeping the state for the rest })
+        localStorage.setItem('data', JSON.stringify(data.data));
+        localStorage.setItem('jwt_token', response.headers.get('Authorization'));
+        
+        setUser({
+          data: data.data,
+          jwt_token: response.headers.get('Authorization'),
+          refresh_token: null
+        });
+
         navigate('/')
         alert(data.status.message);
       } else {

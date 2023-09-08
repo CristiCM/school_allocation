@@ -1,16 +1,15 @@
+import { useContext } from "react";
 import NavBar from "../../components/shared/NavBar";
-import UserInfoCard from "../../components/shared/UserInformationCard";
+import GradeInformationCard from "../../components/students/GradeInformationCard";
+import UserContext from "./UserContext";
 
 
 function  Home(){
-    const current_user = JSON.parse(localStorage.getItem('user'))
+    const [user,] = useContext(UserContext);
     return(
         <>
         <NavBar />
-        <h2>Home Page</h2>
-        <button className="btn btn-primary">Click Me</button>
-        { current_user && <UserInfoCard user= {current_user}/>}
-        { localStorage.getItem('jwt')}
+        { user.data && user.data.role === 'student' && <GradeInformationCard/> }
         </>
     )
 }
