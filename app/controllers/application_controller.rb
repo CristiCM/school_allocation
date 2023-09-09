@@ -1,10 +1,45 @@
 class ApplicationController < ActionController::Base
     protect_from_forgery unless: -> { request.format.json? }
+
     rescue_from CanCan::AccessDenied do |exception|
         render_error("You don't have access on this page!", :forbidden)
-    end  
-    
+    end
+
     protected
+
+    def authentificate_request
+      auth_header = request.headers['Authorization']
+    
+      if auth_header.nil? || auth_header.blank?
+        render_error("No authentification header provided.", :not_found)
+        return
+      end
+  
+      token = auth_header.split(' ')[1]
+  
+      if token.blank?
+        render_error("Invalid authorization provided.", :bad_request)
+        return
+      end
+  
+      begin
+        jwt_payload = JWT.decode(token, ENV['DEVISE_JWT_SECRET_KEY'])
+      rescue JWT::ExpiredSignature
+        render_error("Token has expired.", :unauthorized)
+        return
+      rescue JWT::DecodeError => e
+        render_error("Invalid token: #{e.message}", :unauthorized)
+        return
+      end
+      
+      payload = jwt_payload[0]
+      current_user = User.find_by(id: payload['sub'])
+  
+      if !current_user
+        render_error("Couldn't find an active session.", :not_found)
+        return
+      end
+    end
 
     def render_success(message = "Success", status = :ok, data_structure = {})
         render json: {

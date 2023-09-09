@@ -1,4 +1,5 @@
 class SchoolsCreationImportController < ApplicationController
+  before_action :authentificate_request
   authorize_resource :School
 
     def create

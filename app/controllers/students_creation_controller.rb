@@ -1,4 +1,5 @@
 class StudentsCreationController < ApplicationController
+  before_action :authentificate_request
   load_and_authorize_resource :User
 
   before_action :set_sorting_params, only: [:index, :download]

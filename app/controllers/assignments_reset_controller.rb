@@ -1,4 +1,5 @@
 class AssignmentsResetController < ApplicationController
+    before_action :authentificate_request
     authorize_resource :Assignment
     skip_before_action :verify_authenticity_token
     before_action :set_job

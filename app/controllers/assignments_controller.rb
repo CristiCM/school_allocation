@@ -1,4 +1,5 @@
 class AssignmentsController < ApplicationController
+  before_action :authentificate_request
   authorize_resource
   skip_before_action :verify_authenticity_token
   before_action :set_no_preference_students, only: :new
