@@ -3,10 +3,10 @@ class Users::SessionsController < Devise::SessionsController
   respond_to :json
 
   def refresh_jwt
-    auth_header = request.headers['RefreshToken']
-    return render_response('No refresh token provided.', :bad_request) if auth_header.blank?
+    refresh_token = cookies[:refresh_token]
+    return render_response('No refresh token provided.', :bad_request) if refresh_token.blank?
 
-    encrypted_token = Digest::SHA256.hexdigest(auth_header)
+    encrypted_token = Digest::SHA256.hexdigest(refresh_token)
     current_user = User.find_by(refresh_token: encrypted_token)
 
     if current_user && current_user.refresh_token_expires_at > Time.now
@@ -18,12 +18,23 @@ class Users::SessionsController < Devise::SessionsController
     end
   end
 
+
   private
 
   def respond_with(resource, options = {})
     new_refresh_token = generate_refresh_token_for(resource)
-    render_response('Logged in successfully.', :ok, {refresh_token: new_refresh_token })
+
+    # Set the refresh token as an HttpOnly cookie
+    cookies[:refresh_token] = {
+      value: new_refresh_token,
+      httponly: true,
+      secure: Rails.env.production?,
+      expires: 7.days
+    }
+
+    render_response('Logged in successfully.', :ok)
   end
+
 
   def respond_to_on_destroy
     auth_header = request.headers['Authorization']
