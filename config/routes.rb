@@ -7,6 +7,10 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
+  devise_scope :user do
+    post "/refresh_jwt" => "users/sessions#refresh_jwt"
+  end  
+
   resources :students, controller: 'students_creation', only: [:new, :create, :update, :destroy, :index, :edit] do
     collection do
       get :download

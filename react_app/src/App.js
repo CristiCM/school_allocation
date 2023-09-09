@@ -15,6 +15,7 @@ import UserContext from './pages/shared/UserContext';
 import PrivateRoute from './components/shared/PrivateRoute';
 import SpecializationCreation from './pages/admins/SpecializationCreation';
 
+// TODO: POSSIBLE ALTERNATIVE SOLUTION
 // TODO: React-cookies for refresh and jwt tokens
 // TODO: New ENDPOINT for userData -> sessionStorage.
 
