@@ -15,7 +15,7 @@ function Logout() {
       {
         method: 'DELETE',
         headers: {
-            'Authorization': `${user.jwt_token}`,
+            'Authorization': `${localStorage.getItem('jwt_token')}`,
         }        
       });
       

@@ -50,3 +50,10 @@
   padding-left: 0;
 }
 
+.tableGeneral {
+  position: absolute;
+  top: 25%;
+  left: 15%;
+  width: 70%;
+}
+
