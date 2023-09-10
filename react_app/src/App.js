@@ -10,39 +10,28 @@ import AllocationOverview from './pages/admins/AllocationOverview';
 import SchoolOptions from './pages/students/SchoolOptions';
 import GradesAndSchoolPreferences from './pages/students/GradesAndSchoolPreferences';
 import UserCredentialsEdit from './pages/shared/UserCredentialsEdit';
-import { useState } from 'react';
-import UserContext from './pages/shared/UserContext';
+import { useEffect, useState, useRef } from 'react';
+import UserJwt from './components/shared/UserJwtContext';
 import PrivateRoute from './components/shared/PrivateRoute';
 import SpecializationCreation from './pages/admins/SpecializationCreation';
+import { refresh_jwt_token } from './services/refreshJwtToken';
 
-// TODO: POSSIBLE ALTERNATIVE SOLUTION
-// TODO: React-cookies for refresh and jwt tokens
-// TODO: New ENDPOINT for userData -> sessionStorage.
 
 function App() {
-  const [user, setUser] = useState(() => {
+  const [jwt, setJwt] = useState('');
+  const hasRun = useRef(false); //Used as a workaround for <React.StrictMode> (index.js)
 
-    const savedData = localStorage.getItem('data');
-
-    if (savedData)
-    {
-      return {
-        data: JSON.parse(savedData),
-        jwt_token: localStorage.getItem('jwt_token'),
-        refresh_token: null
-      };
+  useEffect(() => {
+    if (sessionStorage.getItem('email') && sessionStorage.getItem('role') && !hasRun.current) {
+        refresh_jwt_token(setJwt);
+        hasRun.current = true;
     }
+}, []);
 
-    return {
-      data: null,
-      jwt_token: null,
-      refresh_token: null
-    };
-  });
 
   return (
     <div className="App">
-      <UserContext.Provider value={[user, setUser]}>
+      <UserJwt.Provider value={[jwt, setJwt]}>
         <BrowserRouter>
           <Routes>
             <Route index element={<Home />} />
@@ -59,7 +48,7 @@ function App() {
             <Route path='*' element={ <NoPage />} />
           </Routes>
         </BrowserRouter>
-      </UserContext.Provider>
+      </UserJwt.Provider>
     </div>
   );
 }

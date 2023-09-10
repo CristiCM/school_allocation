@@ -4,11 +4,11 @@ import Navbar from 'react-bootstrap/Navbar';
 import Logout from './Logout';
 import AdminNavBar from '../admins/AdminNavBar';
 import StudentNavBar from '../students/StudentNavBar';
-import { useContext } from 'react';
-import UserContext from '../../pages/shared/UserContext';
+
 
 function NavBar() {
-  const [user,] = useContext(UserContext);
+  const email = sessionStorage.getItem('email');
+  const role = sessionStorage.getItem('role');
 
   return (
     <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary">
@@ -17,15 +17,15 @@ function NavBar() {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
 
-          {user.data && user.data.role === 'admin' ?
+          {role && role === 'admin' ?
             <AdminNavBar /> :
-            user.data && user.data.role === 'student' ?
+            role && role === 'student' ?
             <StudentNavBar /> :
             null}
 
           <Nav>
-            <Nav.Link href="/user_credentials_edit">{user.data? user.data.email : null}</Nav.Link>
-            { user.data ?
+            <Nav.Link href="/user_credentials_edit">{email? email : null}</Nav.Link>
+            { email && role ?
                   (<Logout />)
                   // (<Nav.Link> <Logout /> </Nav.Link>)
                   : 

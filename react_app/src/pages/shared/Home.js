@@ -1,15 +1,24 @@
 import { useContext } from "react";
 import NavBar from "../../components/shared/NavBar";
-import GradeInformationCard from "../../components/students/GradeInformationCard";
-import UserContext from "./UserContext";
+import UserJwt from "../../components/shared/UserJwtContext";
+import AdminHomeAccordion from "../../components/admins/AdminHomeAccordion";
+import StudentHomeAccordion from "../../components/students/StudentHomeAccordion";
 
 
 function  Home(){
-    const [user,] = useContext(UserContext);
+    const [jwt, setJwt] = useContext(UserJwt);
+    const role = sessionStorage.getItem('role');
     return(
         <>
         <NavBar />
-        { user.data && user.data.role === 'student' && <GradeInformationCard/> }
+        { role && role === 'admin' ?
+            <AdminHomeAccordion /> 
+            :
+            role && role === 'student' ?
+            <StudentHomeAccordion />
+            :
+            null
+        }
         </>
     )
 }

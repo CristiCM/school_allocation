@@ -1,43 +1,26 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
-import UserContext from '../../pages/shared/UserContext';
+import UserJwt from './UserJwtContext';
 
 function Logout() {
 
   const navigate = useNavigate();
-  const [user, setUser] = useContext(UserContext);
+  const [, setJwt] = useContext(UserJwt);
 
-  const handleLogout = async () => {
-
+  const handleLogout = () => {
     try {
-      const response = await fetch('http://localhost:3000/users/sign_out', 
-      {
-        method: 'DELETE',
-        headers: {
-            'Authorization': `${localStorage.getItem('jwt_token')}`,
-        }        
-      });
-      
-      const data = await response.json();
-
-      data.status.code === 200 ? (alert(data.status.message)) : (alert("Failed to log out."))
-
-      navigate('/');
-
-      localStorage.removeItem('data');
-      localStorage.removeItem('jwt_token');
-
-      setUser({
-        data: null,
-        jwt_token: null,
-        refresh_token: null
-      });
-
+        sessionStorage.removeItem('email');
+        sessionStorage.removeItem('role');
+        setJwt(""); // Clear the JWT from context state
+        alert("Successfully logged out.");
+        navigate('/');
     } catch (error) {
-      console.error('Failed to log out:', error);
+        console.error('Failed to log out:', error);
     }
-  };
+};
+
+  
 
   return (
     <Nav.Link onClick={handleLogout}>Logout</Nav.Link>

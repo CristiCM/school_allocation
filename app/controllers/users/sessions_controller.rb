@@ -29,10 +29,10 @@ class Users::SessionsController < Devise::SessionsController
       value: new_refresh_token,
       httponly: true,
       secure: Rails.env.production?,
-      expires: 7.days
+      expires: 7.days,
     }
-
-    render_response('Logged in successfully.', :ok)
+    sign_out resource
+    render_response('Logged in successfully.', :ok, {email: resource.email, role: resource.role})
   end
 
 
@@ -41,12 +41,14 @@ class Users::SessionsController < Devise::SessionsController
     
     if auth_header.blank?
       render_response("No authentification header provided.", :not_found)
+      return
     end
 
     token = auth_header.split(' ')[1]
 
     if token.blank?
       render_response("Invalid authorization provided.", :bad_request)
+      return
     end
 
     jwt_payload = JWT.decode(token, ENV['DEVISE_JWT_SECRET_KEY'])
@@ -55,6 +57,7 @@ class Users::SessionsController < Devise::SessionsController
 
     if current_user
       render_response("Logged out successfully.", :ok)
+      current_user = nil
     else
       render_response("Couldn't find an active session.", :not_found)
     end

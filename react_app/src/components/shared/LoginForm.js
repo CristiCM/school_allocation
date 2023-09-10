@@ -2,10 +2,10 @@ import React, { useContext, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useNavigate } from 'react-router-dom';
-import UserContext from '../../pages/shared/UserContext';
+import UserJwt from './UserJwtContext';
 
 function LoginForm() {
-  const [, setUser] = useContext(UserContext)
+  const [, setJwt] = useContext(UserJwt)
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -16,6 +16,7 @@ function LoginForm() {
     try {
       const response = await fetch('http://localhost:3000/users/sign_in', {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -28,21 +29,14 @@ function LoginForm() {
         })
       });
 
-      const data = await response.json();
+      const jsonResponse = await response.json();
 
-      if (data.status.code === 200) {
-        //...prevState => ({ for updating only a few elements and keeping the state for the rest })
-        localStorage.setItem('data', JSON.stringify(data.data));
-        localStorage.setItem('jwt_token', response.headers.get('Authorization'));
-        
-        setUser({
-          data: data.data,
-          jwt_token: response.headers.get('Authorization'),
-          refresh_token: null
-        });
-
+      if (jsonResponse.status.code === 200) {
+        sessionStorage.setItem('email', jsonResponse.data.email);
+        sessionStorage.setItem('role', jsonResponse.data.role);
+        setJwt(response.headers.get('Authorization'))
         navigate('/')
-        alert(data.status.message);
+        alert(jsonResponse.status.message);
       } else {
         alert('Login failed.');
       }

@@ -5,7 +5,7 @@ class User < ApplicationRecord
   has_one :assignment, dependent: :destroy
   
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable,
+         :recoverable, :validatable,
          :jwt_authenticatable, jwt_revocation_strategy: self
 
   validates :email, presence: true, uniqueness: true
