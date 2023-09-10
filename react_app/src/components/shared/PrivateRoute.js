@@ -1,5 +1,3 @@
-import { useContext } from "react";
-import UserContext from "./UserJwtContext";
 import Login from "../../pages/shared/Login";
 import NotAuthorized from "../../pages/shared/NotAuthorized";
 

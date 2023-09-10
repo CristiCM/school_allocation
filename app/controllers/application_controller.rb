@@ -8,13 +8,14 @@ class ApplicationController < ActionController::Base
     protected
 
     def authentificate_request
+      debugger
       auth_header = request.headers['Authorization']
     
       if auth_header.nil? || auth_header.blank?
         render_error("No authentification header provided.", :not_found)
         return
       end
-  
+      
       token = auth_header.split(' ')[1]
   
       if token.blank?
