@@ -28,7 +28,7 @@ function SchoolCreationForm() {
 
     const handleSubmit = async (event) => {
         event.preventDefault()
-        const message = await CreateSchoolSpecialization(selectedSchoolId, selectedTrackId, selectedSpecializationId, spotsAvailable);
+        await CreateSchoolSpecialization(selectedSchoolId, selectedTrackId, selectedSpecializationId, spotsAvailable);
         setSelectedSchoolId(null);
         setSelectedTrackId(null);
         setSelectedSpecializationId(null);

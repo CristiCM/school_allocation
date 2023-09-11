@@ -7,6 +7,7 @@ function AdminNavBar() {
         <NavDropdown title="Creation square" id="collasible-nav-dropdown">
           <NavDropdown.Item href="/import_data">Import Data</NavDropdown.Item>
           <NavDropdown.Item href="/specialization_creation">Specialization Creation</NavDropdown.Item>
+          <NavDropdown.Item href="/specialization_index">All Specializations</NavDropdown.Item>
           <NavDropdown.Item href="/student_creation">Student Creation</NavDropdown.Item>
         </NavDropdown>
         <Nav.Link href="/scheduler">Scheduler</Nav.Link>

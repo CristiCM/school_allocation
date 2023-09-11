@@ -12,6 +12,8 @@ import GradesAndSchoolPreferences from './pages/students/GradesAndSchoolPreferen
 import UserCredentialsEdit from './pages/shared/UserCredentialsEdit';
 import PrivateRoute from './components/shared/PrivateRoute';
 import SpecializationCreation from './pages/admins/SpecializationCreation';
+import SpecializationsIndex from './pages/admins/SpecializationsIndex';
+import SpecializationEdit from './pages/admins/SpecializationEdit';
 
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
             <Route path='/home' element={<Home/>} />
             <Route path='/import_data' element={<PrivateRoute roles={['admin']} route={<ImportData />} />}/>
             <Route path='/specialization_creation' element={<PrivateRoute roles={['admin']} route={<SpecializationCreation />} />}/>
+            <Route path='/specialization_index' element={<PrivateRoute roles={['admin']} route={<SpecializationsIndex />} />}/>
+            <Route path='/specialization_edit/:id' element={<PrivateRoute roles={['admin']} route={<SpecializationEdit />} />}/>
             <Route path='/student_creation' element={<PrivateRoute roles={['admin']} route={<StudentCreation />} />}/>
             <Route path='/scheduler' element={<PrivateRoute roles={['admin']} route={<Scheduler />} />}/>
             <Route path='/allocation_overview' element={<PrivateRoute roles={['admin']} route={<AllocationOverview />} />}/>

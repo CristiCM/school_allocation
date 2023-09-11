@@ -1,4 +1,4 @@
-import SchoolCreationForm from "../../components/admins/SchoolCreationFrom";
+import SpecializationCreationFrom from "../../components/admins/SpecializationCreationFrom";
 import NavBar from "../../components/shared/NavBar";
 
 function SpecializationCreation(){
@@ -6,7 +6,8 @@ function SpecializationCreation(){
         <>
             <NavBar />
             <h2>SpecializationCreation Page</h2>
-            <SchoolCreationForm />
+            <SpecializationCreationFrom />
+            <br />
         </>
     )
 }

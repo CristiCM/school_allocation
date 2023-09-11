@@ -1,17 +1,13 @@
-// #create
+// #index
 import axios from  'axios';
 
-export const CreateSchoolSpecialization = async (schoolId, trackId, specializationId, spotsAvailable) => {
+export const GetSchoolSpecializationsData = async (order, page) => {
 
     const url = 'http://localhost:3000/school_specializations';
 
     const data = {
-      "school_specialization": {
-          "school_id": schoolId,
-          "track_id": trackId,
-          "specialization_id": specializationId,
-          "spots_available": spotsAvailable
-      }
+        "order": order === null ? 'DESC' : order,
+        "track_id": page === null ? 1 : page,
     };
     
     const headers = {
@@ -20,13 +16,9 @@ export const CreateSchoolSpecialization = async (schoolId, trackId, specializati
     };
     
     try {
-        const response = await axios.post(url, data, { headers: headers });
-    
-        if (response.data.status.code === 201) {
-            alert(response.data.status.message || "School Specialization Created");
-        }
+        const response = await axios.get(url, { params: data, headers: headers });
 
-        return response.data.status.message;
+        return response.data;
 
     } catch (error) {
         console.error("Error making the API call:", error);
