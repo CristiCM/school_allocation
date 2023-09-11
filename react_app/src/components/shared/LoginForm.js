@@ -1,12 +1,12 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useNavigate } from 'react-router-dom';
-import UserJwt from './UserJwtContext';
+
 import { LoginUser } from '../../services/API/Session/LoginUser';
 
 function LoginForm() {
-  const [, setJwt] = useContext(UserJwt)
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -20,7 +20,8 @@ function LoginForm() {
       if (response.data.status.code === 200) {
         sessionStorage.setItem('email', response.data.data.email);
         sessionStorage.setItem('role', response.data.data.role);
-        setJwt(response.headers['Authorization'])
+        sessionStorage.setItem('jwt', response.headers['authorization']);
+
         navigate('/')
         alert(response.data.status.message);
       } else {

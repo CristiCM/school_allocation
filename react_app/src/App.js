@@ -10,28 +10,14 @@ import AllocationOverview from './pages/admins/AllocationOverview';
 import SchoolOptions from './pages/students/SchoolOptions';
 import GradesAndSchoolPreferences from './pages/students/GradesAndSchoolPreferences';
 import UserCredentialsEdit from './pages/shared/UserCredentialsEdit';
-import { useEffect, useState, useRef } from 'react';
-import UserJwt from './components/shared/UserJwtContext';
 import PrivateRoute from './components/shared/PrivateRoute';
 import SpecializationCreation from './pages/admins/SpecializationCreation';
-import { refresh_jwt_token } from './services/API/Session/refreshJwtToken';
 
 
 function App() {
-  const [jwt, setJwt] = useState('');
-  const hasRun = useRef(false); //Used as a workaround for <React.StrictMode> (index.js)
-
-  useEffect(() => {
-    if (sessionStorage.getItem('email') && sessionStorage.getItem('role') && !hasRun.current) {
-        refresh_jwt_token(setJwt);
-        hasRun.current = true;
-    }
-}, []);
-
 
   return (
     <div className="App">
-      <UserJwt.Provider value={[jwt, setJwt]}>
         <BrowserRouter>
           <Routes>
             <Route index element={<Home />} />
@@ -48,7 +34,6 @@ function App() {
             <Route path='*' element={ <NoPage />} />
           </Routes>
         </BrowserRouter>
-      </UserJwt.Provider>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const uploadSchoolSpecializations = async (file, jwt) => {
+export const uploadSchoolSpecializations = async (file) => {
   const url = 'http://localhost:3000/school_specialization_import';
   const formData = new FormData();
   formData.append('file', file);
@@ -8,7 +8,7 @@ export const uploadSchoolSpecializations = async (file, jwt) => {
   const config = {
       headers: {
         'content-type': 'multipart/form-data',
-        'Authorization': `${jwt}`
+        'Authorization': `${sessionStorage.getItem('jwt')}`
       },
   };      
   

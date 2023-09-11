@@ -1,10 +1,7 @@
-import React, { useContext, useState } from 'react';
-import UserJwt from '../shared/UserJwtContext';
-import { refresh_jwt_token } from '../../services/API/Session/refreshJwtToken';
+import React, { useState } from 'react';
 import { uploadSchoolSpecializations } from '../../services/API/SchoolCreationImport/UploadSchoolInformationFile';
 
 function ImportSchools() {
-  const [jwt, setJwt] = useContext(UserJwt);
   const [file, setFile] = useState()
 
   function handleChange(event) {
@@ -14,11 +11,8 @@ function ImportSchools() {
   async function handleSubmit(event) {
     event.preventDefault()
 
-    if(!jwt) {
-      refresh_jwt_token(setJwt);
-    }
+    const responseData = await uploadSchoolSpecializations(file);
 
-    const responseData = await uploadSchoolSpecializations(file, jwt);
     if(responseData.status.code === 200){
       alert("File imported successfully!");
     } else {

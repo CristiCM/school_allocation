@@ -22,7 +22,7 @@ class SchoolsCreationController < ApplicationController
   
     def create
       @school_specialization = SchoolSpecialization.new(school_specialization_params)
-      
+      debugger
       if SchoolSpecialization.exists?(school_id: school_specialization_params[:school_id], track_id: school_specialization_params[:track_id], specialization_id: school_specialization_params[:specialization_id])
         render_error("Specialization already exists!", :conflict)
       elsif @school_specialization.save

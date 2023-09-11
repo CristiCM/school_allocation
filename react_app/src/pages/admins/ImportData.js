@@ -5,7 +5,6 @@ function ImportData(){
     return(
         <>
             <NavBar />
-
             <ImportDataForm />
         </>
     )
