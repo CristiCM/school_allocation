@@ -14,7 +14,7 @@ import { useEffect, useState, useRef } from 'react';
 import UserJwt from './components/shared/UserJwtContext';
 import PrivateRoute from './components/shared/PrivateRoute';
 import SpecializationCreation from './pages/admins/SpecializationCreation';
-import { refresh_jwt_token } from './services/refreshJwtToken';
+import { refresh_jwt_token } from './services/API/Session/refreshJwtToken';
 
 
 function App() {

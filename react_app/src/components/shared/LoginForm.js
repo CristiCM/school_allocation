@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useNavigate } from 'react-router-dom';
 import UserJwt from './UserJwtContext';
-import axios from 'axios';
+import { LoginUser } from '../../services/API/Session/LoginUser';
 
 function LoginForm() {
   const [, setJwt] = useContext(UserJwt)
@@ -15,20 +15,7 @@ function LoginForm() {
     e.preventDefault();
 
     try {
-      const response = await axios({
-        method: 'post',
-        url: 'http://localhost:3000/users/sign_in',
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        data: {
-          user: {
-            email,
-            password
-          }
-        }
-      });
+      const response = await LoginUser(email, password);
 
       if (response.data.status.code === 200) {
         sessionStorage.setItem('email', response.data.data.email);

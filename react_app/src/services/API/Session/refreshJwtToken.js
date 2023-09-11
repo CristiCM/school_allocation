@@ -7,7 +7,6 @@ export const refresh_jwt_token = async (setJwt) => {
             headers: {'Content-Type': 'application/json'}
         });
 
-        // With Axios, you directly get the parsed JSON, so no need to call .json()
         if (response.status !== 200) {
             throw new Error('Failed to refresh JWT.');
         }

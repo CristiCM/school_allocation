@@ -1,41 +1,29 @@
 import React, { useContext, useState } from 'react';
 import UserJwt from '../shared/UserJwtContext';
-import { refresh_jwt_token } from '../../services/refreshJwtToken';
-import axios from 'axios';
+import { refresh_jwt_token } from '../../services/API/Session/refreshJwtToken';
+import { uploadSchoolSpecializations } from '../../services/API/SchoolCreationImport/UploadSchoolInformationFile';
+
 function ImportSchools() {
   const [jwt, setJwt] = useContext(UserJwt);
-
   const [file, setFile] = useState()
 
   function handleChange(event) {
     setFile(event.target.files[0])
   }
   
-   function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
 
     if(!jwt) {
       refresh_jwt_token(setJwt);
     }
 
-    const url = 'http://localhost:3000/school_specialization_import';
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('fileName', file.name);
-    const config = {
-        headers: {
-          'content-type': 'multipart/form-data',
-          'Authorization': `${jwt}`
-        },
-    };      
-    axios.post(url, formData, config).then((response) => {
-      if(response.data.status.code === 200){
-        alert("File imported successfully!");
-      } else {
-        alert("File import failed!");
-      };
-    });
-
+    const responseData = await uploadSchoolSpecializations(file, jwt);
+    if(responseData.status.code === 200){
+      alert("File imported successfully!");
+    } else {
+      alert("File import failed!");
+    };
   }
 
   return (
