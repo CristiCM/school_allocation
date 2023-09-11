@@ -1,17 +1,18 @@
+import axios from 'axios';
+
 export const refresh_jwt_token = async (setJwt) => {
-    try{
-        const response = await fetch('http://localhost:3000/refresh_jwt', {
-            method: 'POST',
-            credentials: 'include',
+    try {
+        const response = await axios.post('http://localhost:3000/refresh_jwt', {}, {
+            withCredentials: true,
             headers: {'Content-Type': 'application/json'}
         });
 
-        if (!response.ok) {
+        // With Axios, you directly get the parsed JSON, so no need to call .json()
+        if (response.status !== 200) {
             throw new Error('Failed to refresh JWT.');
         }
 
-        const newJwt = await response.json();
-        setJwt(newJwt.data.new_jwt_tokne);
+        setJwt("Barer " + response.data.data.new_jwt_token);
         return true;
 
     } catch (error) {

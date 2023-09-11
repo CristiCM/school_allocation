@@ -35,7 +35,7 @@ function LoginForm() {
         sessionStorage.setItem('role', response.data.data.role);
         setJwt(response.headers['Authorization'])
         navigate('/')
-        alert(response.data.status.message);  // Assuming the server sends back a message
+        alert(response.data.status.message);
       } else {
         alert('Login failed.');
       }

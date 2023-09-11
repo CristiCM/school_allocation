@@ -11,9 +11,13 @@ function ImportSchools() {
     setFile(event.target.files[0])
   }
   
-  function handleSubmit(event) {
-    if(!jwt) {refresh_jwt_token(setJwt)};
+   function handleSubmit(event) {
     event.preventDefault()
+
+    if(!jwt) {
+      refresh_jwt_token(setJwt);
+    }
+
     const url = 'http://localhost:3000/school_specialization_import';
     const formData = new FormData();
     formData.append('file', file);
@@ -25,7 +29,11 @@ function ImportSchools() {
         },
     };      
     axios.post(url, formData, config).then((response) => {
-      console.log(response.data);
+      if(response.data.status.code === 200){
+        alert("File imported successfully!");
+      } else {
+        alert("File import failed!");
+      };
     });
 
   }
