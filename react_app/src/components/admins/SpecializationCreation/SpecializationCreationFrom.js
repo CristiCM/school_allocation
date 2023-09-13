@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/esm/Button';
-import { GetSchoolTrackSpecData } from '../../services/API/SchoolCreation/GetSchoolTrackSpecData';
-import { CreateSchoolSpecialization } from '../../services/API/SchoolCreation/CreateSchoolSpecialization';
+import { GetSchoolTrackSpecData } from '../../../services/API/SchoolCreation/GetSchoolTrackSpecData';
+import { CreateSchoolSpecialization } from '../../../services/API/SchoolCreation/CreateSchoolSpecialization';
 
 
 function SchoolCreationForm() {

@@ -3,7 +3,7 @@ import axios from  'axios';
 
 export const GetSchoolSpecialization = async (id) => {
 
-  const url = 'http://localhost:3000/school_specializations' + `/${id}`;
+  const url = `http://localhost:3000/school_specializations/${id}`;
   const config = {
       headers: {
         'Content-Type': 'application/json',

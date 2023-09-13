@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/esm/Button';
 import { useParams } from "react-router-dom";
-import { GetSchoolTrackSpecData } from "../../services/API/SchoolCreation/GetSchoolTrackSpecData";
-import { GetSchoolSpecialization } from "../../services/API/SchoolCreation/GetSchoolSpecialization";
-import { UpdateSchoolSpecialization } from "../../services/API/SchoolCreation/UpdateSchoolSpecialization";
+import { GetSchoolTrackSpecData } from "../../../services/API/SchoolCreation/GetSchoolTrackSpecData";
+import { GetSchoolSpecialization } from "../../../services/API/SchoolCreation/GetSchoolSpecialization";
+import { UpdateSchoolSpecialization } from "../../../services/API/SchoolCreation/UpdateSchoolSpecialization";
 
 
 function SpecializationEditForm() {
@@ -19,17 +19,13 @@ function SpecializationEditForm() {
 
     useEffect(() => {
         const fetchData = async () => {
+            
             const specData = await GetSchoolSpecialization(id);
             setSelectedSchoolId(specData.school_id);
             setSelectedTrackId(specData.track_id);
             setSelectedSpecializationId(specData.specialization_id);
             setSpotsAvailalbe(specData.spots_available);
 
-            console.log(specData);
-            console.log(specData);
-            console.log(specData);
-            console.log(specData);
-            console.log(specData);
             const data = await GetSchoolTrackSpecData();
             setSchools(data.schools);
             setTracks(data.tracks);

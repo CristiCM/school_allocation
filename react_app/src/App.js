@@ -3,17 +3,18 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/shared/Home';
 import NoPage from './pages/shared/NoPage';
 import Login from './pages/shared/Login';
-import ImportData from './pages/admins/ImportData';
-import StudentCreation from './pages/admins/StudentCreation';
+import ImportData from './pages/admins/SpecializationCreation/ImportData';
+import StudentCreation from './pages/admins/StudentCreation/StudentCreation';
 import Scheduler from './pages/admins/Scheduler';
 import AllocationOverview from './pages/admins/AllocationOverview';
 import SchoolOptions from './pages/students/SchoolOptions';
 import GradesAndSchoolPreferences from './pages/students/GradesAndSchoolPreferences';
 import UserCredentialsEdit from './pages/shared/UserCredentialsEdit';
 import PrivateRoute from './components/shared/PrivateRoute';
-import SpecializationCreation from './pages/admins/SpecializationCreation';
-import SpecializationsIndex from './pages/admins/SpecializationsIndex';
-import SpecializationEdit from './pages/admins/SpecializationEdit';
+import SpecializationCreation from './pages/admins/SpecializationCreation/SpecializationCreation';
+import SpecializationsIndex from './pages/admins/SpecializationCreation/SpecializationsIndex';
+import SpecializationEdit from './pages/admins/SpecializationCreation/SpecializationEdit';
+import StudentIndex from './pages/admins/StudentCreation/StudentIndex';
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
             <Route path='/specialization_index' element={<PrivateRoute roles={['admin']} route={<SpecializationsIndex />} />}/>
             <Route path='/specialization_edit/:id' element={<PrivateRoute roles={['admin']} route={<SpecializationEdit />} />}/>
             <Route path='/student_creation' element={<PrivateRoute roles={['admin']} route={<StudentCreation />} />}/>
+            <Route path='/student_index' element={<PrivateRoute roles={['admin']} route={<StudentIndex />} />}/>
             <Route path='/scheduler' element={<PrivateRoute roles={['admin']} route={<Scheduler />} />}/>
             <Route path='/allocation_overview' element={<PrivateRoute roles={['admin']} route={<AllocationOverview />} />}/>
             <Route path='/school_options' element={<PrivateRoute roles={['student']} route={<SchoolOptions />} />}/>

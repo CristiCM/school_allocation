@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { uploadSchoolSpecializations } from '../../services/API/SchoolCreationImport/UploadSchoolInformationFile';
+import { uploadSchoolSpecializations } from '../../../services/API/SchoolCreationImport/UploadSchoolInformationFile';
 import Button from 'react-bootstrap/Button';
 
 function ImportSchools() {

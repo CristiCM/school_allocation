@@ -1,5 +1,5 @@
-import NavBar from "../../components/shared/NavBar";
-import ImportDataForm from "../../components/admins/ImportDataForm";
+import NavBar from "../../../components/shared/NavBar";
+import ImportDataForm from "../../../components/admins/SpecializationCreation/ImportDataForm";
 
 function ImportData(){
     return(
