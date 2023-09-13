@@ -2,45 +2,9 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* An IDEA TODO */
 .loginform
 {
-  width: 60%;
+  width: 50%;
   display: inline-block;
   align-items: center;
 }
@@ -57,24 +21,60 @@
   padding-left: 0;
 }
 
-.tableGeneral {
-  display: inline-block;
-  margin-top: 14%;
-  top: 30%;
-  left: 15%;
-  width: 70%;
+.fullPageContainer {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  min-height: calc(100vh - 200px);
 }
 
-.infoHeaderGeneral {
-  margin-top: 10%;
+.tableGeneral {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  margin-top: auto;
+}
+
+.tableGeneral .table {
+  width: 70%;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.tableGeneral thead th:first-child {
+  border-top-left-radius: 5px;
+}
+
+.tableGeneral thead th:last-child {
+  border-top-right-radius: 5px;
+}
+
+.tableGeneral tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 5px;
+}
+
+.tableGeneral tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 5px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pageInfo {
+  margin-bottom: 5px;
 }
 
 .accordionGeneral {
-  position: relative;
-  top:50%;
-  left: 15%;
   width: 70%;
 }
 
-
-
+.tableHeader {
+  color: inherit;
+  text-decoration: none;
+}

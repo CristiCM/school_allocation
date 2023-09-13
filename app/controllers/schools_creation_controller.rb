@@ -22,7 +22,7 @@ class SchoolsCreationController < ApplicationController
   
     def create
       @school_specialization = SchoolSpecialization.new(school_specialization_params)
-      debugger
+      
       if SchoolSpecialization.exists?(school_id: school_specialization_params[:school_id], track_id: school_specialization_params[:track_id], specialization_id: school_specialization_params[:specialization_id])
         render_error("Specialization already exists!", :conflict)
       elsif @school_specialization.save
@@ -62,12 +62,19 @@ class SchoolsCreationController < ApplicationController
 
     # Can receive params: :order, :page(pagination)
     def index
+      meta_data = {
+        page: params[:page],
+        total_pages: (@school_specializations.count.to_f / 10).ceil
+      }
       @school_specializations = apply_pagination(@school_specializations)
       
       if @school_specializations.empty?
         render_success("There are no assignments", :no_content)
       else
-        data = {school_specializations: SchoolSpecializationSerializer.new(@school_specializations).serializable_hash[:data].map {|data| data[:attributes]}}
+        data = {
+          school_specializations: SchoolSpecializationSerializer.new(@school_specializations).serializable_hash[:data].map {|data| data[:attributes]},
+          pagination_meta_data: meta_data
+        }
         render_success("School Specializations, ordered and paginated.", :ok, data)
       end
     end

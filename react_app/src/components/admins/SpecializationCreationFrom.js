@@ -83,7 +83,7 @@ function SchoolCreationForm() {
                 />
             </Form.Group>
             <br />
-            <Button variant="primary" type="submit">
+            <Button variant="dark" type="submit">
                 Create School Specialization
             </Button>
         </Form>

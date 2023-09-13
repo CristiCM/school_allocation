@@ -8,14 +8,16 @@ function  Home(){
     return(
         <>
         <NavBar />
-        { role && role === 'admin' ?
-            <AdminHomeAccordion /> 
-            :
-            role && role === 'student' ?
-            <StudentHomeAccordion />
-            :
-            null
-        }
+        <div className="fullPageContainer">
+            { role && role === 'admin' ?
+                <AdminHomeAccordion /> 
+                :
+                role && role === 'student' ?
+                <StudentHomeAccordion />
+                :
+                null
+            }
+        </div>
         </>
     )
 }

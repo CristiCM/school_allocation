@@ -7,7 +7,7 @@ export const GetSchoolSpecializationsData = async (order, page) => {
 
     const data = {
         "order": order === null ? 'DESC' : order,
-        "track_id": page === null ? 1 : page,
+        "page": page === null ? 1 : page,
     };
     
     const headers = {

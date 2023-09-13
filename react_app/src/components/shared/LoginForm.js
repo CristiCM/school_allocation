@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useNavigate } from 'react-router-dom';
-
 import { LoginUser } from '../../services/API/Session/LoginUser';
 
 function LoginForm() {
@@ -36,6 +35,7 @@ function LoginForm() {
 
   return (
     <Form className='loginform' onSubmit={handleSubmit}>
+      <Form.Label>LOGIN</Form.Label>
       <Form.Group className="mb-3 mt-5" controlId="formBasicEmail">
         <Form.Label>Email address</Form.Label>
         <Form.Control 
@@ -58,7 +58,7 @@ function LoginForm() {
           onChange={(e) => setPassword(e.target.value)}
         />
       </Form.Group>
-      <Button variant="primary" type="submit">
+      <Button variant="dark" type="submit">
         Submit
       </Button>
     </Form>

@@ -3,7 +3,7 @@ import Accordion from 'react-bootstrap/Accordion';
 function AdminHomeAccordion() {
   return (
     <>
-        <div className='infoHeaderGeneral'>
+        <div className='pageInfo'>
             <h3>HOW TO</h3>
             <p>A quick step by step description of the process</p>
         </div>

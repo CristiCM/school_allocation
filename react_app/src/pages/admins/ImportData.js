@@ -5,7 +5,7 @@ function ImportData(){
     return(
         <>
             <NavBar />
-            <ImportDataForm />
+            <div className="fullPageContainer"><ImportDataForm /></div>
         </>
     )
 }

@@ -22,13 +22,16 @@ function ImportSchools() {
   }
 
   return (
-    <div className='tableGeneral'>
-        <form onSubmit={handleSubmit}>
-          <h1>Upload Data</h1>
-          <input type="file" onChange={handleChange}/>
-          <Button variant='primary' type="submit">Upload</Button>
-        </form>
-    </div>
+    <>
+      <div className='pageInfo'>
+        <h1>Upload Data</h1>
+      </div>
+
+      <form onSubmit={handleSubmit}>
+        <input type="file" onChange={handleChange}/>
+        <Button variant='dark' type="submit">Upload</Button>
+      </form>
+    </>
   );
 }
 

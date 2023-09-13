@@ -5,8 +5,9 @@ function SpecializationCreation(){
     return(
         <>
             <NavBar />
-            <SpecializationCreationFrom />
-            <br />
+            <div className="fullPageContainer">
+                <SpecializationCreationFrom />
+            </div>
         </>
     )
 }
