@@ -46,6 +46,7 @@
 }
 
 .schoolCreationFrom {
+  margin-top: 8%;
   width: 60%;
   display: inline-block;
   align-items: center;
@@ -58,13 +59,14 @@
 
 .tableGeneral {
   display: inline-block;
+  margin-top: 14%;
   top: 30%;
   left: 15%;
   width: 70%;
 }
 
 .infoHeaderGeneral {
-  margin-top: 15%;
+  margin-top: 10%;
 }
 
 .accordionGeneral {

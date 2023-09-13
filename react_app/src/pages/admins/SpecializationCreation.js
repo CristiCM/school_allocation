@@ -5,7 +5,6 @@ function SpecializationCreation(){
     return(
         <>
             <NavBar />
-            <h2>SpecializationCreation Page</h2>
             <SpecializationCreationFrom />
             <br />
         </>

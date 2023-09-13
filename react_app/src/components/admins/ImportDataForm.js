@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { uploadSchoolSpecializations } from '../../services/API/SchoolCreationImport/UploadSchoolInformationFile';
+import Button from 'react-bootstrap/Button';
 
 function ImportSchools() {
   const [file, setFile] = useState()
@@ -21,11 +22,11 @@ function ImportSchools() {
   }
 
   return (
-    <div>
+    <div className='tableGeneral'>
         <form onSubmit={handleSubmit}>
-          <h1>React File Upload</h1>
+          <h1>Upload Data</h1>
           <input type="file" onChange={handleChange}/>
-          <button type="submit">Upload</button>
+          <Button variant='primary' type="submit">Upload</Button>
         </form>
     </div>
   );

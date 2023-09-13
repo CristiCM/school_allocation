@@ -37,8 +37,8 @@ function SchoolCreationForm() {
 
     return(
         <>
-        <h6>Creation From</h6>
         <Form className='schoolCreationFrom' onSubmit={handleSubmit}>
+            <Form.Label>School Creation From</Form.Label>
             <Form.Select
                 aria-label='Select a School'
                 value={selectedSchoolId || ""}

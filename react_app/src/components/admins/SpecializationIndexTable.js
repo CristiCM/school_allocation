@@ -57,6 +57,7 @@ function SpecializationIndexTable() {
   return (
     <>
       <div className="tableGeneral">
+        <h3>All Specializations</h3>
         <Table striped bordered hover variant="dark">
           <thead>
             <tr>
