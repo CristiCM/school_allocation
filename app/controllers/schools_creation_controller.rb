@@ -84,6 +84,17 @@ class SchoolsCreationController < ApplicationController
       data = ExcelGenerator.generate_for_school_specializations(@school_specializations)
       send_data data, filename: "School Specializations.xlsx", type: Mime::Type.lookup_by_extension('xlsx').to_s
     end
+
+    def show
+      school_specialization = SchoolSpecialization.all.find_by(id: params[:id])
+
+      if !school_specialization
+        render_error("Invalid record id!", :not_found)
+      else
+        data = {school_specialization: SchoolSpecializationSerializer.new(school_specialization).serializable_hash[:data][:attributes]}
+        render_success("Specialization found!", :ok, data)
+      end
+    end
     
     private
 

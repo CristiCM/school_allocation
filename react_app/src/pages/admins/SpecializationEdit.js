@@ -4,9 +4,8 @@ import SpecializationEditForm from "../../components/admins/SpecializationEditFo
 function SpecializationEdit(){
     return(
         <>
-            <NavBar />
-            <h2>Specialization Edit Page</h2>
-            <SpecializationEditForm />
+          <NavBar />
+          <div className="fullPageContainer"><SpecializationEditForm /></div>
         </>
     )
 }
