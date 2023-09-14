@@ -1,5 +1,6 @@
 // #create
 import axios from  'axios';
+import { toast } from 'react-toastify';
 
 export const DeleteSchoolSpecialization = async (school_specialization_id) => {
 
@@ -13,16 +14,16 @@ export const DeleteSchoolSpecialization = async (school_specialization_id) => {
     try {
         const response = await axios.delete(url, { headers: headers });
         
-        alert(response.data.status.message);
+        toast.success(response.data.status.message);
 
         return response.data.status.message;
 
     } catch (error) {
         console.error("Error making the API call:", error);
         if (error.response && error.response.data && error.response.data.status && error.response.data.status.message) {
-            alert(error.response.data.status.message);
+            toast.error(error.response.data.status.message);
         } else {
-            alert("An error occurred. Please try again.");
+            toast.error("An error occurred. Please try again.");
         }
     }
 };

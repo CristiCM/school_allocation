@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
+import { toast } from 'react-toastify';
 
 function Logout() {
 
@@ -11,18 +12,19 @@ function Logout() {
         sessionStorage.removeItem('role');
         sessionStorage.removeItem('jwt');
 
-        alert("Successfully logged out.");
+        toast.success("Successfully logged out.");
         navigate('/');
     } catch (error) {
-        console.error('Failed to log out:', error);
+        toast.error('Failed to log out');
     }
 };
 
   
 
   return (
-    <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
-    // <button onClick={handleLogout}>Logout</button>
+    <>
+      <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+    </>
   );
 }
 

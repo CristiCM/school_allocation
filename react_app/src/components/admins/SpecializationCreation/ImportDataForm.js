@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { uploadSchoolSpecializations } from '../../../services/API/SchoolCreationImport/UploadSchoolInformationFile';
 import Button from 'react-bootstrap/Button';
+import { toast } from 'react-toastify';
 
 function ImportSchools() {
   const [file, setFile] = useState()
@@ -15,9 +16,9 @@ function ImportSchools() {
     const responseData = await uploadSchoolSpecializations(file);
 
     if(responseData.status.code === 200){
-      alert("File imported successfully!");
+      toast.success("File imported successfully!");
     } else {
-      alert("File import failed!");
+      toast.error("File import failed!");
     };
   }
 

@@ -15,12 +15,24 @@ import SpecializationCreation from './pages/admins/SpecializationCreation/Specia
 import SpecializationsIndex from './pages/admins/SpecializationCreation/SpecializationsIndex';
 import SpecializationEdit from './pages/admins/SpecializationCreation/SpecializationEdit';
 import StudentIndex from './pages/admins/StudentCreation/StudentIndex';
-
+import { ToastContainer } from 'react-toastify';
 
 function App() {
 
   return (
     <div className="App">
+        <ToastContainer
+          position="top-center"
+          autoClose={1500}
+          hideProgressBar
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
         <BrowserRouter>
           <Routes>
             <Route index element={<Home />} />

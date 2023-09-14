@@ -1,5 +1,6 @@
 // #index
 import axios from  'axios';
+import { toast } from 'react-toastify';
 
 export const GetSchoolSpecializationsData = async (order, page) => {
 
@@ -23,9 +24,9 @@ export const GetSchoolSpecializationsData = async (order, page) => {
     } catch (error) {
         console.error("Error making the API call:", error);
         if (error.response && error.response.data && error.response.data.status && error.response.data.status.message) {
-            alert(error.response.data.status.message);
+            toast.error(error.response.data.status.message);
         } else {
-            alert("An error occurred. Please try again.");
+            toast.error("An error occurred. Please try again.");
         }
     }
 };

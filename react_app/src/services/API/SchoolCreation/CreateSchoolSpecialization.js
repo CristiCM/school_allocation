@@ -1,6 +1,6 @@
 // #create
 import axios from  'axios';
-
+import { toast } from 'react-toastify';
 export const CreateSchoolSpecialization = async (schoolId, trackId, specializationId, spotsAvailable) => {
 
     const url = 'http://localhost:3000/school_specializations';
@@ -23,7 +23,7 @@ export const CreateSchoolSpecialization = async (schoolId, trackId, specializati
         const response = await axios.post(url, data, { headers: headers });
     
         if (response.data.status.code === 201) {
-            alert(response.data.status.message || "School Specialization Created");
+            toast.success(response.data.status.message || "School Specialization Created");
         }
 
         return response.data.status.message;
@@ -31,9 +31,9 @@ export const CreateSchoolSpecialization = async (schoolId, trackId, specializati
     } catch (error) {
         console.error("Error making the API call:", error);
         if (error.response && error.response.data && error.response.data.status && error.response.data.status.message) {
-            alert(error.response.data.status.message);
+            toast.error(error.response.data.status.message);
         } else {
-            alert("An error occurred. Please try again.");
+            toast.error("An error occurred. Please try again.");
         }
     }
 };

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export const DownloadSchoolSpecializations = async (order) => {
     const url = 'http://localhost:3000/school_specializations/download';
@@ -24,4 +25,6 @@ export const DownloadSchoolSpecializations = async (order) => {
     document.body.appendChild(link);
     link.click();
     link.remove();
+
+    toast.success('File downloaded successfully!')
 }
