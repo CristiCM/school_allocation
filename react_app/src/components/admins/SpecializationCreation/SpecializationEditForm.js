@@ -8,7 +8,9 @@ import { UpdateSchoolSpecialization } from "../../../services/API/SchoolCreation
 
 
 function SpecializationEditForm() {
-    const {id} = useParams();
+    const params = useParams();
+    const id = params.id ? parseInt(params.id) : parseInt(localStorage.getItem('lastCreatedSpec'));
+
     const [schools, setSchools] = useState([]);
     const [tracks, setTracks] = useState([]);
     const [specializations, setSpecializations] = useState([]);

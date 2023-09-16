@@ -26,6 +26,9 @@ export const CreateSchoolSpecialization = async (schoolId, trackId, specializati
             toast.success(response.data.status.message || "School Specialization Created");
         }
 
+        const lastCreatedSpecialization = response.data.data.school_specialization.id;
+        localStorage.setItem('lastCreatedSpec', lastCreatedSpecialization);
+
         return response.data.status.message;
 
     } catch (error) {

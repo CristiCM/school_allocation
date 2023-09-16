@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { uploadSchoolSpecializations } from '../../../services/API/SchoolCreationImport/UploadSchoolInformationFile';
 import Button from 'react-bootstrap/Button';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 function ImportSchools() {
-  const [file, setFile] = useState()
+  const navigate = useNavigate();
+  const [file, setFile] = useState();
 
   function handleChange(event) {
     setFile(event.target.files[0])
@@ -17,6 +19,7 @@ function ImportSchools() {
 
     if(responseData.status.code === 200){
       toast.success("File imported successfully!");
+      navigate("/specialization_creation");
     } else {
       toast.error("File import failed!");
     };
