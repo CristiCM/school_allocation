@@ -1,3 +1,4 @@
+import StudentCreationForm from "../../../components/admins/StudentCreation/StudentCreationForm";
 import NavBar from "../../../components/shared/NavBar";
 
 function StudentCreation(){
@@ -5,7 +6,7 @@ function StudentCreation(){
         <>
             <NavBar />
             <div className="fullPageContainer">
-                <h2>StudentCreation Page</h2>
+                <StudentCreationForm />
             </div>
         </>
     )

@@ -1,22 +1,22 @@
 // #create
 import axios from  'axios';
 import { toast } from 'react-toastify';
-export const CreateStudent = async (email, admissionAverage, englishAverage, romanianGrade, mathematicsGrade, motherTongue, motherTongueGrade, graduationAverage) => {
+export const CreateStudent = async (studentData) => {
 
     const url = 'http://localhost:3000/students';
-
+    
     const data = {
-      "user": {
-          "email": email,
-          "admission_average": admissionAverage,
-          "en_average": englishAverage,
-          "ro_grade": romanianGrade,
-          "mathematics_grade": mathematicsGrade,
-          "mother_tongue": motherTongue,
-          "mother_tongue_grade": motherTongueGrade,
-          "graduation_average": graduationAverage
-      }
-    };
+        "user": {
+            "email": studentData.email,
+            "admission_average": parseFloat(studentData.admission_average),
+            "en_average": parseFloat(studentData.en_average),
+            "ro_grade": parseFloat(studentData.ro_grade),
+            "mathematics_grade": parseFloat(studentData.mathematics_grade),
+            "mother_tongue": studentData.motherTongue,
+            "mother_tongue_grade": parseFloat(studentData.mother_tongue_grade),
+            "graduation_average": parseFloat(studentData.graduation_average)
+        }
+    };         
     
     const headers = {
       'Content-Type': 'application/json',
