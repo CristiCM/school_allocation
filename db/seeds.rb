@@ -18,7 +18,7 @@ if Rails.env.development?
     # Admin email: admin@admin.com
     # Admin password: 123456
 
-    User.create(email: 'admin@admin.com', password: '123456', role: 'admin')
+    FactoryBot.create(:user, email: 'admin@admin.com', password: '123456', role: 'admin' )
 
     350.times do
         user = FactoryBot.create(:user)

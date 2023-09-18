@@ -9,9 +9,17 @@ class User < ApplicationRecord
          :jwt_authenticatable, jwt_revocation_strategy: self
 
   validates :email, presence: true, uniqueness: true
-  validates :admission_average, :en_average, :ro_grade, :mathematics_grade, :graduation_average, presence: true, if: :student?
-  validates :admission_average, :en_average, :ro_grade, :mathematics_grade, :graduation_average, numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 10 }
-  validates :mother_tongue_grade, numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 10 }, allow_nil: true
+  
+  validates :admission_average, :en_average, :ro_grade, :mathematics_grade, :graduation_average, 
+  presence: true, 
+  numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 10 }, 
+  if: :student?
+
+  validates :mother_tongue_grade, 
+    numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 10 }, 
+    allow_nil: true, 
+    if: :student?
+
   
   def jwt_payload
     super
