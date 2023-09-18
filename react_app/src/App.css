@@ -8,6 +8,12 @@
   align-items: center;
 }
 
+.studentform {
+  width: 30%;
+  display: inline-block;
+  align-items: center;
+}
+
 .noBullets {
   list-style-type: none;
   padding-left: 0;

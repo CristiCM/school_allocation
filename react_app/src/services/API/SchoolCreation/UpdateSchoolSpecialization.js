@@ -3,7 +3,6 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 export const UpdateSchoolSpecialization = async(id, schoolId, trackId, specializationId, spotsAvailable) => {
-
     const url = 'http://localhost:3000/school_specializations' + `/${id}`;
 
     const data = {
@@ -22,7 +21,7 @@ export const UpdateSchoolSpecialization = async(id, schoolId, trackId, specializ
     
     try {
         const response = await axios.patch(url, data, { headers: headers });
-        toast.success("Updated successfully!")
+        toast.success("Updated successfully!");
         return response.data.status.message;
 
     } catch (error) {

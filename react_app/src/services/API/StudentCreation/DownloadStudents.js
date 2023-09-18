@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
-export const DownloadSchoolSpecializations = async (sortBy, order) => {
+export const DownloadStudents = async (sortBy, order) => {
     const url = 'http://localhost:3000/students/download';
 
     const headers = {
@@ -9,7 +9,7 @@ export const DownloadSchoolSpecializations = async (sortBy, order) => {
     };
 
     const params = {
-        "sortBy": sortBy,
+        "sort_by": sortBy,
         "order": order
     };
   

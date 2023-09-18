@@ -7,7 +7,7 @@ export const GetStudents = async (sortBy, order, page) => {
     const url = 'http://localhost:3000/students';
 
     const data = {
-        "sortBy": sortBy === null? 'users.email' : sortBy,
+        "sort_by": sortBy === null? 'users.email' : sortBy,
         "order": order === null ? 'DESC' : order,
         "page": page === null ? 1 : page,
     };
@@ -19,6 +19,13 @@ export const GetStudents = async (sortBy, order, page) => {
     
     try {
         const response = await axios.get(url, { params: data, headers: headers });
+
+        console.log(response);
+        console.log(response);
+        console.log(response);
+        console.log(response);
+        console.log(response);
+        console.log(response);
 
         return response.data;
 

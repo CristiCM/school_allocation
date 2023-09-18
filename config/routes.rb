@@ -11,7 +11,7 @@ Rails.application.routes.draw do
     post "/refresh_jwt" => "users/sessions#refresh_jwt"
   end  
 
-  resources :students, controller: 'students_creation', only: [:new, :create, :update, :destroy, :index, :edit] do
+  resources :students, controller: 'students_creation', only: [:new, :create, :update, :destroy, :index, :edit, :show] do
     collection do
       get :download
     end

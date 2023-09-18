@@ -5,9 +5,10 @@ import { useParams } from "react-router-dom";
 import { GetSchoolTrackSpecData } from "../../../services/API/SchoolCreation/GetSchoolTrackSpecData";
 import { GetSchoolSpecialization } from "../../../services/API/SchoolCreation/GetSchoolSpecialization";
 import { UpdateSchoolSpecialization } from "../../../services/API/SchoolCreation/UpdateSchoolSpecialization";
-
+import { useNavigate } from 'react-router-dom';
 
 function SpecializationEditForm() {
+    const navigate = useNavigate();
     const params = useParams();
     const id = params.id ? parseInt(params.id) : parseInt(localStorage.getItem('lastCreatedSpec'));
 
@@ -45,6 +46,7 @@ function SpecializationEditForm() {
         setSelectedTrackId(selectedTrackId);
         setSelectedSpecializationId(selectedSpecializationId);
         setSpotsAvailalbe(spotsAvailable);
+        navigate("/specialization_index");
     }
 
     return(

@@ -1,10 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from "react";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/esm/Button';
-import { CreateStudent } from '../../../services/API/StudentCreation/CreateStudent';
+import { useNavigate, useParams } from "react-router-dom";
+import { GetStudent } from "../../../services/API/StudentCreation/GetStudent";
+import { UpdateStudent } from "../../../services/API/StudentCreation/UpdateStudent";
 
+function StudentEditForm() {
+    const navigate = useNavigate();
+    const params = useParams();
+    const id = parseInt(params.id);
 
-function StudentCreationForm() {
     const [email, setEmail] = useState("");
     const [admissionAverage, setAdmissionAverage] = useState("");
     const [englishAverage, setEnglishAverage] = useState("");
@@ -12,12 +17,31 @@ function StudentCreationForm() {
     const [mathematicsGrade, setMathematicsGrade] = useState("");
     const [motherTongue, setMotherTongue ] = useState("");
     const [motherTongueGrade, setMotherTongueGrade ] = useState("");
-    const [graduationAverage, setGraduationAverage ] = useState("");    
+    const [graduationAverage, setGraduationAverage ] = useState(""); 
+
+    useEffect(() => {
+        const fetchData = async () => {
+            
+            const studentData = await GetStudent(id);
+            setEmail(studentData.email);
+            setAdmissionAverage(studentData.admission_average);
+            setEnglishAverage(studentData.en_average);
+            setRomanianGrade(studentData.ro_grade);
+            setMathematicsGrade(studentData.mathematics_grade);
+            setMotherTongue(studentData.mother_tongue);
+            setMotherTongueGrade(studentData.mother_tongue_grade);
+            setGraduationAverage(studentData.graduation_average);
+        };
+    
+        fetchData();
+    }, []);
+    
 
     const handleSubmit = async (event) => {
-        event.preventDefault();
-    
-        let studentData = {
+        event.preventDefault()
+
+        let updatedStudentData = {
+            id: id,
             email: email,
             admission_average: admissionAverage,
             en_average: englishAverage,
@@ -27,40 +51,27 @@ function StudentCreationForm() {
         };
     
         if (motherTongue !== "") {
-            studentData.user.mother_tongue = motherTongue;
+            updatedStudentData.mother_tongue = motherTongue;
         }
     
         if (motherTongueGrade !== "") {
-            studentData.user.mother_tongue_grade = motherTongueGrade;
+            updatedStudentData.mother_tongue_grade = motherTongueGrade;
         }
 
-        await CreateStudent(studentData);
-
-        setEmail("");
-        setAdmissionAverage("");
-        setEnglishAverage("");
-        setRomanianGrade("");
-        setMathematicsGrade("");
-        setMotherTongue("");
-        setMotherTongueGrade("");
-        setGraduationAverage("");
-    }    
+        await UpdateStudent(updatedStudentData);
+        navigate("/student_index");
+    }
 
     return(
         <>
         <Form className='studentform' onSubmit={handleSubmit}>
-            <Form.Label>Student Creation Form</Form.Label>
-            <Form.Control
-            placeholder='Email Adress'
-            type='email'
-            value={email}
-            required
-            onChange={(e) => setEmail(e.target.value)
-            }/>
-            <br />
+            <Form.Label style={{ fontWeight: 'bold', fontSize: '1.2em' }}>
+                Edit student: {email}
+            </Form.Label>
 
+            <br />
+            <Form.Label>Admission average</Form.Label>
             <Form.Control
-                    placeholder='Admission Average'
                     type='number'
                     value={admissionAverage}
                     min={1.00}
@@ -70,9 +81,8 @@ function StudentCreationForm() {
                     onChange={(e) => setAdmissionAverage(e.target.value)}
                 />
             <br />
-
+            <Form.Label>English average</Form.Label>
             <Form.Control
-                    placeholder='English Average'
                     type='number'
                     value={englishAverage}
                     min={1.00}
@@ -82,9 +92,8 @@ function StudentCreationForm() {
                     onChange={(e) => setEnglishAverage(e.target.value)}
                 />
             <br />
-
+            <Form.Label>Romanian grade</Form.Label>
             <Form.Control
-                    placeholder='Romanian Average'
                     type='number'
                     value={romanianGrade}
                     min={1.00}
@@ -94,10 +103,8 @@ function StudentCreationForm() {
                     onChange={(e) => setRomanianGrade(e.target.value)}
                 />
             <br />
-
-
+            <Form.Label>Mathematics average</Form.Label>
             <Form.Control
-                placeholder='Mathematics Average'
                 type='number'
                 value={mathematicsGrade}
                 min={1.00}
@@ -108,18 +115,18 @@ function StudentCreationForm() {
             />
             <br />
 
-
+            <Form.Label>Mother tongue</Form.Label>
             <Form.Control
-                placeholder='Mother Tongue'
+                placeholder="Mother tongue"
                 type='text'
                 value={motherTongue}
                 onChange={(e) => setMotherTongue(e.target.value)}
             />
             <br />
 
-
+            <Form.Label>Mother tongue grade</Form.Label>
             <Form.Control
-                placeholder='Mother Tongue Grade'
+                placeholder="Mother Tongue Grade"
                 type='number'
                 value={motherTongueGrade}
                 min={1.00}
@@ -129,7 +136,7 @@ function StudentCreationForm() {
             />
             <br />
 
-
+            <Form.Label>Graduation average</Form.Label>
             <Form.Control
                 placeholder='Graduation Average'
                 type='number'
@@ -142,11 +149,11 @@ function StudentCreationForm() {
             />
             <br />
             <Button variant="dark" type="submit">
-                Create Student
+                Update Student
             </Button>
         </Form>
         </>
     );
 }
 
-export default StudentCreationForm;
+export default StudentEditForm;

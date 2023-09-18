@@ -1,3 +1,4 @@
+import StudentIndexTable from "../../../components/admins/StudentCreation/StudentIndexTable";
 import NavBar from "../../../components/shared/NavBar";
 
 function StudentIndex(){
@@ -5,7 +6,7 @@ function StudentIndex(){
         <>
             <NavBar />
             <div className="fullPageContainer">
-                <h2>StudentIndex Page</h2>
+                <StudentIndexTable />
             </div>
         </>
     )

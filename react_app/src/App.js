@@ -5,6 +5,8 @@ import NoPage from './pages/shared/NoPage';
 import Login from './pages/shared/Login';
 import ImportData from './pages/admins/SpecializationCreation/ImportData';
 import StudentCreation from './pages/admins/StudentCreation/StudentCreation';
+import StudentIndex from './pages/admins/StudentCreation/StudentIndex';
+import StudentEdit from './pages/admins/StudentCreation/StudentEdit';
 import Scheduler from './pages/admins/Scheduler';
 import AllocationOverview from './pages/admins/AllocationOverview';
 import SchoolOptions from './pages/students/SchoolOptions';
@@ -14,7 +16,7 @@ import PrivateRoute from './components/shared/PrivateRoute';
 import SpecializationCreation from './pages/admins/SpecializationCreation/SpecializationCreation';
 import SpecializationsIndex from './pages/admins/SpecializationCreation/SpecializationsIndex';
 import SpecializationEdit from './pages/admins/SpecializationCreation/SpecializationEdit';
-import StudentIndex from './pages/admins/StudentCreation/StudentIndex';
+
 import { ToastContainer } from 'react-toastify';
 
 function App() {
@@ -43,6 +45,7 @@ function App() {
             <Route path='/specialization_edit/:id' element={<PrivateRoute roles={['admin']} route={<SpecializationEdit />} />}/>
             <Route path='/student_creation' element={<PrivateRoute roles={['admin']} route={<StudentCreation />} />}/>
             <Route path='/student_index' element={<PrivateRoute roles={['admin']} route={<StudentIndex />} />}/>
+            <Route path='/student_edit/:id' element={<PrivateRoute roles={['admin']} route={<StudentEdit />} />}/>
             <Route path='/scheduler' element={<PrivateRoute roles={['admin']} route={<Scheduler />} />}/>
             <Route path='/allocation_overview' element={<PrivateRoute roles={['admin']} route={<AllocationOverview />} />}/>
             <Route path='/school_options' element={<PrivateRoute roles={['student']} route={<SchoolOptions />} />}/>

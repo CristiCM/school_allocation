@@ -38,10 +38,17 @@ class StudentsCreationController < ApplicationController
   
   # Can receive params: :sort_by, :order, :page(pagination)
   def index
+    meta_data = {
+      page: params[:page],
+      total_pages: (@students.count.to_f / 10).ceil
+    }
     @students = apply_pagination(@students)
 
     if @students.any?
-      data = {users: UserSerializer.new(@students).serializable_hash[:data].map {|data| data[:attributes]}}
+      data = {
+        users: UserSerializer.new(@students).serializable_hash[:data].map {|data| data[:attributes]},
+        pagination_meta_data: meta_data
+      }
       render_success("Students, sorted, ordered, paginated.", :ok, data)
     else
       render_error("There are no student records.", :ok)
@@ -52,6 +59,17 @@ class StudentsCreationController < ApplicationController
   def download
     data = ExcelGenerator.generate_for_student_creation(@students)
     send_data data, filename: "Students.xlsx", type: Mime::Type.lookup_by_extension('xlsx').to_s
+  end
+
+  def show
+    student = User.find_by(id: params[:id])
+
+    if !student
+      render_error("Invalid record id!", :not_found)
+    else
+        data = {student: UserSerializer.new(student).serializable_hash[:data][:attributes]}
+        render_success("Specialization found!", :ok, data)
+    end
   end
 
   private
