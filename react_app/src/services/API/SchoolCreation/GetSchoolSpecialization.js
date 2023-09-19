@@ -11,11 +11,12 @@ export const GetSchoolSpecialization = async (id) => {
       },
   };      
   
-  const response = await axios.get(url, config);
-
-  if (response.status !== 200) {
-    throw new Error('Failed to get School/Track/Specialization Data.');
-  };
+  try{
+    const response = await axios.get(url, config);
 
   return response.data.data.school_specialization;
+  } catch {
+    
+  }
+  
 };

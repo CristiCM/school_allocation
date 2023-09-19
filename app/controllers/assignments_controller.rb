@@ -17,14 +17,20 @@ class AssignmentsController < ApplicationController
   end
 
   def index
+    meta_data = {
+      page: params[:page],
+      total_pages: (@assignments.count.to_f / 10).ceil
+    }
     @assignments = apply_pagination(@assignments)
     data = {
       assignments: @assignments.map do |assignment|
         {
           assignment: AssignmentSerializer.new(assignment).serializable_hash[:data][:attributes],
+          school_specialization: SchoolSpecializationSerializer.new(assignment.school_specialization).serializable_hash[:data][:attributes],
           user: UserSerializer.new(assignment.user).serializable_hash[:data][:attributes]
         }
-      end
+      end,
+      pagination_meta_data: meta_data
     }
 
     if @assignments.empty?

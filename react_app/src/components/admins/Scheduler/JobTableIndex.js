@@ -3,6 +3,7 @@ import Table from 'react-bootstrap/esm/Table';
 import Button from 'react-bootstrap/esm/Button';
 import { GetJobs } from '../../../services/API/Scheduler/GetJobs';
 import { DeleteJob } from '../../../services/API/Scheduler/DeleteJob';
+import { ResetAllocation } from '../../../services/API/AllocationReset/ResetAllocation';
 
 function JobTableIndex() {
 
@@ -31,7 +32,13 @@ function JobTableIndex() {
     const handleDelete = async (type) => {
 
         await DeleteJob(type)
-    }    
+    };
+
+    const handleReset = async() => {
+        if (window.confirm("Are you sure you want to reset allocation?")) {
+            await ResetAllocation();
+        };
+    };
 
     return(
         <>
@@ -50,7 +57,7 @@ function JobTableIndex() {
                         <td>{firstNotificationTime ? firstNotificationTime : "N/A"}</td>
                         <td>{secondNotificationTime ? secondNotificationTime : "N/A"}</td>
                         <td>{allocationTime ? allocationTime : "N/A"}</td>
-                        <td style={{ verticalAlign: 'middle' }} rowSpan={2}>{allocationDone ? "Done" : "Not done"}</td>
+                        <td>{allocationDone ? "Done" : "Not done"}</td>
                     </tr>
                     <tr>
                         <td>
@@ -61,6 +68,9 @@ function JobTableIndex() {
                         </td>
                         <td>
                         <Button variant="secondary" size="sm" onClick={() => handleDelete("allocation_date")}>Delete</Button>
+                        </td>
+                        <td>
+                        <Button variant="danger" size="sm" onClick={() => handleReset()}>Reset Allocation</Button>
                         </td>
                     </tr>
                 </tbody>

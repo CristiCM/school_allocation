@@ -1,26 +1,22 @@
-// #index
+// #create
 import axios from  'axios';
 import { toast } from 'react-toastify';
 
-export const GetStudents = async (sortBy, order, page) => {
+export const ResetAllocation = async () => {
 
-    const url = 'http://localhost:3000/students';
-
-    const data = {
-        "sort_by": sortBy === null? 'users.email' : sortBy,
-        "order": order === null ? 'DESC' : order,
-        "page": page === null ? 1 : page,
-    };
-    
+    const url = `http://localhost:3000/assignments_reset/1`;
+ 
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': `${sessionStorage.getItem('jwt')}`
     };
     
     try {
-        const response = await axios.get(url, { params: data, headers: headers });
+        const response = await axios.delete(url, { headers: headers });
+        
+        toast.success(response.data.status.message);
 
-        return response.data;
+        return response.data.status.message;
 
     } catch (error) {
         console.error("Error making the API call:", error);

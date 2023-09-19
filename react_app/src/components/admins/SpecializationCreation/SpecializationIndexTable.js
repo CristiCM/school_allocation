@@ -71,7 +71,7 @@ function SpecializationIndexTable() {
 
   return (
     <>
-      <div className="tableGeneral">
+      <div>
         <Table striped bordered hover variant="dark">
           <thead>
             <tr>

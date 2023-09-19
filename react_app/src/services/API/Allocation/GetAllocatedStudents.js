@@ -2,9 +2,9 @@
 import axios from  'axios';
 import { toast } from 'react-toastify';
 
-export const GetStudents = async (sortBy, order, page) => {
+export const GetAllocatedStudents = async (sortBy, order, page) => {
 
-    const url = 'http://localhost:3000/students';
+    const url = 'http://localhost:3000/assignments';
 
     const data = {
         "sort_by": sortBy === null? 'users.email' : sortBy,
