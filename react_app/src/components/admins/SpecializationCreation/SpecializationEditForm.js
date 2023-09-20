@@ -6,6 +6,8 @@ import { GetSchoolTrackSpecData } from "../../../services/API/SchoolCreation/Get
 import { GetSchoolSpecialization } from "../../../services/API/SchoolCreation/GetSchoolSpecialization";
 import { UpdateSchoolSpecialization } from "../../../services/API/SchoolCreation/UpdateSchoolSpecialization";
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from "@tanstack/react-query";
+import { toast } from 'react-toastify';
 
 function SpecializationEditForm() {
     const navigate = useNavigate();
@@ -20,24 +22,32 @@ function SpecializationEditForm() {
     const [selectedSpecializationId, setSelectedSpecializationId] = useState(null);
     const [spotsAvailable, setSpotsAvailalbe] = useState(0);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            
-            const specData = await GetSchoolSpecialization(id);
-            setSelectedSchoolId(specData.school_id);
-            setSelectedTrackId(specData.track_id);
-            setSelectedSpecializationId(specData.specialization_id);
-            setSpotsAvailalbe(specData.spots_available);
+    const schoolTrackSpecializationQuery = useQuery({
+        queryKey: ['schoolTrackSpecData'],
+        queryFn: GetSchoolTrackSpecData,
+        onSuccess: (data) => {
+            setSchools(data.data.data.schools);
+            setTracks(data.data.data.tracks);
+            setSpecializations(data.data.data.specializations);
+        },
+        onError: () => {
+            toast.error('Error fetching school track specialization data:');
+        }
+    });
 
-            const data = await GetSchoolTrackSpecData();
-            setSchools(data.schools);
-            setTracks(data.tracks);
-            setSpecializations(data.specializations);
-        };
-    
-        fetchData();
-    }, []);
-    
+    const specializationQuery = useQuery({
+        queryKey: ['specializationData', id],
+        queryFn: () => GetSchoolSpecialization(id),
+        onSuccess: (data) => {
+            setSelectedSchoolId(data.data.data.school_specialization.school_id);
+            setSelectedTrackId(data.data.data.school_specialization.track_id);
+            setSelectedSpecializationId(data.data.data.school_specialization.specialization_id);
+            setSpotsAvailalbe(data.data.data.school_specialization.spots_available);
+        },
+        onError: () => {
+            toast.error('Error fetching the newly-created specialization!');
+        }
+    });
 
     const handleSubmit = async (event) => {
         event.preventDefault()

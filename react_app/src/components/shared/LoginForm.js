@@ -5,35 +5,40 @@ import { useNavigate } from 'react-router-dom';
 import { LoginUser } from '../../services/API/Session/LoginUser';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { useMutation } from '@tanstack/react-query';
+import LoadingComp from '../../components/shared/LoadingComp';
 function LoginForm() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+
+  const mutation = useMutation({
+    mutationFn: (credentials) => {
+      return LoginUser(credentials.email, credentials.password);
+    },
+    onSuccess: (response) => {
+      sessionStorage.setItem('email', response.data.data.email);
+      sessionStorage.setItem('role', response.data.data.role);
+      sessionStorage.setItem('jwt', response.headers['authorization']);
+
+      navigate('/')
+      toast.success(response.data.status.message);
+    },
+    onError: (error) => {
+      toast.error(error.response.data);
+    },
+  });
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await LoginUser(email, password);
-
-      if (response.data.status.code === 200) {
-        sessionStorage.setItem('email', response.data.data.email);
-        sessionStorage.setItem('role', response.data.data.role);
-        sessionStorage.setItem('jwt', response.headers['authorization']);
-
-        navigate('/')
-        toast.success(response.data.status.message);
-      };
-
-    } catch {
-      toast.error('Login failed!');
-    }
+    mutation.mutate({email, password});
   }
-    
 
   return (
+    mutation.isLoading ? 
+    <LoadingComp message={"Logging you in..."}/>
+    :
     <>
       <Form className='loginform' onSubmit={handleSubmit}>
         <Form.Label>LOGIN</Form.Label>

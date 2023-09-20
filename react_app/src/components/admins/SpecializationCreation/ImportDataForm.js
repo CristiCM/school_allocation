@@ -1,40 +1,54 @@
 import React, { useState } from 'react';
-import { uploadSchoolSpecializations } from '../../../services/API/SchoolCreationImport/UploadSchoolInformationFile';
+import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { UploadSchoolSpecializations } from '../../../services/API/SchoolCreationImport/UploadSchoolInformationFile';
+import { useMutation } from '@tanstack/react-query';
+import LoadingComp from '../../shared/LoadingComp';
 
 function ImportSchools() {
   const navigate = useNavigate();
   const [file, setFile] = useState();
+
+  const mutation = useMutation({
+    mutationFn: (file) => {
+      return UploadSchoolSpecializations(file);
+    },
+    onSuccess: (response) => {
+      toast.success(response.data.status.message);
+      navigate("/specialization_creation");
+    },
+    onError: (error) => {
+      toast.error(error.response.data.status.message);
+    },
+  });
 
   function handleChange(event) {
     setFile(event.target.files[0])
   }
   
   async function handleSubmit(event) {
-    event.preventDefault()
+    event.preventDefault();
+    mutation.mutate(file);
 
-    const responseData = await uploadSchoolSpecializations(file);
-
-    if(responseData.status.code === 200){
-      toast.success("File imported successfully!");
-      navigate("/specialization_creation");
-    } else {
-      toast.error("File import failed!");
-    };
   }
 
   return (
+    mutation.isLoading ?
+    <LoadingComp message={"Uploading file..."} />
+    :
     <>
       <div className='pageInfo'>
         <h1>Upload Data</h1>
       </div>
-
-      <form onSubmit={handleSubmit}>
-        <input type="file" onChange={handleChange}/>
-        <Button variant='dark' type="submit">Upload</Button>
-      </form>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group controlId="formFile" className="mb-3">
+          <Form.Label>The only acceptable format is '.csv'</Form.Label>
+          <Form.Control type="file" className="mb-3" onChange={handleChange} />
+          <Button variant='dark' type="submit">Upload</Button>
+        </Form.Group>
+      </Form>
     </>
   );
 }

@@ -1,9 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/esm/Button';
 import { GetSchoolTrackSpecData } from '../../../services/API/SchoolCreation/GetSchoolTrackSpecData';
 import { CreateSchoolSpecialization } from '../../../services/API/SchoolCreation/CreateSchoolSpecialization';
-
+import { useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
+import LoadingComp from '../../shared/LoadingComp';
+import { useQueryClient } from '@tanstack/react-query';
 
 function SchoolCreationForm() {
     const [schools, setSchools] = useState([]);
@@ -14,21 +18,43 @@ function SchoolCreationForm() {
     const [selectedSpecializationId, setSelectedSpecializationId] = useState(null);
     const [spotsAvailable, setSpotsAvailalbe] = useState(0);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const data = await GetSchoolTrackSpecData();
-            setSchools(data.schools);
-            setTracks(data.tracks);
-            setSpecializations(data.specializations);
-        };
-    
-        fetchData();
-    }, []);
-    
+    const queryClient = useQueryClient();
+
+    const schoolTrackSpecializationQuery = useQuery({
+        queryKey: ['schoolTrackSpecData'],
+        queryFn: GetSchoolTrackSpecData,
+        onSuccess: (data) => {
+            setSchools(data.data.data.schools);
+            setTracks(data.data.data.tracks);
+            setSpecializations(data.data.data.specializations);
+        },
+        onError: (error) => {
+            toast.error('Error fetching school track specialization data:', error)
+        }
+    });
+
+    const mutation = useMutation({
+        mutationFn: (credentials) => {
+            return CreateSchoolSpecialization(
+                credentials.selectedSchoolId,
+                credentials.selectedTrackId,
+                credentials.selectedSpecializationId,
+                credentials.spotsAvailable
+            );
+        },
+        onSuccess: (response) => {
+            toast.success(response.data.status.message)
+            localStorage.setItem('lastCreatedSpec', response.data.data.school_specialization.id);
+            queryClient.invalidateQueries(['specializationData']);
+        },
+        onError: (error) => {
+            toast.error(error.response.data.status.message)
+        }
+    })
 
     const handleSubmit = async (event) => {
         event.preventDefault()
-        await CreateSchoolSpecialization(selectedSchoolId, selectedTrackId, selectedSpecializationId, spotsAvailable);
+        mutation.mutate({selectedSchoolId, selectedTrackId, selectedSpecializationId, spotsAvailable})
         setSelectedSchoolId(null);
         setSelectedTrackId(null);
         setSelectedSpecializationId(null);
@@ -36,6 +62,8 @@ function SchoolCreationForm() {
     }
 
     return(
+        mutation.isLoading ?
+        <LoadingComp message={"Creating specialization..."} /> :
         <>
         <Form className='schoolCreationFrom' onSubmit={handleSubmit}>
             <Form.Label>School Creation From</Form.Label>

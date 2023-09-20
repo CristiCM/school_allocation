@@ -7,19 +7,13 @@ function Logout() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    try {
-        sessionStorage.removeItem('email');
-        sessionStorage.removeItem('role');
-        sessionStorage.removeItem('jwt');
+    sessionStorage.removeItem('email');
+    sessionStorage.removeItem('role');
+    sessionStorage.removeItem('jwt');
 
-        toast.success("Successfully logged out.");
-        navigate('/');
-    } catch (error) {
-        toast.error('Failed to log out');
-    }
-};
-
-  
+    toast.success("Successfully logged out.");
+    navigate('/');
+  };
 
   return (
     <>
