@@ -3,12 +3,18 @@ import { Link } from "react-router-dom";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Pagination from 'react-bootstrap/Pagination';
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { GetSchoolTrackSpecData } from "../../../services/API/SchoolCreation/GetSchoolTrackSpecData";
 import { GetSchoolSpecializationsData } from "../../../services/API/SchoolCreation/GetSchoolSpecializationsData";
 import { DeleteSchoolSpecialization } from "../../../services/API/SchoolCreation/DeleteSchoolSpecialization";
 import { DownloadSchoolSpecializations } from "../../../services/API/SchoolCreation/DownloadSchoolSpecializations";
+import { toast } from 'react-toastify';
+import { useQueryClient } from '@tanstack/react-query';
+import LoadingComp from "../../shared/LoadingComp";
 
 function SpecializationIndexTable() {
+  const queryClient = useQueryClient();
+
   const [schools, setSchools] = useState([]);
   const [tracks, setTracks] = useState([]);
   const [specializations, setSpecializations] = useState([]);
@@ -18,58 +24,90 @@ function SpecializationIndexTable() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const fetchGeneralData = async () => {
-    const data = await GetSchoolTrackSpecData();
-    setSchools(data.schools);
-    setTracks(data.tracks);
-    setSpecializations(data.specializations);
-  };
+  const getSchoolTrackSpecializationQuery = useQuery({
+    queryKey: ['schoolTrackSpecData'],
+    queryFn: GetSchoolTrackSpecData,
+    onSuccess: (data) => {
+        setSchools(data.data.data.schools);
+        setTracks(data.data.data.tracks);
+        setSpecializations(data.data.data.specializations);
+    },
+    onError: () => {
+        toast.error('Error fetching school track specialization data')
+    }
+  });
 
-  const fetchSpecializationData = async() => {
-    const data = await GetSchoolSpecializationsData(order, page);
-    setSchoolSpecializations(data.data.school_specializations);
-    setPage(data.data.pagination_meta_data.page);
-    setTotalPages(data.data.pagination_meta_data.total_pages);
-  };
+  const getSchoolSpecializationsQuery = useQuery({
+    queryKey: ['schoolSpecializations', page, order],
+    queryFn: () => GetSchoolSpecializationsData(order, page),
+    onSuccess: (data) => {
+      setSchoolSpecializations(data.data.data.school_specializations);
+      setPage(data.data.data.pagination_meta_data.page);
+      setTotalPages(data.data.data.pagination_meta_data.total_pages);
+    },
+    onError: () => {
+      toast.error("Error fetching the school specializations.");
+    }
+  })
+
+  const deleteSchoolSpecializationMutation = useMutation({
+    mutationFn: (school_specialization_id) => {
+      return DeleteSchoolSpecialization(school_specialization_id);
+    },
+    onSuccess: (data) => {
+      toast.success(data.data.status.message);
+      queryClient.invalidateQueries(['schoolSpecializations']);
+    },
+    onError: (error) => {
+      toast.error(error.data.status.message);
+    }
+  })
+
+  const downloadSchoolSpecializationsMutation = useMutation({
+    mutationFn: (order) => {
+      return DownloadSchoolSpecializations(order);
+    },
+    onSuccess: (blob) => {
+      const downloadUrl = window.URL.createObjectURL(new Blob([blob]));
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.setAttribute('download', 'School Specializations.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      toast.success('File downloaded successfully!');
+    },
+    onError: () => {
+      toast.error("Error downloading the specializations.");
+    }
+});
+
 
   const handleOrdering = async () => {
     const newOrder = order === 'DESC' ? 'ASC' : 'DESC';
     setOrder(newOrder);
-
-    const data = await GetSchoolSpecializationsData(newOrder, page);
-    setSchoolSpecializations(data.data.school_specializations);
-    setPage(data.data.pagination_meta_data.page);
-    setTotalPages(data.data.pagination_meta_data.total_pages);
-  };
-
-  const handleDelete = async (school_spec_id) => {
-    await DeleteSchoolSpecialization(school_spec_id);
-    await fetchSpecializationData();
   };
 
   const handlePageChange = async (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
-      const data = await GetSchoolSpecializationsData(order, newPage);
-      setSchoolSpecializations(data.data.school_specializations);
-      setPage(Number(data.data.pagination_meta_data.page));
-      setTotalPages(data.data.pagination_meta_data.total_pages);
+      setPage(newPage)
     }
   };
 
-  const handleDownload = async(order) => {
-    await DownloadSchoolSpecializations(order);
+  const handleDelete = async (school_specialization_id) => {
+    deleteSchoolSpecializationMutation.mutate(school_specialization_id);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await fetchGeneralData();
-      await fetchSpecializationData();
-    };
-
-    fetchData();
-  }, []);
+  const handleDownload = (order) => {
+    downloadSchoolSpecializationsMutation.mutate(order);
+  };
 
   return (
+    deleteSchoolSpecializationMutation.isLoading ?
+    <LoadingComp message={"Deleteing specialization..."} /> :
+    downloadSchoolSpecializationsMutation.isLoading ?
+    <LoadingComp message={"Downloading specializations..."} /> :
     <>
       <div>
         <Table striped bordered hover variant="dark">

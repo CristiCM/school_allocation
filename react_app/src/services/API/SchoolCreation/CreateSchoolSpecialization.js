@@ -1,6 +1,6 @@
 // #create
-
 import ApiCall from '../Session/ApiCall';
+
 export const CreateSchoolSpecialization = async (schoolId, trackId, specializationId, spotsAvailable) => {
     const data = {
         "school_specialization": {

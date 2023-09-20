@@ -1,16 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/esm/Button';
 import { useParams } from "react-router-dom";
 import { GetSchoolTrackSpecData } from "../../../services/API/SchoolCreation/GetSchoolTrackSpecData";
 import { GetSchoolSpecialization } from "../../../services/API/SchoolCreation/GetSchoolSpecialization";
 import { UpdateSchoolSpecialization } from "../../../services/API/SchoolCreation/UpdateSchoolSpecialization";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from 'react-toastify';
+import LoadingComp from "../../shared/LoadingComp";
 
 function SpecializationEditForm() {
     const navigate = useNavigate();
+    const location = useLocation();
     const params = useParams();
     const id = params.id ? parseInt(params.id) : parseInt(localStorage.getItem('lastCreatedSpec'));
 
@@ -22,7 +25,7 @@ function SpecializationEditForm() {
     const [selectedSpecializationId, setSelectedSpecializationId] = useState(null);
     const [spotsAvailable, setSpotsAvailalbe] = useState(0);
 
-    const schoolTrackSpecializationQuery = useQuery({
+    const getSchoolTrackSpecializationQuery = useQuery({
         queryKey: ['schoolTrackSpecData'],
         queryFn: GetSchoolTrackSpecData,
         onSuccess: (data) => {
@@ -35,31 +38,55 @@ function SpecializationEditForm() {
         }
     });
 
-    const specializationQuery = useQuery({
+    const getSpecializationQuery = useQuery({
         queryKey: ['specializationData', id],
         queryFn: () => GetSchoolSpecialization(id),
-        onSuccess: (data) => {
-            setSelectedSchoolId(data.data.data.school_specialization.school_id);
-            setSelectedTrackId(data.data.data.school_specialization.track_id);
-            setSelectedSpecializationId(data.data.data.school_specialization.specialization_id);
-            setSpotsAvailalbe(data.data.data.school_specialization.spots_available);
+        onSuccess: (response) => {
+            setSelectedSchoolId(response.data.data.school_specialization.school_id);
+            setSelectedTrackId(response.data.data.school_specialization.track_id);
+            setSelectedSpecializationId(response.data.data.school_specialization.specialization_id);
+            setSpotsAvailalbe(response.data.data.school_specialization.spots_available);
         },
         onError: () => {
             toast.error('Error fetching the newly-created specialization!');
         }
     });
 
+    const updateSchoolSpecializationMutation = useMutation({
+        mutationFn: (credentials) => {
+            return UpdateSchoolSpecialization(
+                credentials.id,
+                credentials.selectedSchoolId,
+                credentials.selectedTrackId,
+                credentials.selectedSpecializationId,
+                credentials.spotsAvailable,
+            )
+        },
+        onSuccess: (response) => {
+            toast.success(response.data.status.message);
+            if (location.pathname !== '/specialization_creation') {
+                navigate("/specialization_index");
+            }
+        },
+        onError: (error) => {
+            toast.error(error.data.status.message);
+        }
+    });
+
     const handleSubmit = async (event) => {
         event.preventDefault()
-        await UpdateSchoolSpecialization(id, selectedSchoolId, selectedTrackId, selectedSpecializationId, spotsAvailable);
-        setSelectedSchoolId(selectedSchoolId);
-        setSelectedTrackId(selectedTrackId);
-        setSelectedSpecializationId(selectedSpecializationId);
-        setSpotsAvailalbe(spotsAvailable);
-        navigate("/specialization_index");
+        updateSchoolSpecializationMutation.mutate({
+            id,
+            selectedSchoolId,
+            selectedTrackId,
+            selectedSpecializationId,
+            spotsAvailable
+        });
     }
 
     return(
+        updateSchoolSpecializationMutation.isLoading ?
+        <LoadingComp message={"Updating the specialization..."} /> :
         <>
         <Form onSubmit={handleSubmit}>
             <Form.Label>School Edit From</Form.Label>

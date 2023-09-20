@@ -20,7 +20,7 @@ function SchoolCreationForm() {
 
     const queryClient = useQueryClient();
 
-    const schoolTrackSpecializationQuery = useQuery({
+    const getSchoolTrackSpecializationQuery = useQuery({
         queryKey: ['schoolTrackSpecData'],
         queryFn: GetSchoolTrackSpecData,
         onSuccess: (data) => {
@@ -28,12 +28,12 @@ function SchoolCreationForm() {
             setTracks(data.data.data.tracks);
             setSpecializations(data.data.data.specializations);
         },
-        onError: (error) => {
-            toast.error('Error fetching school track specialization data:', error)
+        onError: () => {
+            toast.error('Error fetching school track specialization data')
         }
     });
 
-    const mutation = useMutation({
+    const createSchoolSpecializationMutation = useMutation({
         mutationFn: (credentials) => {
             return CreateSchoolSpecialization(
                 credentials.selectedSchoolId,
@@ -54,15 +54,16 @@ function SchoolCreationForm() {
 
     const handleSubmit = async (event) => {
         event.preventDefault()
-        mutation.mutate({selectedSchoolId, selectedTrackId, selectedSpecializationId, spotsAvailable})
-        setSelectedSchoolId(null);
-        setSelectedTrackId(null);
-        setSelectedSpecializationId(null);
-        setSpotsAvailalbe(0);
+        createSchoolSpecializationMutation.mutate({
+            selectedSchoolId,
+            selectedTrackId,
+            selectedSpecializationId,
+            spotsAvailable
+        });
     }
 
     return(
-        mutation.isLoading ?
+        createSchoolSpecializationMutation.isLoading ?
         <LoadingComp message={"Creating specialization..."} /> :
         <>
         <Form className='schoolCreationFrom' onSubmit={handleSubmit}>

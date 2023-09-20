@@ -11,7 +11,7 @@ function ImportSchools() {
   const navigate = useNavigate();
   const [file, setFile] = useState();
 
-  const mutation = useMutation({
+  const uploadSchoolSpecializationsMutation = useMutation({
     mutationFn: (file) => {
       return UploadSchoolSpecializations(file);
     },
@@ -30,12 +30,12 @@ function ImportSchools() {
   
   async function handleSubmit(event) {
     event.preventDefault();
-    mutation.mutate(file);
+    uploadSchoolSpecializationsMutation.mutate(file);
 
   }
 
   return (
-    mutation.isLoading ?
+    uploadSchoolSpecializationsMutation.isLoading ?
     <LoadingComp message={"Uploading file..."} />
     :
     <>
