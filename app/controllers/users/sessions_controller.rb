@@ -4,7 +4,11 @@ class Users::SessionsController < Devise::SessionsController
 
   def refresh_jwt
     refresh_token = cookies[:refresh_token]
-    return render_response('No refresh token provided.', :bad_request) if refresh_token.blank?
+
+    if refresh_token.blank?
+      render json: {}, status: :bad_request
+      return
+    end
 
     encrypted_token = Digest::SHA256.hexdigest(refresh_token)
     current_user = User.find_by(refresh_token: encrypted_token)
@@ -12,9 +16,11 @@ class Users::SessionsController < Devise::SessionsController
     if current_user && current_user.refresh_token_expires_at > Time.now
       current_user.update_columns(jti: SecureRandom.uuid)
       new_jwt = Warden::JWTAuth::UserEncoder.new.call(current_user, :user, nil).first
-      render_response('JWT refreshed successfully!', :ok, {new_jwt_token: new_jwt})
+      render json: {
+        new_jwt_token: new_jwt
+      }, status: :ok
     else
-      render_response('Refresh token expired!', :unauthorized)
+      render json: {}, status: :unauthorized
     end
   end
 
@@ -32,7 +38,10 @@ class Users::SessionsController < Devise::SessionsController
       expires: 7.days,
     }
     sign_out resource
-    render_response('Logged in successfully.', :ok, {email: resource.email, role: resource.role})
+    render json: {
+      email: resource.email,
+      role: resource.role
+    }, status: :ok
   end
 
 
@@ -40,14 +49,14 @@ class Users::SessionsController < Devise::SessionsController
     auth_header = request.headers['Authorization']
     
     if auth_header.blank?
-      render_response("No authentification header provided.", :not_found)
+      render json: {}, status: :not_found
       return
     end
 
     token = auth_header.split(' ')[1]
 
     if token.blank?
-      render_response("Invalid authorization provided.", :bad_request)
+      render json: {}, status: :bad_request
       return
     end
 
@@ -56,10 +65,11 @@ class Users::SessionsController < Devise::SessionsController
     current_user = User.find(payload['sub'])
 
     if current_user
-      render_response("Logged out successfully.", :ok)
+      render json: {}, status: :ok
       current_user = nil
     else
-      render_response("Couldn't find an active session.", :not_found)
+      ren
+      render json: {}, status: :not_found
     end
   end
 
@@ -73,12 +83,5 @@ class Users::SessionsController < Devise::SessionsController
       Rails.logger.error("Failed to update user refresh token: #{current_user.errors.full_messages.join(", ")}")
       nil
     end
-  end  
-
-  def render_response(message = "Success", status = :ok, data_structure = {})
-    render json: {
-      status: {code: Rack::Utils::SYMBOL_TO_STATUS_CODE[status], message: message},
-      data: data_structure
-    }, status: status
   end
 end

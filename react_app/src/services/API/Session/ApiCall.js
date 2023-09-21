@@ -12,9 +12,9 @@ const ApiCall = async (method, url, data = null, headers = {}, params = null, re
       responseType
     });
   } catch (error) {
-    if (error.response && error.response.status === 401 && error.response.data.status.message === "Invalid or missing token.") {
+    if (error.response && error.response.status === 401) {
       const refreshResponse = await RefreshJwtToken();
-      sessionStorage.setItem('jwt', `Bearer ${refreshResponse.data.data.new_jwt_token}`);
+      sessionStorage.setItem('jwt', `Bearer ${refreshResponse.data.new_jwt_token}`);
       return axios({
         method,
         url: `http://localhost:3000${url}`,

@@ -10,9 +10,6 @@ import LoadingComp from '../../shared/LoadingComp';
 import { useQueryClient } from '@tanstack/react-query';
 
 function SchoolCreationForm() {
-    const [schools, setSchools] = useState([]);
-    const [tracks, setTracks] = useState([]);
-    const [specializations, setSpecializations] = useState([]);
     const [selectedSchoolId, setSelectedSchoolId] = useState(null);
     const [selectedTrackId, setSelectedTrackId] = useState(null);
     const [selectedSpecializationId, setSelectedSpecializationId] = useState(null);
@@ -20,20 +17,15 @@ function SchoolCreationForm() {
 
     const queryClient = useQueryClient();
 
-    const getSchoolTrackSpecializationQuery = useQuery({
+    const {data: schoolTrackSpecData, isLoading: schoolTrackSpecIsLoading} = useQuery({
         queryKey: ['schoolTrackSpecData'],
         queryFn: GetSchoolTrackSpecData,
-        onSuccess: (data) => {
-            setSchools(data.data.data.schools);
-            setTracks(data.data.data.tracks);
-            setSpecializations(data.data.data.specializations);
-        },
         onError: () => {
             toast.error('Error fetching school track specialization data')
         }
     });
 
-    const createSchoolSpecializationMutation = useMutation({
+    const {mutate: createSchoolSpecializationMutation, isLoading: schoolSpecializationCreationIsLoading} = useMutation({
         mutationFn: (credentials) => {
             return CreateSchoolSpecialization(
                 credentials.selectedSchoolId,
@@ -43,18 +35,20 @@ function SchoolCreationForm() {
             );
         },
         onSuccess: (response) => {
-            toast.success(response.data.status.message)
-            localStorage.setItem('lastCreatedSpec', response.data.data.school_specialization.id);
-            queryClient.invalidateQueries(['specializationData']);
+            toast.success('Specialization created successfully');
+            localStorage.setItem('lastCreatedSpec', response.data.school_specialization.id);
+            queryClient.invalidateQueries('specializationData');
         },
         onError: (error) => {
-            toast.error(error.response.data.status.message)
+            error.response.status === 409 ?
+            toast.error("That specialization already exists!") :
+            toast.error("There was an error in creating the specialization!");
         }
     })
 
     const handleSubmit = async (event) => {
         event.preventDefault()
-        createSchoolSpecializationMutation.mutate({
+        createSchoolSpecializationMutation({
             selectedSchoolId,
             selectedTrackId,
             selectedSpecializationId,
@@ -63,8 +57,8 @@ function SchoolCreationForm() {
     }
 
     return(
-        createSchoolSpecializationMutation.isLoading ?
-        <LoadingComp message={"Creating specialization..."} /> :
+        schoolTrackSpecIsLoading ?
+        <LoadingComp message={"Fetching Data..."} /> :
         <>
         <Form className='schoolCreationFrom' onSubmit={handleSubmit}>
             <Form.Label>School Creation From</Form.Label>
@@ -74,7 +68,7 @@ function SchoolCreationForm() {
                 onChange={(e) => setSelectedSchoolId(e.target.value)}
             >
                 <option value="" disabled>Select a School</option>
-                {schools.map(school => (
+                {schoolTrackSpecData.data.schools.map(school => (
                     <option key={school.id} value={school.id}>{school.name}</option>
                 ))}
             </Form.Select>
@@ -85,7 +79,7 @@ function SchoolCreationForm() {
                 onChange={(e) => setSelectedTrackId(e.target.value)}
             >
                 <option value="" disabled>Select a Track</option>
-                {tracks.map(track => (
+                {schoolTrackSpecData.data.tracks.map(track => (
                     <option key={track.id} value={track.id}>{track.name}</option>
                 ))}
             </Form.Select>
@@ -96,7 +90,7 @@ function SchoolCreationForm() {
                 onChange={(e) => setSelectedSpecializationId(e.target.value)}
             >
                 <option value="" disabled>Select a Specialization</option>
-                {specializations.map(spec => (
+                {schoolTrackSpecData.data.specializations.map(spec => (
                     <option key={spec.id} value={spec.id}>{spec.name}</option>
                 ))}
             </Form.Select>
@@ -112,8 +106,11 @@ function SchoolCreationForm() {
                 />
             </Form.Group>
             <br />
-            <Button variant="dark" type="submit">
-                Create School Specialization
+            <Button variant="dark" type="submit" disabled={schoolSpecializationCreationIsLoading}>
+                {schoolSpecializationCreationIsLoading ?
+                    "Creating...":
+                    "Create School Specialization"
+                }
             </Button>
         </Form>
         </>

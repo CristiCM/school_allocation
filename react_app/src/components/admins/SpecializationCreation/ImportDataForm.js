@@ -11,16 +11,17 @@ function ImportSchools() {
   const navigate = useNavigate();
   const [file, setFile] = useState();
 
-  const uploadSchoolSpecializationsMutation = useMutation({
+  const {mutate, isLoading} = useMutation({
     mutationFn: (file) => {
       return UploadSchoolSpecializations(file);
     },
-    onSuccess: (response) => {
-      toast.success(response.data.status.message);
+    onSuccess: () => {
+      toast.success('File uploaded successfully');
       navigate("/specialization_creation");
     },
     onError: (error) => {
-      toast.error(error.response.data.status.message);
+      console.log(error);
+      toast.error(`Failed: ${error.response.statusText}`);
     },
   });
 
@@ -30,12 +31,12 @@ function ImportSchools() {
   
   async function handleSubmit(event) {
     event.preventDefault();
-    uploadSchoolSpecializationsMutation.mutate(file);
+    mutate(file);
 
   }
 
   return (
-    uploadSchoolSpecializationsMutation.isLoading ?
+    isLoading ?
     <LoadingComp message={"Uploading file..."} />
     :
     <>

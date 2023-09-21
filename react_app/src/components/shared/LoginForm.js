@@ -8,35 +8,35 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useMutation } from '@tanstack/react-query';
 import LoadingComp from '../../components/shared/LoadingComp';
 function LoginForm() {
-
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
 
-  const mutation = useMutation({
+  const {mutate, isLoading} = useMutation({
     mutationFn: (credentials) => {
       return LoginUser(credentials.email, credentials.password);
     },
     onSuccess: (response) => {
-      sessionStorage.setItem('email', response.data.data.email);
-      sessionStorage.setItem('role', response.data.data.role);
+      console.log(response);
+      sessionStorage.setItem('email', response.data.email);
+      sessionStorage.setItem('role', response.data.role);
       sessionStorage.setItem('jwt', response.headers['authorization']);
 
       navigate('/')
-      toast.success(response.data.status.message);
+      toast.success('Logged in successfully');
     },
     onError: (error) => {
-      toast.error(error.response.data);
+      toast.error(`Failed: ${error.response.data}`);
     },
   });
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    mutation.mutate({email, password});
+    mutate({email, password});
   }
 
   return (
-    mutation.isLoading ? 
+    isLoading ? 
     <LoadingComp message={"Logging you in..."}/>
     :
     <>

@@ -14,56 +14,47 @@ import LoadingComp from "../../shared/LoadingComp";
 
 function SpecializationIndexTable() {
   const queryClient = useQueryClient();
-
-  const [schools, setSchools] = useState([]);
-  const [tracks, setTracks] = useState([]);
-  const [specializations, setSpecializations] = useState([]);
-  const [schoolSpecializations, setSchoolSpecializations] = useState([]);
-
   const [order, setOrder] = useState('DESC');
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
 
-  const getSchoolTrackSpecializationQuery = useQuery({
+  const {data: schoolTrackSpecData, isLoading: schoolTrackSpecIsLoading} = useQuery({
     queryKey: ['schoolTrackSpecData'],
     queryFn: GetSchoolTrackSpecData,
-    onSuccess: (data) => {
-        setSchools(data.data.data.schools);
-        setTracks(data.data.data.tracks);
-        setSpecializations(data.data.data.specializations);
-    },
     onError: () => {
         toast.error('Error fetching school track specialization data')
     }
   });
 
-  const getSchoolSpecializationsQuery = useQuery({
+  const {data: schoolSpecializationsData, isLoading: schoolSpecializationsIsLoading} = useQuery({
     queryKey: ['schoolSpecializations', page, order],
     queryFn: () => GetSchoolSpecializationsData(order, page),
-    onSuccess: (data) => {
-      setSchoolSpecializations(data.data.data.school_specializations);
-      setPage(data.data.data.pagination_meta_data.page);
-      setTotalPages(data.data.data.pagination_meta_data.total_pages);
+    onSuccess: (response) => {
+      setOrder(response.data.order);
+      setPage(response.data.page);
     },
     onError: () => {
       toast.error("Error fetching the school specializations.");
     }
   })
 
-  const deleteSchoolSpecializationMutation = useMutation({
+  const {mutate: deleteSpecialization, isLoading: deleteSpecializationIsLoading} = useMutation({
     mutationFn: (school_specialization_id) => {
       return DeleteSchoolSpecialization(school_specialization_id);
     },
-    onSuccess: (data) => {
-      toast.success(data.data.status.message);
+    onSuccess: () => {
+      toast.success('Record deleted successfully')
       queryClient.invalidateQueries(['schoolSpecializations']);
     },
     onError: (error) => {
-      toast.error(error.data.status.message);
+      error.response.status === 404?
+      toast.error('Invalid record id!') :
+      error.response.status === 403?
+      toast.error("Delete failed: Students have that specialization selected.") :
+      toast.error('Error: Delete failed.');
     }
   })
 
-  const downloadSchoolSpecializationsMutation = useMutation({
+  const {mutate: downloadSpecializations, isLoading: downloadIsLoading} = useMutation({
     mutationFn: (order) => {
       return DownloadSchoolSpecializations(order);
     },
@@ -85,29 +76,26 @@ function SpecializationIndexTable() {
 
 
   const handleOrdering = async () => {
-    const newOrder = order === 'DESC' ? 'ASC' : 'DESC';
-    setOrder(newOrder);
+    setOrder(order === 'DESC' ? 'ASC' : 'DESC');
   };
 
   const handlePageChange = async (newPage) => {
-    if (newPage >= 1 && newPage <= totalPages) {
+    if (newPage >= 1 && newPage <= schoolSpecializationsData.data.total_pages) {
       setPage(newPage)
     }
   };
 
   const handleDelete = async (school_specialization_id) => {
-    deleteSchoolSpecializationMutation.mutate(school_specialization_id);
+    deleteSpecialization(school_specialization_id);
   };
 
   const handleDownload = (order) => {
-    downloadSchoolSpecializationsMutation.mutate(order);
+    downloadSpecializations(order);
   };
 
   return (
-    deleteSchoolSpecializationMutation.isLoading ?
-    <LoadingComp message={"Deleteing specialization..."} /> :
-    downloadSchoolSpecializationsMutation.isLoading ?
-    <LoadingComp message={"Downloading specializations..."} /> :
+    schoolSpecializationsIsLoading || schoolTrackSpecIsLoading ?
+    <LoadingComp message={"Fetching data..."} /> :
     <>
       <div>
         <Table striped bordered hover variant="dark">
@@ -130,12 +118,13 @@ function SpecializationIndexTable() {
             </tr>
           </thead>
           <tbody>
-            {schoolSpecializations ?
-              schoolSpecializations.map(schoolSpecialization => (
+            {console.log()}
+            {schoolSpecializationsData.data.school_specializations ?
+              schoolSpecializationsData.data.school_specializations.map(schoolSpecialization => (
                 <tr key={schoolSpecialization.id}>
-                  <td>{(schools.find(school => school.id === schoolSpecialization.school_id) || {}).name}</td>
-                  <td>{(tracks.find(track => track.id === schoolSpecialization.track_id) || {}).name}</td>
-                  <td>{(specializations.find(specialization => specialization.id === schoolSpecialization.specialization_id) || {}).name}</td>
+                  <td>{(schoolTrackSpecData.data.schools.find(school => school.id === schoolSpecialization.school_id) || {}).name}</td>
+                  <td>{(schoolTrackSpecData.data.tracks.find(track => track.id === schoolSpecialization.track_id) || {}).name}</td>
+                  <td>{(schoolTrackSpecData.data.specializations.find(specialization => specialization.id === schoolSpecialization.specialization_id) || {}).name}</td>
                   <td>{schoolSpecialization.spots_available}</td>
                   <td>
                     <Button variant="secondary" size="sm" as={Link} to={`/specialization_edit/${schoolSpecialization.id}`}>
@@ -143,7 +132,11 @@ function SpecializationIndexTable() {
                     </Button>
                   </td>
                   <td>
-                    <Button variant="secondary" size="sm" onClick={() => handleDelete(schoolSpecialization.id)}>Delete</Button>
+                    <Button variant="secondary" size="sm" disabled={deleteSpecializationIsLoading} onClick={() => handleDelete(schoolSpecialization.id)}>
+                      {deleteSpecializationIsLoading ?
+                        "Deleting..." :
+                        "Delete"}
+                    </Button>
                   </td>
                 </tr>
               )) :
@@ -156,17 +149,21 @@ function SpecializationIndexTable() {
         <Pagination>
           <Pagination.First onClick={() => handlePageChange(1)} />
           <Pagination.Prev onClick={() => { handlePageChange(page - 1)}} />
-          {[...Array(totalPages)].map((_, index) => (
+          {[...Array(schoolSpecializationsData.data.total_pages)].map((_, index) => (
             <Pagination.Item key={index} active={index + 1 === page} onClick={() => handlePageChange(index + 1)}>
               {index + 1}
             </Pagination.Item>
           ))}
           <Pagination.Next onClick={() => handlePageChange(page + 1)} />
-          <Pagination.Last onClick={() => handlePageChange(totalPages)} />
+          <Pagination.Last onClick={() => handlePageChange(schoolSpecializationsData.data.total_pages)} />
         </Pagination>
       </div>
 
-      <Button variant="dark" onClick={() => handleDownload(order)}>Download all specializations</Button>
+      <Button variant="dark" disabled={downloadIsLoading} onClick={() => handleDownload(order)}>
+        {downloadIsLoading ?
+          "Downloading..." :
+          "Download all specializations"}
+      </Button>
     </>
   );
 }

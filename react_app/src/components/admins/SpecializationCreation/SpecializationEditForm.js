@@ -16,43 +16,36 @@ function SpecializationEditForm() {
     const location = useLocation();
     const params = useParams();
     const id = params.id ? parseInt(params.id) : parseInt(localStorage.getItem('lastCreatedSpec'));
-
-    const [schools, setSchools] = useState([]);
-    const [tracks, setTracks] = useState([]);
-    const [specializations, setSpecializations] = useState([]);
     const [selectedSchoolId, setSelectedSchoolId] = useState(null);
     const [selectedTrackId, setSelectedTrackId] = useState(null);
     const [selectedSpecializationId, setSelectedSpecializationId] = useState(null);
     const [spotsAvailable, setSpotsAvailalbe] = useState(0);
 
-    const getSchoolTrackSpecializationQuery = useQuery({
+    const {data: schoolTrackSpecData, isLoading: schoolTrackSpecIsLoading} = useQuery({
         queryKey: ['schoolTrackSpecData'],
         queryFn: GetSchoolTrackSpecData,
-        onSuccess: (data) => {
-            setSchools(data.data.data.schools);
-            setTracks(data.data.data.tracks);
-            setSpecializations(data.data.data.specializations);
-        },
         onError: () => {
-            toast.error('Error fetching school track specialization data:');
+            toast.error('Error fetching school track specialization data')
         }
     });
-
-    const getSpecializationQuery = useQuery({
+    
+    const {isLoading: newlyCreatedSpecializationIsLoading} = useQuery({
         queryKey: ['specializationData', id],
         queryFn: () => GetSchoolSpecialization(id),
         onSuccess: (response) => {
-            setSelectedSchoolId(response.data.data.school_specialization.school_id);
-            setSelectedTrackId(response.data.data.school_specialization.track_id);
-            setSelectedSpecializationId(response.data.data.school_specialization.specialization_id);
-            setSpotsAvailalbe(response.data.data.school_specialization.spots_available);
+            setSelectedSchoolId(response.data.school_specialization.school_id);
+            setSelectedTrackId(response.data.school_specialization.track_id);
+            setSelectedSpecializationId(response.data.school_specialization.specialization_id);
+            setSpotsAvailalbe(response.data.school_specialization.spots_available);
         },
-        onError: () => {
+        onError: (error) => {
+            error.response.status === 404?
+            toast.error(`Invalid record id: ${id}!`):
             toast.error('Error fetching the newly-created specialization!');
         }
     });
 
-    const updateSchoolSpecializationMutation = useMutation({
+    const {mutate: updateSchoolSpecializationMutation, isLoading: updateSpecializationIsLoading } = useMutation({
         mutationFn: (credentials) => {
             return UpdateSchoolSpecialization(
                 credentials.id,
@@ -62,20 +55,20 @@ function SpecializationEditForm() {
                 credentials.spotsAvailable,
             )
         },
-        onSuccess: (response) => {
-            toast.success(response.data.status.message);
-            if (location.pathname !== '/specialization_creation') {
-                navigate("/specialization_index");
-            }
+        onSuccess: () => {
+            toast.success('Specialization updated successfully');
+            if (location.pathname !== '/specialization_creation') navigate("/specialization_index");
         },
         onError: (error) => {
-            toast.error(error.data.status.message);
+            error.response.status === 404 ?
+            toast.error(`Invalid record id: ${id}!`):
+            toast.error('Error fetching the newly-created specialization!');
         }
     });
 
     const handleSubmit = async (event) => {
         event.preventDefault()
-        updateSchoolSpecializationMutation.mutate({
+        updateSchoolSpecializationMutation({
             id,
             selectedSchoolId,
             selectedTrackId,
@@ -85,8 +78,10 @@ function SpecializationEditForm() {
     }
 
     return(
-        updateSchoolSpecializationMutation.isLoading ?
-        <LoadingComp message={"Updating the specialization..."} /> :
+        schoolTrackSpecIsLoading ?
+        <LoadingComp message={"Fetching Data..."} /> :
+        newlyCreatedSpecializationIsLoading ?
+        <LoadingComp message={"Fetching Data..."} /> :
         <>
         <Form onSubmit={handleSubmit}>
             <Form.Label>School Edit From</Form.Label>
@@ -95,8 +90,8 @@ function SpecializationEditForm() {
                 value={selectedSchoolId || ""}
                 onChange={(e) => setSelectedSchoolId(e.target.value)}
             >
-                <option value="" disabled>{(schools.find(school => school.id === selectedSchoolId) || {}).name}</option>
-                {schools.map(school => (
+                <option value="" disabled>{(schoolTrackSpecData.data.schools.find(school => school.id === selectedSchoolId) || {}).name}</option>
+                {schoolTrackSpecData.data.schools.map(school => (
                     <option key={school.id} value={school.id}>{school.name}</option>
                 ))}
             </Form.Select>
@@ -106,8 +101,8 @@ function SpecializationEditForm() {
                 value={selectedTrackId || ""}
                 onChange={(e) => setSelectedTrackId(e.target.value)}
             >
-                <option value="" disabled>{(tracks.find(track => track.id === selectedTrackId) || {}).name}</option>
-                {tracks.map(track => (
+                <option value="" disabled>{(schoolTrackSpecData.data.tracks.find(track => track.id === selectedTrackId) || {}).name}</option>
+                {schoolTrackSpecData.data.tracks.map(track => (
                     <option key={track.id} value={track.id}>{track.name}</option>
                 ))}
             </Form.Select>
@@ -117,8 +112,8 @@ function SpecializationEditForm() {
                 value={selectedSpecializationId || ""}
                 onChange={(e) => setSelectedSpecializationId(e.target.value)}
             >
-                <option value="" disabled>{(specializations.find(specialization => specialization.id === selectedSpecializationId) || {}).name}</option>
-                {specializations.map(spec => (
+                <option value="" disabled>{(schoolTrackSpecData.data.specializations.find(specialization => specialization.id === selectedSpecializationId) || {}).name}</option>
+                {schoolTrackSpecData.data.specializations.map(spec => (
                     <option key={spec.id} value={spec.id}>{spec.name}</option>
                 ))}
             </Form.Select>
@@ -134,8 +129,11 @@ function SpecializationEditForm() {
                 />
             </Form.Group>
             <br />
-            <Button variant="dark" type="submit">
-                Update School Specialization
+            <Button variant="dark" type="submit" disabled={updateSpecializationIsLoading}>
+                {updateSpecializationIsLoading ?
+                    "Updating...":
+                    "Update School Specialization"
+                }
             </Button>
         </Form>
         </>

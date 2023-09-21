@@ -5,10 +5,9 @@ class SchoolsCreationImportController < ApplicationController
     def create
         begin
           DataImporter.new(params[:file]).import_csv
-
-          render_success("Successfully imported!", :ok)
+          render json: {}, status: :ok
         rescue => e
-          render_error("Import failed: #{e.message}", :bad_request)
+          render json: {}, status: :bad_request
         end
     end
 end

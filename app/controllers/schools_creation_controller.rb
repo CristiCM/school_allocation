@@ -6,30 +6,24 @@ class SchoolsCreationController < ApplicationController
   PAGINATION_RECORD_NUMBER = 10
   
     def new
-
-      data = {
+      render json: {
         schools: SchoolSerializer.new(School.all).serializable_hash[:data].map { |data| data[:attributes] },
         tracks: TrackSerializer.new(Track.all).serializable_hash[:data].map { |data| data[:attributes] },
         specializations: SpecializationSerializer.new(Specialization.all).serializable_hash[:data].map { |data| data[:attributes] }
-      }
-
-      if !School.any? || !Track.any? || !Specialization.any?
-        render_success("School, Track, Spec records.", :partial_content, data)
-      else
-        render_success("School, Track, Spec records.", :ok, data)
-      end
+      }, status: !School.any? || !Track.any? || !Specialization.any? ? :partial_content : :ok
     end
   
     def create
       @school_specialization = SchoolSpecialization.new(school_specialization_params)
       
       if SchoolSpecialization.exists?(school_id: school_specialization_params[:school_id], track_id: school_specialization_params[:track_id], specialization_id: school_specialization_params[:specialization_id])
-        render_error("Specialization already exists!", :conflict)
+        render json: {}, status: :conflict
       elsif @school_specialization.save
-        data = {school_specialization: SchoolSpecializationSerializer.new(@school_specialization).serializable_hash[:data][:attributes]}
-        render_success("Specialization created!", :created, data)
+        render json: {
+          school_specialization: SchoolSpecializationSerializer.new(@school_specialization).serializable_hash[:data][:attributes]
+        }, status: :created
       else
-        render_error(@school_specialization.errors.full_messages.to_sentence, :bad_request)
+        render json: {}, status: :bad_request
       end
     end
 
@@ -37,12 +31,11 @@ class SchoolsCreationController < ApplicationController
       @school_specialization = SchoolSpecialization.find_by(id: params[:id])
 
       if !@school_specialization
-        render_error("Invalid record id!", :not_found)
+        render json: {}, status: :not_found
       elsif @school_specialization.update(school_specialization_params)
-        data = {school_specialization: SchoolSpecializationSerializer.new(@school_specialization).serializable_hash[:data][:attributes]}
-        render_success("Specialization updated!", :ok, data)
+        render json: {}, status: :ok
       else
-        render_error(@school_specialization.errors.full_messages.to_sentence, :bad_request)
+        render json: {}, status: :bad_request
       end
     end
     
@@ -51,31 +44,28 @@ class SchoolsCreationController < ApplicationController
       
       begin
         if !@school_specialization
-          render_error("invalid record id!", :not_found)
+          render json: {}, status: :not_found
         elsif @school_specialization.destroy
-          render_success("Record deleted succesfully!", :ok)
+          render json: {}, status: :ok
         end
       rescue
-        render_error("Delete failed: Students have that specialization selected.", :forbidden)
+        render json: {}, status: :forbidden
       end
     end
 
     # Can receive params: :order, :page(pagination)
     def index
-      meta_data = {
-        page: params[:page],
-        total_pages: (@school_specializations.count.to_f / 10).ceil
-      }
       @school_specializations = apply_pagination(@school_specializations)
       
       if @school_specializations.empty?
-        render_success("There are no assignments", :no_content)
+        render json: {}, status: :no_content
       else
-        data = {
+        render json: {
           school_specializations: SchoolSpecializationSerializer.new(@school_specializations).serializable_hash[:data].map {|data| data[:attributes]},
-          pagination_meta_data: meta_data
-        }
-        render_success("School Specializations, ordered and paginated.", :ok, data)
+          order: params[:order],
+          page: params[:page],
+          total_pages: (@school_specializations.count.to_f / 10).ceil
+        }, status: :ok
       end
     end
 
@@ -89,10 +79,11 @@ class SchoolsCreationController < ApplicationController
       school_specialization = SchoolSpecialization.all.find_by(id: params[:id])
 
       if !school_specialization
-        render_error("Invalid record id!", :not_found)
+        render json: {}, status: :not_found
       else
-        data = {school_specialization: SchoolSpecializationSerializer.new(school_specialization).serializable_hash[:data][:attributes]}
-        render_success("Specialization found!", :ok, data)
+        render json: {
+          school_specialization: SchoolSpecializationSerializer.new(school_specialization).serializable_hash[:data][:attributes]
+        }, status: :ok
       end
     end
     
