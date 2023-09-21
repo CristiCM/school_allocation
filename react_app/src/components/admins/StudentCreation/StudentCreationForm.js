@@ -2,6 +2,8 @@ import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/esm/Button';
 import { CreateStudent } from '../../../services/API/StudentCreation/CreateStudent';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 
 
 function StudentCreationForm() {
@@ -12,7 +14,21 @@ function StudentCreationForm() {
     const [mathematicsGrade, setMathematicsGrade] = useState("");
     const [motherTongue, setMotherTongue ] = useState("");
     const [motherTongueGrade, setMotherTongueGrade ] = useState("");
-    const [graduationAverage, setGraduationAverage ] = useState("");    
+    const [graduationAverage, setGraduationAverage ] = useState("");
+    
+    const {mutate: createStudent, isLoading: createStudentIsLoading} = useMutation({
+        mutationFn: (studentData) => {
+            return CreateStudent(studentData)
+        },
+        onSuccess: () => {
+            toast.success("Student created successfully");
+        },
+        onError: (error) => {
+            error.response.status === 400?
+            toast.error("Email has already been taken!") :
+            toast.error("Error: Creation failed!");
+        }
+    })
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -34,7 +50,7 @@ function StudentCreationForm() {
             studentData.user.mother_tongue_grade = motherTongueGrade;
         }
 
-        await CreateStudent(studentData);
+        createStudent(studentData);
 
         setEmail("");
         setAdmissionAverage("");
@@ -141,8 +157,10 @@ function StudentCreationForm() {
                 onChange={(e) => setGraduationAverage(e.target.value)}
             />
             <br />
-            <Button variant="dark" type="submit">
-                Create Student
+            <Button variant="dark" type="submit" disabled={createStudentIsLoading}>
+                {createStudentIsLoading ?
+                    "Creating..." :
+                    "Create student"}
             </Button>
         </Form>
         </>

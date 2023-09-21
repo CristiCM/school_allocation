@@ -1,9 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/esm/Button';
 import { useNavigate, useParams } from "react-router-dom";
 import { GetStudent } from "../../../services/API/StudentCreation/GetStudent";
 import { UpdateStudent } from "../../../services/API/StudentCreation/UpdateStudent";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import LoadingComp from "../../shared/LoadingComp";
 
 function StudentEditForm() {
     const navigate = useNavigate();
@@ -17,25 +20,36 @@ function StudentEditForm() {
     const [mathematicsGrade, setMathematicsGrade] = useState("");
     const [motherTongue, setMotherTongue ] = useState("");
     const [motherTongueGrade, setMotherTongueGrade ] = useState("");
-    const [graduationAverage, setGraduationAverage ] = useState(""); 
+    const [graduationAverage, setGraduationAverage ] = useState("");
 
-    useEffect(() => {
-        const fetchData = async () => {
-            
-            const studentData = await GetStudent(id);
-            setEmail(studentData.email);
-            setAdmissionAverage(studentData.admission_average);
-            setEnglishAverage(studentData.en_average);
-            setRomanianGrade(studentData.ro_grade);
-            setMathematicsGrade(studentData.mathematics_grade);
-            setMotherTongue(studentData.mother_tongue);
-            setMotherTongueGrade(studentData.mother_tongue_grade);
-            setGraduationAverage(studentData.graduation_average);
-        };
-    
-        fetchData();
-    }, []);
-    
+    const {isLoading: studentDataIsLoading} = useQuery({
+        queryKey: ['studentData', id],
+        queryFn: () => GetStudent(id),
+        onSuccess: (response) => {
+            setEmail(response.data.student.email || "");
+            setAdmissionAverage(response.data.student.admission_average || "");
+            setEnglishAverage(response.data.student.en_average || "");
+            setRomanianGrade(response.data.student.ro_grade || "");
+            setMathematicsGrade(response.data.student.mathematics_grade || "");
+            setMotherTongue(response.data.student.mother_tongue || "");
+            setMotherTongueGrade(response.data.student.mother_tongue_grade || "");
+            setGraduationAverage(response.data.student.graduation_average || "");
+        },
+        onError: () => {
+            toast.error('Error fetching student data!');
+        },
+    });
+
+    const {mutate: updateStudent, isLoading: updateStudentIsLoading} = useMutation({
+        mutationFn: (updateStudentData) => {
+            return UpdateStudent(updateStudentData);
+        },
+        onSuccess: () => {
+            toast.success("Student was updated successfully");
+            navigate("/student_index");
+        },
+        onError: () => { toast.error("Error: Update failed!")},
+    });
 
     const handleSubmit = async (event) => {
         event.preventDefault()
@@ -58,11 +72,12 @@ function StudentEditForm() {
             updatedStudentData.mother_tongue_grade = motherTongueGrade;
         }
 
-        await UpdateStudent(updatedStudentData);
-        navigate("/student_index");
+        updateStudent(updatedStudentData);
     }
 
     return(
+        studentDataIsLoading ?
+        <LoadingComp message={'Fetching data...'} /> :
         <>
         <Form className='studentform' onSubmit={handleSubmit}>
             <Form.Label style={{ fontWeight: 'bold', fontSize: '1.2em' }}>
@@ -148,8 +163,10 @@ function StudentEditForm() {
                 onChange={(e) => setGraduationAverage(e.target.value)}
             />
             <br />
-            <Button variant="dark" type="submit">
-                Update Student
+            <Button variant="dark" type="submit" disabled={updateStudentIsLoading}>
+                {updateStudentIsLoading ?
+                    "Updating..." :
+                    "Update Student"}
             </Button>
         </Form>
         </>

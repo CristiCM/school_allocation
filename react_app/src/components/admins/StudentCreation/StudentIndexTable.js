@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
@@ -6,21 +6,81 @@ import Pagination from 'react-bootstrap/Pagination';
 import { GetStudents } from "../../../services/API/StudentCreation/GetStudents";
 import { DeleteStudent } from "../../../services/API/StudentCreation/DeleteStudent";
 import { DownloadStudents } from "../../../services/API/StudentCreation/DownloadStudents";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQueryClient } from '@tanstack/react-query';
+
+import { toast } from "react-toastify";
+import LoadingComp from "../../shared/LoadingComp";
 
 function StudentIndexTable() {
-  const [students, setStudents] = useState([]);
+  const queryClient = useQueryClient();
 
   const [sortBy, setSortBy] = useState('users.email');
   const [order, setOrder] = useState('ASC');
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
 
-  const fetchStudentData = async() => {
-    const data = await GetStudents(sortBy, order, page);
+  const {data: studentsData, isLoading: studentsIsLoading} = useQuery({
+    queryKey: ['students', sortBy, order, page],
+    queryFn: () => GetStudents(sortBy, order, page),
+    onError: () => {toast.error("Error fetching students!")},
+  });
 
-    setStudents(data.data.users);
-    setPage(data.data.pagination_meta_data.page);
-    setTotalPages(data.data.pagination_meta_data.total_pages);
+  const {mutate: deleteStudent, isLoading: deleteStudentIsLoading} = useMutation({
+    mutationFn: (student_id) => {
+      return DeleteStudent(student_id);
+    },
+    onSuccess: () => {
+      toast.success('Student deleted successfully');
+      queryClient.invalidateQueries('students');
+    },
+    onError: () => {
+      toast.error('Error: Deletion failed!')
+    },
+  });
+
+  const {mutate: downloadStudents, isLoading: downloadIsLoading} = useMutation({
+    mutationFn: ({sortBy, order}) => {
+      return DownloadStudents(sortBy, order);
+    },
+    onSuccess: (blob) => {
+      const downloadUrl = window.URL.createObjectURL(new Blob([blob]));
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.setAttribute('download', 'Students.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      toast.success('File downloaded successfully!');
+    },
+    onError: () => {
+      toast.error("Error downloading the students.");
+    }
+  });
+
+  const handleEmailOrdering = async () => {
+    setOrder(order === 'DESC' ? 'ASC' : 'DESC');
+    setSortBy('users.email');
+  };
+
+  const handleCreationOrdering = async () => {
+    setOrder(order === 'DESC' ? 'ASC' : 'DESC');
+    setSortBy('users.created_at');
+  };
+
+  const handleDelete = async (student_id) => {
+    deleteStudent(student_id);
+  };
+
+  const handlePageChange = async (newPage) => {
+    if (newPage >= 1 && newPage <= studentsData.data.total_pages) 
+    {
+      setPage(newPage);
+    }
+  };
+
+  const handleDownload = async(sortBy, order) => {
+    downloadStudents({sortBy, order});
   };
 
   const formatDate = dateString => {
@@ -29,55 +89,9 @@ function StudentIndexTable() {
     return `${date} ${simplifiedTime}`;
   };
 
-  const handleEmailOrdering = async () => {
-    const newOrder = order === 'DESC' ? 'ASC' : 'DESC';
-    setOrder(newOrder);
-    setSortBy('users.email');
-
-    const data = await GetStudents(sortBy, newOrder, page);
-    setStudents(data.data.users);
-    setPage(data.data.pagination_meta_data.page);
-    setTotalPages(data.data.pagination_meta_data.total_pages);
-  };
-
-  const handleCreationOrdering = async () => {
-    const newOrder = order === 'DESC' ? 'ASC' : 'DESC';
-    setOrder(newOrder);
-    setSortBy('users.created_at');
-
-    const data = await GetStudents(sortBy, newOrder, page);
-    setStudents(data.data.users);
-    setPage(data.data.pagination_meta_data.page);
-    setTotalPages(data.data.pagination_meta_data.total_pages);
-  };
-
-  const handleDelete = async (student_id) => {
-    await DeleteStudent(student_id);
-    await fetchStudentData();
-  };
-
-  const handlePageChange = async (newPage) => {
-    if (newPage >= 1 && newPage <= totalPages) {
-      const data = await GetStudents(sortBy, order, newPage);
-      setStudents(data.data.users);
-      setPage(Number(data.data.pagination_meta_data.page));
-      setTotalPages(data.data.pagination_meta_data.total_pages);
-    }
-  };
-
-  const handleDownload = async(sortBy, order) => {
-    await DownloadStudents(sortBy, order);
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      await fetchStudentData();
-    };
-
-    fetchData();
-  }, []);
-
   return (
+    studentsIsLoading ?
+    <LoadingComp message={"Fetching data..."} /> :
     <>
       <div>
         <Table striped bordered hover variant="dark">
@@ -103,8 +117,8 @@ function StudentIndexTable() {
             </tr>
           </thead>
           <tbody>
-            {students ?
-              students.map(student => (
+            {studentsData.data.students ?
+              studentsData.data.students.map(student => (
                 <tr key={student.id}>
                   <td>{student.email}</td>
                   <td>{formatDate(student.created_at)}</td>
@@ -114,7 +128,11 @@ function StudentIndexTable() {
                     </Button>
                   </td>
                   <td>
-                    <Button variant="secondary" size="sm" onClick={() => handleDelete(student.id)}>Delete</Button>
+                    <Button variant="secondary" size="sm" disabled={deleteStudentIsLoading} onClick={() => handleDelete(student.id)}>
+                      {deleteStudentIsLoading ?
+                        "Deleting..." :
+                        "Delete"}
+                    </Button>
                   </td>
                 </tr>
               )) :
@@ -127,17 +145,21 @@ function StudentIndexTable() {
         <Pagination>
           <Pagination.First onClick={() => handlePageChange(1)} />
           <Pagination.Prev onClick={() => { handlePageChange(page - 1)}} />
-          {[...Array(totalPages)].map((_, index) => (
+          {[...Array(studentsData.data.total_pages)].map((_, index) => (
             <Pagination.Item key={index} active={index + 1 === page} onClick={() => handlePageChange(index + 1)}>
               {index + 1}
             </Pagination.Item>
           ))}
           <Pagination.Next onClick={() => handlePageChange(page + 1)} />
-          <Pagination.Last onClick={() => handlePageChange(totalPages)} />
+          <Pagination.Last onClick={() => handlePageChange(studentsData.data.total_pages)} />
         </Pagination>
       </div>
 
-      <Button variant="dark" onClick={() => handleDownload(sortBy, order)}>Download all Students</Button>
+      <Button variant="dark" disabled={downloadIsLoading} onClick={() => handleDownload(sortBy, order)}>
+        {downloadIsLoading ?
+          "Downloading..." :
+          "Download Students"}
+      </Button>
     </>
   );
 }

@@ -14,6 +14,7 @@ const ApiCall = async (method, url, data = null, headers = {}, params = null, re
   } catch (error) {
     if (error.response && error.response.status === 401) {
       const refreshResponse = await RefreshJwtToken();
+      console.log(refreshResponse);
       sessionStorage.setItem('jwt', `Bearer ${refreshResponse.data.new_jwt_token}`);
       return axios({
         method,

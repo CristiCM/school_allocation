@@ -45,9 +45,7 @@ class StudentsCreationController < ApplicationController
       render json: {}, status: :no_content
     else
       render json: {
-        users: UserSerializer.new(@students).serializable_hash[:data].map {|data| data[:attributes]},
-        order: params[:order],
-        page: params[:page],
+        students: UserSerializer.new(@students).serializable_hash[:data].map {|data| data[:attributes]},
         total_pages: (@students.count.to_f / 10).ceil
       }
     end

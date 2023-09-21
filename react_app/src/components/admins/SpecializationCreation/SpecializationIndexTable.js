@@ -28,10 +28,6 @@ function SpecializationIndexTable() {
   const {data: schoolSpecializationsData, isLoading: schoolSpecializationsIsLoading} = useQuery({
     queryKey: ['schoolSpecializations', page, order],
     queryFn: () => GetSchoolSpecializationsData(order, page),
-    onSuccess: (response) => {
-      setOrder(response.data.order);
-      setPage(response.data.page);
-    },
     onError: () => {
       toast.error("Error fetching the school specializations.");
     }
@@ -72,7 +68,7 @@ function SpecializationIndexTable() {
     onError: () => {
       toast.error("Error downloading the specializations.");
     }
-});
+  });
 
 
   const handleOrdering = async () => {

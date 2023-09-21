@@ -1,21 +1,6 @@
 //#show
-import axios from  'axios';
+import ApiCall from "../Session/ApiCall";
 
 export const GetStudent = async (id) => {
-
-  const url = `http://localhost:3000/students/${id}`;
-  const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `${sessionStorage.getItem('jwt')}`
-      },
-  };      
-  
-  const response = await axios.get(url, config);
-
-  if (response.status !== 200) {
-    throw new Error('Failed to get Student.');
-  };
-
-  return response.data.data.student;
+  return ApiCall('get', `/students/${id}`, null, {'Content-Type': 'application/json'});
 };

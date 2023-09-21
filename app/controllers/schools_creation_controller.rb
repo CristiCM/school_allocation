@@ -62,8 +62,6 @@ class SchoolsCreationController < ApplicationController
       else
         render json: {
           school_specializations: SchoolSpecializationSerializer.new(@school_specializations).serializable_hash[:data].map {|data| data[:attributes]},
-          order: params[:order],
-          page: params[:page],
           total_pages: (@school_specializations.count.to_f / 10).ceil
         }, status: :ok
       end
