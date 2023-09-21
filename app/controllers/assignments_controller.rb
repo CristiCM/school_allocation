@@ -10,9 +10,11 @@ class AssignmentsController < ApplicationController
   def new
     data = UserSerializer.new(@students).serializable_hash[:data].map {|data| data[:attributes]}
     if @students.empty?
-      render_success("All students have preferences!", :no_content, data)
+      render json: {}, status: :no_content
     else
-      render_success("Students with no preferences!", :ok, data)
+      render json: {
+        students: UserSerializer.new(@students).serializable_hash[:data].map {|data| data[:attributes]}
+      }, status: :ok
     end
   end
 
@@ -22,21 +24,21 @@ class AssignmentsController < ApplicationController
       total_pages: (@assignments.count.to_f / 10).ceil
     }
     @assignments = apply_pagination(@assignments)
-    data = {
-      assignments: @assignments.map do |assignment|
-        {
-          assignment: AssignmentSerializer.new(assignment).serializable_hash[:data][:attributes],
-          school_specialization: SchoolSpecializationSerializer.new(assignment.school_specialization).serializable_hash[:data][:attributes],
-          user: UserSerializer.new(assignment.user).serializable_hash[:data][:attributes]
-        }
-      end,
-      pagination_meta_data: meta_data
-    }
 
     if @assignments.empty?
-      render_success("There are no assignments", :no_content, data)
+      render json: {}, :no_content
     else
-      render_success("List of assignments", :ok, data)
+      render json: {
+        assignments: @assignments.map do |assignment|
+          {
+            assignment: AssignmentSerializer.new(assignment).serializable_hash[:data][:attributes],
+            school_specialization: SchoolSpecializationSerializer.new(assignment.school_specialization).serializable_hash[:data][:attributes],
+            user: UserSerializer.new(assignment.user).serializable_hash[:data][:attributes]
+          },
+        order: params[:order],
+        page: params[:page],
+        total_pages: (@assignments.count.to_f / 10).ceil
+      }, status: :ok
     end
   end
   

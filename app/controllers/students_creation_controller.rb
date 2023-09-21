@@ -13,45 +13,43 @@ class StudentsCreationController < ApplicationController
 
     if @student.save
       @student.send_reset_password_instructions
-      data = {student: UserSerializer.new(@student).serializable_hash[:data][:attributes]}
-      render_success("Student created successfully!", :created, data)
+      render json: {
+        student: UserSerializer.new(@student).serializable_hash[:data][:attributes]
+      }, status: :created
     else
-      render_error(@student.errors.full_messages.to_sentence, :bad_request)
+      render json: {}, status: :bad_request
     end
   end
 
   def update
     if @student.update(student_params)
-      render_success("Student updated successfully!", :ok, {student: @student})
+      render json: {}, status: :ok
     else
-      render_error(@student.errors.full_messages.to_sentence, :bad_request)
+      render json: {}, status: :bad_request
     end
   end
 
   def destroy
     if @student.destroy
-      render_success("Student deleted successfully!", :ok)
+      render json: {}, status: :ok
     else
-      render_error(@student.errors.full_messages.to_sentence, :not_found)
+      render json: {}, status: :not_found
     end
   end
   
   # Can receive params: :sort_by, :order, :page(pagination)
   def index
-    meta_data = {
-      page: params[:page],
-      total_pages: (@students.count.to_f / 10).ceil
-    }
     @students = apply_pagination(@students)
 
-    if @students.any?
-      data = {
-        users: UserSerializer.new(@students).serializable_hash[:data].map {|data| data[:attributes]},
-        pagination_meta_data: meta_data
-      }
-      render_success("Students, sorted, ordered, paginated.", :ok, data)
+    if @students.empty?
+      render json: {}, status: :no_content
     else
-      render_error("There are no student records.", :ok)
+      render json: {
+        users: UserSerializer.new(@students).serializable_hash[:data].map {|data| data[:attributes]},
+        order: params[:order],
+        page: params[:page],
+        total_pages: (@students.count.to_f / 10).ceil
+      }
     end
   end
 
@@ -65,10 +63,11 @@ class StudentsCreationController < ApplicationController
     student = User.find_by(id: params[:id])
 
     if !student
-      render_error("Invalid record id!", :not_found)
+      render json: {}, status: :not_found
     else
-        data = {student: UserSerializer.new(student).serializable_hash[:data][:attributes]}
-        render_success("Specialization found!", :ok, data)
+        render json: {
+          student: UserSerializer.new(student).serializable_hash[:data][:attributes]
+        }, status: :ok
     end
   end
 
@@ -76,7 +75,6 @@ class StudentsCreationController < ApplicationController
 
   def set_student
     @student = User.find_by(id: params[:id])
-    render_error("Invalid record id!", :not_found) if !@student
   end
 
   def set_students

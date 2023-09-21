@@ -6,10 +6,10 @@ class AssignmentsResetController < ApplicationController
     
     def destroy
         if !@job.allocation_done?
-            render_error("Allocation not done: Nothing to reset!", :not_found)
+            render json: {}, status: :not_found
         else
             AllocationResetWorker.perform_async
-            render_success("Allocation reset process started!", :accepted)
+            render json: {}, status: :accepted
         end
     end
 end

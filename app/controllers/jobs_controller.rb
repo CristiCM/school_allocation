@@ -8,30 +8,32 @@ class JobsController < ApplicationController
     job_manager = JobManager.new(creation_params)
 
     if @job.allocation_done?
-      render_error("The allocation is already done!", :unprocessable_entity)
+      render json: {}, status: :unprocessable_entity
     elsif job_manager.create
-      render_success("Job created successfully!", :created, {job: JobSerializer.new(@job.reload).serializable_hash[:data][:attributes]})
+      render json: {
+        job: JobSerializer.new(@job.reload).serializable_hash[:data][:attributes] #needs to be removed and #show to be invalidated
+      }, status: :created
     else
-      render_error("Job creation failed: Bad params.", :not_found)
+      render json: {}, status: :not_found
     end
   end
-
-
 
   def destroy
     job_manager = JobManager.new(destroy_params)
       
     if job_manager.destroy
-      render_success("Job deleted successfully!", :ok, {job: JobSerializer.new(@job.reload).serializable_hash[:data][:attributes]})
+      render json: {
+        job: JobSerializer.new(@job.reload).serializable_hash[:data][:attributes] #needs to be removed and #show to be invalidated
+      }, status: :ok
     else
-      render_error(@job.errors.full_messages.to_sentence, :bad_request)
+      render json: {}, status: :bad_request
     end
   end
 
-
-
   def show
-    render_success("Job time information.", :ok, {job: JobSerializer.new(@job.reload).serializable_hash[:data][:attributes]})
+    render json: {
+      job: JobSerializer.new(@job.reload).serializable_hash[:data][:attributes]
+    }, status: :ok
   end
 
   private
