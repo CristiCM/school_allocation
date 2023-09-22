@@ -3,48 +3,50 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/esm/Button';
 import { GetJobs } from '../../../services/API/Scheduler/GetJobs';
 import { CreateJob } from '../../../services/API/Scheduler/CreateJob';
-
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
+import LoadingComp from '../../shared/LoadingComp';
 
 function JobCreationForm() {
+    const queryClient = useQueryClient();
     const JOB_TYPES = Object.freeze(["First Notification", "Second Notification", "Allocation Date"]);
-    const [, setFirstNotificationTime] = useState('');
-    const [, setSecondNotificationTime] = useState('');
-    const [, setAllocationTime] = useState('');
-    const [, setAllocationDone] = useState(false);
     const [selectedJob, setSelectedJob] = useState('');
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
 
-    const fetchJobs = async() => {
-        const data = await GetJobs();
+    const {isLoading: jobsDataIsLoading} = useQuery({
+        queryKey: ['jobsData'],
+        queryFn: GetJobs,
+        onError: () => {
+            toast.error('Error fetching the jobs data!')
+        },
+    });
 
-        setFirstNotificationTime(data.first_notification_time);
-        setSecondNotificationTime(data.second_notification_time);
-        setAllocationTime(data.allocation_time);
-        setAllocationDone(data.allocation_done)
-    };
-
-    useEffect(() => {
-        const fetchData = async () => {
-          await fetchJobs();
-        };
-    
-        fetchData();
-    }, []);
+    const {mutate: createJob, isLoading: createJobIsLoading} = useMutation({
+        mutationFn: (credentials) => {
+            return CreateJob(credentials.type, credentials.selectedTime);
+        },
+        onSuccess: () => {
+            toast.success('Job created successfully');
+            queryClient.invalidateQueries(['jobsData']);
+        },
+        onError: (error) => {
+            error.response.status === 422 ?
+            toast.error('The allocation is already done!') :
+            toast.error('Error: All fields need to be filled!')
+        },
+    });
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         const type = selectedJob === "First Notification" ?
-        "first_notification" :
-        selectedJob === "Second Notification" ?
-        "second_notification" :
-        "allocation_date";
-
+        "first_notification" : selectedJob === "Second Notification" ?
+        "second_notification" : "allocation_date";
         const selectedTime = `${date} ${time}`;
 
-        await CreateJob(type, selectedTime);
-        await fetchJobs();
+        createJob({type, selectedTime});
 
         setSelectedJob('');
         setDate('');
@@ -52,6 +54,8 @@ function JobCreationForm() {
     }    
 
     return(
+        jobsDataIsLoading ?
+        <LoadingComp message={'Fetching data...'} /> :
         <>
             <Form className='studentform' onSubmit={handleSubmit}>
 
@@ -81,8 +85,10 @@ function JobCreationForm() {
                 />
                 
                 <br />
-                <Button variant="dark" type="submit">
-                    Schedule action
+                <Button variant="dark" type="submit" disabled={createJobIsLoading}>
+                    {createJobIsLoading ? 
+                        "Scheduling..." :
+                        "Schedule action"}
                 </Button>
             </Form>
         </>

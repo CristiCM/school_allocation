@@ -65,6 +65,17 @@ class JobManager
     true
   end
 
+  def destroy_all
+    ALL_JOB_ATTRIBUTES.each do |_, job_attributes|
+      delete_job(@job.send(job_attributes[:job_jid_attribute]))
+      @job.update(
+        job_attributes[:job_jid_attribute] => nil,
+        job_attributes[:job_time_attribute] => nil
+      )
+    end
+    @job.update(allocation_done: false)
+  end
+
   private
 
   def validate_job_params?

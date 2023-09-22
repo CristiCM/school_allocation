@@ -10,9 +10,7 @@ class JobsController < ApplicationController
     if @job.allocation_done?
       render json: {}, status: :unprocessable_entity
     elsif job_manager.create
-      render json: {
-        job: JobSerializer.new(@job.reload).serializable_hash[:data][:attributes] #needs to be removed and #show to be invalidated
-      }, status: :created
+      render json: {}, status: :created
     else
       render json: {}, status: :not_found
     end
@@ -22,9 +20,7 @@ class JobsController < ApplicationController
     job_manager = JobManager.new(destroy_params)
       
     if job_manager.destroy
-      render json: {
-        job: JobSerializer.new(@job.reload).serializable_hash[:data][:attributes] #needs to be removed and #show to be invalidated
-      }, status: :ok
+      render json: {}, status: :ok
     else
       render json: {}, status: :bad_request
     end
@@ -45,5 +41,4 @@ class JobsController < ApplicationController
   def destroy_params
     params.permit(:id, :type)
   end
-  
 end
