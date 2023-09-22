@@ -1,94 +1,90 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Pagination from 'react-bootstrap/Pagination';
 import { GetAllocatedStudents } from "../../../services/API/Allocation/GetAllocatedStudents";
 import { DownloadAllocatedStudents } from "../../../services/API/Allocation/DownloadAllocatedStudents";
 import { GetSchoolTrackSpecData } from "../../../services/API/SchoolCreation/GetSchoolTrackSpecData";
+import LoadingComp from "../../shared/LoadingComp";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from 'react-toastify';
 
 function AllocatedStudentsIndexTable() {
-
-  const [assignments, setAssignments] = useState([]);
+  const queryClient = useQueryClient();
 
   const [sortBy, setSortBy] = useState('users.email');
   const [order, setOrder] = useState('ASC');
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
 
-  const [schools, setSchools] = useState([]);
-  const [tracks, setTracks] = useState([]);
-  const [specializations, setSpecializations] = useState([]);
+  const {data: schoolTrackSpecData, isLoading: schoolTrackSpecIsLoading} = useQuery({
+    queryKey: ['schoolTrackSpecData'],
+    queryFn: GetSchoolTrackSpecData,
+    onError: () => {
+        toast.error('Error fetching school track specialization data')
+    }
+  });
 
-  const fetchSchoolTrackSpecData = async () => {
-    const data = await GetSchoolTrackSpecData();
-    setSchools(data.schools);
-    setTracks(data.tracks);
-    setSpecializations(data.specializations);
-  };
-
-  const fetchAllocatedStudentsData = async() => {
-    const data = await GetAllocatedStudents(sortBy, order, page);
-
-    if (data){
-        setAssignments(data.data.assignments);
-        setPage(Number(data.data.pagination_meta_data.page));
-        setTotalPages(data.data.pagination_meta_data.total_pages);
-    };
-  };
+  const {data: allocatedStudentsData, isLoading: allocatedStudentsIsLoading} = useQuery({
+    queryKey: ['allocatedStudents', sortBy, order, page],
+    queryFn: () => GetAllocatedStudents(sortBy, order, page),
+    onError: () => {
+      toast.error('Error fetching the allocation data!');
+    },
+  });
 
   const fetchSchoolTrackOrSpecializationName = (id, type) => {
-
+    console.log(schoolTrackSpecData);
     if (type === "school") {
-        const school = schools.find(s => s.id === id);
+        const school = schoolTrackSpecData.data.schools.find(s => s.id === id);
         return school ? school.name : '';
     } else if (type === "track") {
-        const track = tracks.find(t => t.id === id);
+        const track = schoolTrackSpecData.data.tracks.find(t => t.id === id);
         return track ? track.name : '';
     } else if (type === "specialization") {
-        const specialization = specializations.find(s => s.id === id);
+        const specialization = schoolTrackSpecData.data.specializations.find(s => s.id === id);
         return specialization ? specialization.name : '';
     };
   }
 
+  const {mutate: downloadAllocated, isLoading: downloadAllocatedIsLoading} = useMutation({
+    mutationFn: ({sortBy, order}) =>
+    {
+      return DownloadAllocatedStudents(sortBy, order);
+    },
+    onSuccess: (blob) => {
+      const downloadUrl = window.URL.createObjectURL(new Blob([blob]));
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.setAttribute('download', 'Allocations.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      toast.success('File downloaded successfully!');
+    },
+    onError: () => { toast.error('There was an error while downloading!')},
+  });
+
 
   const handleSortAndOrdering = async (sortAttribute) => {
-    const newOrder = order === 'DESC' ? 'ASC' : 'DESC';
-    setOrder(newOrder);
+    setOrder(order === 'DESC' ? 'ASC' : 'DESC');
     setSortBy(sortAttribute);
-    
-    const data = await GetAllocatedStudents(sortAttribute, newOrder, page);
-    setAssignments(data.data.assignments);
-    setPage(data.data.pagination_meta_data.page);
-    setTotalPages(data.data.pagination_meta_data.total_pages);
   };
 
   const handlePageChange = async (newPage) => {
-    
-    if (newPage >= 1 && newPage <= totalPages) {
-      const data = await GetAllocatedStudents(sortBy, order, newPage);
-
-      if (data){
-        setAssignments(data.data.assignments);
-        setPage(Number(data.data.pagination_meta_data.page));
-        setTotalPages(data.data.pagination_meta_data.total_pages);
-      };
-    }
+    if (newPage >= 1 && newPage <= allocatedStudentsData.data.total_pages) {
+      setPage(newPage);
+    };
   };
 
   const handleDownload = async(sortBy, order) => {
-    await DownloadAllocatedStudents(sortBy, order);
+    downloadAllocated({sortBy, order});
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await fetchSchoolTrackSpecData();
-      await fetchAllocatedStudentsData();
-    };
-
-    fetchData();
-  }, []);
-
   return (
+    schoolTrackSpecIsLoading || allocatedStudentsIsLoading ?
+    <LoadingComp message={"Fetching data..."} /> :
     <>
       <div>
         <Table striped bordered hover variant="dark">
@@ -166,8 +162,9 @@ function AllocatedStudentsIndexTable() {
             </tr>
           </thead>
           <tbody>
-            {assignments ?
-              assignments.map(assignment => (
+          {console.log(allocatedStudentsData)}
+            {allocatedStudentsData.data.assignments ?
+              allocatedStudentsData.data.assignments.map(assignment => (
                 <tr key={assignment.assignment.id}>
                   <td>{assignment.user.email}</td>
                   <td>{assignment.user.admission_average}</td>
@@ -191,17 +188,21 @@ function AllocatedStudentsIndexTable() {
         <Pagination>
           <Pagination.First onClick={() => handlePageChange(1)} />
           <Pagination.Prev onClick={() => { handlePageChange(page - 1)}} />
-          {[...Array(totalPages)].map((_, index) => (
+          {[...Array(allocatedStudentsData.data.total_pages)].map((_, index) => (
             <Pagination.Item key={index} active={index + 1 === page} onClick={() => handlePageChange(index + 1)}>
               {index + 1}
             </Pagination.Item>
           ))}
           <Pagination.Next onClick={() => handlePageChange(page + 1)} />
-          <Pagination.Last onClick={() => handlePageChange(totalPages)} />
+          <Pagination.Last onClick={() => handlePageChange(allocatedStudentsData.data.total_pages)} />
         </Pagination>
       </div>
 
-      <Button variant="dark" onClick={() => handleDownload(sortBy, order)}>Download all Students</Button>
+      <Button variant="dark" disabled={downloadAllocatedIsLoading} onClick={() => handleDownload(sortBy, order)}>
+        {downloadAllocatedIsLoading ?
+          "Downloading..." :
+          "Download all Students"}
+      </Button>
     </>
   );
 }

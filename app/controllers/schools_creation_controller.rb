@@ -1,5 +1,5 @@
 class SchoolsCreationController < ApplicationController
-  before_action :authentificate_request
+  before_action :authenticate_request
   load_and_authorize_resource :SchoolSpecialization
   before_action :set_sorting_params, only: [:index, :download]
   before_action :set_school_specializations, only: [:index, :download]

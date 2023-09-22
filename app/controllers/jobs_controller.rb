@@ -1,5 +1,5 @@
 class JobsController < ApplicationController
-  before_action :authentificate_request
+  before_action :authenticate_request
   skip_before_action :verify_authenticity_token
   authorize_resource
   before_action :set_job

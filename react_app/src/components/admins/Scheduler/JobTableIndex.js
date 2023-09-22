@@ -35,7 +35,7 @@ function JobTableIndex() {
         mutationFn: () => {return ResetAllocation();},
         onSuccess: () => {
             toast.success('Allocation reseted successfully');
-            queryClient.invalidateQueries(['jobsData']);
+            queryClient.invalidateQueries('jobsData');
         },
         onError: () => {
             toast.error('There was an error reseting the allocation!')

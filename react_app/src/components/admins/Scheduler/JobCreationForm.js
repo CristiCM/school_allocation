@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/esm/Button';
 import { GetJobs } from '../../../services/API/Scheduler/GetJobs';

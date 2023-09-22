@@ -2,11 +2,9 @@ class AllocationResetWorker
     include Sidekiq::Worker
 
     def perform
-        job_manager = JobManager.new()
-        job_manager.destroy_all
-
         ActiveRecord::Base.transaction do
           Assignment.destroy_all
         end
+        Job.first.update(allocation_done: false)
     end      
 end

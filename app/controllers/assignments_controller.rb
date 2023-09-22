@@ -1,5 +1,5 @@
 class AssignmentsController < ApplicationController
-  before_action :authentificate_request
+  before_action :authenticate_request
   authorize_resource
   skip_before_action :verify_authenticity_token
   before_action :set_no_preference_students, only: :new
@@ -19,28 +19,26 @@ class AssignmentsController < ApplicationController
   end
 
   def index
-    meta_data = {
-      page: params[:page],
-      total_pages: (@assignments.count.to_f / 10).ceil
-    }
     @assignments = apply_pagination(@assignments)
-
+  
     if @assignments.empty?
-      render json: {}, :no_content
+      render json: {}, status: :no_content
     else
+      serialized_assignments = @assignments.map do |assignment|
+        {
+          assignment: AssignmentSerializer.new(assignment).serializable_hash[:data][:attributes],
+          school_specialization: SchoolSpecializationSerializer.new(assignment.school_specialization).serializable_hash[:data][:attributes],
+          user: UserSerializer.new(assignment.user).serializable_hash[:data][:attributes]
+        }
+      end
+  
       render json: {
-        assignments: @assignments.map do |assignment|
-          {
-            assignment: AssignmentSerializer.new(assignment).serializable_hash[:data][:attributes],
-            school_specialization: SchoolSpecializationSerializer.new(assignment.school_specialization).serializable_hash[:data][:attributes],
-            user: UserSerializer.new(assignment.user).serializable_hash[:data][:attributes]
-          },
-        order: params[:order],
-        page: params[:page],
+        assignments: serialized_assignments,
         total_pages: (@assignments.count.to_f / 10).ceil
       }, status: :ok
     end
   end
+  
   
 
   def download

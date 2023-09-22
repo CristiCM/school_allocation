@@ -1,5 +1,5 @@
 class PreferencesController < ApplicationController
-    before_action :authentificate_request
+    before_action :authenticate_request
     authorize_resource
     before_action :set_preferences
 

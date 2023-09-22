@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
 
   protected
 
-  def authentificate_request
+  def authenticate_request
     if current_user.nil?
       render_error("Invalid or missing token.", :unauthorized)
       return
