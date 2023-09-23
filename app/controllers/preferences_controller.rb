@@ -7,9 +7,9 @@ class PreferencesController < ApplicationController
         @preference = current_user.preferences.build(preference_params)
 
         if @preference.save
-            render_success("Preference was successfully created.", :created, {preference: @preference})
+            render json: {}, status: :created
         else
-            render_error(@preference.errors.full_messages.to_sentence, :bad_request)
+            render json: {}, status: :bad_request
         end
     end
      
@@ -17,20 +17,20 @@ class PreferencesController < ApplicationController
         @preference = @preferences.find_by(id: params[:id])
         
         if !@preference
-            render_error("Invalid record id!", :not_found)
+            render json: {}, status: :not_found
         elsif @preference.destroy
             update_priority_after_deletion
-            render_success("Preference successfully destroyed!", :ok)
+            render json: {}, status: :ok
         end
     end
-    
 
     def index
         if @preferences.any?
-            data = { preferences: PreferenceSerializer.new(@preferences).serializable_hash[:data].map {|data| data[:attributes]} }
-            render_success("Student preferences.", :ok,  data)
+            render json: {
+                preferences: PreferenceSerializer.new(@preferences).serializable_hash[:data].map {|data| data[:attributes]}
+            }, status: :ok
         else
-            render_error("Student has no preferences.", :ok)
+            render json: {}, status: :no_content
         end
     end
     

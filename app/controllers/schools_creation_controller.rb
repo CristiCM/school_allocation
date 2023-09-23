@@ -1,11 +1,12 @@
 class SchoolsCreationController < ApplicationController
   before_action :authenticate_request
-  load_and_authorize_resource :SchoolSpecialization
+  load_and_authorize_resource :SchoolSpecialization, except: [:all_specializations, :new]
   before_action :set_sorting_params, only: [:index, :download]
-  before_action :set_school_specializations, only: [:index, :download]
+  before_action :set_school_specializations, only: [:index, :download, :all_specializations]
   PAGINATION_RECORD_NUMBER = 10
   
     def new
+      authorize! :new, :schools_creation_controller
       render json: {
         schools: SchoolSerializer.new(School.all).serializable_hash[:data].map { |data| data[:attributes] },
         tracks: TrackSerializer.new(Track.all).serializable_hash[:data].map { |data| data[:attributes] },
@@ -55,6 +56,7 @@ class SchoolsCreationController < ApplicationController
 
     # Can receive params: :order, :page(pagination)
     def index
+
       @school_specializations = apply_pagination(@school_specializations)
       
       if @school_specializations.empty?
@@ -84,7 +86,18 @@ class SchoolsCreationController < ApplicationController
         }, status: :ok
       end
     end
-    
+
+    def all_specializations
+      authorize! :all_specializations, :schools_creation_controller
+      if !@school_specializations
+        render json: {}, status: :not_found
+      else
+        render json: {
+          school_specializations: SchoolSpecializationSerializer.new(@school_specializations).serializable_hash[:data].map {|data| data[:attributes]}
+        }, status: :ok
+      end
+    end
+
     private
 
     def set_sorting_params
@@ -94,15 +107,21 @@ class SchoolsCreationController < ApplicationController
     
     def set_school_specializations
       unassigned_school = School.find_by(name: "Unassigned School")
-    
+      
       if unassigned_school
         @school_specializations = SchoolSpecialization.where.not(school_id: unassigned_school.id)
       else
         @school_specializations = SchoolSpecialization.all
       end
-    
-      @school_specializations.order!("#{@sort_by} #{@order}")
+      
+      allowed_sort_columns = ['school_specializations.spots_available']
+      allowed_orders = ['ASC', 'DESC']
+
+      if allowed_sort_columns.include?(@sort_by) && allowed_orders.include?(@order.upcase)
+        @school_specializations = @school_specializations.order(Arel.sql("#{@sort_by} #{@order}"))
+      end
     end
+    
     
     def apply_pagination(school_specializations)
       school_specializations.paginate(page: params[:page], per_page: PAGINATION_RECORD_NUMBER)

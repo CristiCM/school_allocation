@@ -2,14 +2,14 @@ class ApplicationController < ActionController::Base
   protect_from_forgery unless: -> { request.format.json? || request.content_type == "multipart/form-data" }
 
   rescue_from CanCan::AccessDenied do |exception|
-    render_error("You don't have access on this page!", :forbidden)
+    render json: {}, status: :forbidden
   end
 
   protected
 
   def authenticate_request
     if current_user.nil?
-      render_error("Invalid or missing token.", :unauthorized)
+      render json: {}, status: :unauthorized
       return
     end
   end
@@ -27,23 +27,10 @@ class ApplicationController < ActionController::Base
     end
   end    
 
-  def render_success(message = "Success", status = :ok, data_structure = {})
-    render json: {
-      status: {code: Rack::Utils::SYMBOL_TO_STATUS_CODE[status], message: message},
-      data: data_structure
-    }, status: status
-  end
-      
-  def render_error(message = "Error", status = :bad_request)
-    render json: {
-      status: {code: Rack::Utils::SYMBOL_TO_STATUS_CODE[status], message: message}
-    }, status: status
-  end
-
   def set_job
     @job = Job.first
     unless @job
-      render_error("Job record does not exist", :not_found)
+      render json: {}, status: :not_found
       return
     end
   end

@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   resources :school_specializations, controller: 'schools_creation', only: [:new, :create, :update, :destroy, :edit, :index, :show] do
     collection do
       get :download
+      get :all_specializations
     end
   end
 

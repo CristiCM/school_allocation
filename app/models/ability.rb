@@ -10,6 +10,8 @@ class Ability
     elsif user.role == 'student'
       can :manage, Preference
       can :read, :pages
+      can :all_specializations, :schools_creation_controller 
+      can :new, :schools_creation_controller
     else
       can :read, :pages
     end
