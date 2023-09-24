@@ -40,6 +40,13 @@ class Users::SessionsController < Devise::SessionsController
     sign_out resource
     render json: {
       email: resource.email,
+      admission_average: resource.admission_average,
+      en_average: resource.en_average,
+      ro_grade: resource.ro_grade,
+      mathematics_grade: resource.mathematics_grade,
+      mother_tongue: resource.mother_tongue,
+      mother_tongue_grade: resource.mother_tongue_grade,
+      graduation_average: resource.graduation_average,
       role: resource.role
     }, status: :ok
   end

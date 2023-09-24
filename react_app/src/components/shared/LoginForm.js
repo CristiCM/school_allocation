@@ -22,6 +22,17 @@ function LoginForm() {
       sessionStorage.setItem('role', response.data.role);
       sessionStorage.setItem('jwt', response.headers['authorization']);
 
+      if (response.data.role === 'student')
+      {
+        sessionStorage.setItem('admissionAverage', response.data.admission_average);
+        sessionStorage.setItem('enAverage', response.data.en_average);
+        sessionStorage.setItem('roGrade', response.data.ro_grade);
+        sessionStorage.setItem('mathematicsGrade', response.data.mathematics_grade);
+        sessionStorage.setItem('motherTongue', response.data.mother_tongue);
+        sessionStorage.setItem('motherTongueGrade', response.data.mother_tongue_grade);
+        sessionStorage.setItem('graduationAverage', response.data.graduation_average);
+      };
+
       navigate('/')
       toast.success('Logged in successfully');
     },
