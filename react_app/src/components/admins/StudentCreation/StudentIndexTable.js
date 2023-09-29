@@ -94,8 +94,8 @@ function StudentIndexTable() {
     studentsIsLoading ?
     <LoadingComp message={"Fetching data..."} /> :
     <>
-      <div>
-        <Table striped bordered hover variant="dark">
+      <div className="tableContainer">
+        <Table className="indexTable" size="sm" responsive variant="dark">
           <thead>
             <tr>
               <th colSpan={4}>All Students</th>
@@ -140,7 +140,7 @@ function StudentIndexTable() {
               null}
           </tbody>
         </Table>
-      </div>
+
 
       <CustomPagination 
         page={page}
@@ -153,6 +153,7 @@ function StudentIndexTable() {
           "Downloading..." :
           "Download Students"}
       </Button>
+    </div>
     </>
   );
 }

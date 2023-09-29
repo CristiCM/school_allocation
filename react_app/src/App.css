@@ -22,30 +22,6 @@
   align-items: center;
 }
 
-.tableGeneral {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.tableGeneral .table {
-  width: 70%;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.tableHeader {
-  color: inherit;
-  text-decoration: none;
-}
-
 /* LOGIN FORM */
 
 .loginFormContainer {
@@ -100,10 +76,9 @@
 }
 
 
-/* ACCORDION */
+/* HOME PAGE ACCORDION */
 
 .pageInfo {
-  /* Removed negative margin-top */
   padding-bottom: 5em;
 }
 
@@ -129,3 +104,104 @@
       width: 90%;
   }
 }
+
+/* IMPORT DATA FORM */
+
+.importFormContainer {
+  max-width: 700px;
+  width: 70%;
+  height: auto;
+  margin: auto;
+  padding: 30px;
+  border-radius: 1em;
+  box-shadow: 0 0.050em 0.35em black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.importInfoLable {
+  margin-bottom: 5px;
+}
+
+.importFormGroup {
+  width: 70%;
+}
+
+.importExtensionLable {
+  padding-top: 3em;
+}
+
+.importFormControl {
+  margin-bottom: 30px;
+}
+
+.importBtn {
+  margin-top: 10px;
+}
+
+@media (max-width: 600px) {
+  .importFormContainer {
+    width: 90%;
+    padding: 15px;
+  }
+
+  .importFormGroup {
+    width: 85%;
+  }
+}
+
+
+/* CREATE SPECIALIZATION FORM */
+
+.specializationCreationFrom {
+  max-width: 700px;
+  width: 70%;
+  height: auto;
+  margin: auto;
+  padding: 30px;
+  border-radius: 1em;
+  box-shadow: 0 0.050em 0.35em black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.availableSpotsField {
+  text-align: center;
+  width: auto;
+}
+
+.specializationCreationFrom .availableSpotsField input[type='number'] {
+  max-width: 120px !important;
+  margin: auto !important;
+}
+
+
+/* INDEX TABLES */
+
+.tableContainer {
+  margin-top: 1em;
+  box-shadow: 0 0.050em 0.35em black;
+  width: 60%;
+  margin: auto;
+  padding: 10px;
+  border-radius: 5px;
+  overflow: auto;
+}
+
+.indexTable {
+  width: 100%;
+}
+
+.indexTable td, .indexTable th {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.tableHeader {
+  text-decoration: none;
+  color: white;
+}
+
+

@@ -40,14 +40,12 @@ function ImportSchools() {
     <LoadingComp message={"Uploading file..."} />
     :
     <>
-      <div className='pageInfo'>
-        <h1>Upload Data</h1>
-      </div>
-      <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="formFile" className="mb-3">
-          <Form.Label>The only acceptable format is '.csv'</Form.Label>
-          <Form.Control type="file" className="mb-3" onChange={handleChange} />
-          <Button variant='dark' type="submit">Upload</Button>
+      <Form className='importFormContainer' onSubmit={handleSubmit}>
+        <Form.Label className='importInfoLable'><h3>Upload Data</h3></Form.Label>
+        <Form.Group controlId="formFile" className="importFormGroup">
+          <Form.Label className='importExtensionLable'>The only acceptable format is '.csv'</Form.Label>
+          <Form.Control type="file" className="importFormControl" onChange={handleChange} />
+          <Button variant='dark' type="submit" className='importBtn'>Upload</Button>
         </Form.Group>
       </Form>
     </>

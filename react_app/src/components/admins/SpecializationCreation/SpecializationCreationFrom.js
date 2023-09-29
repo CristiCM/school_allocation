@@ -60,8 +60,8 @@ function SchoolCreationForm() {
         schoolTrackSpecIsLoading ?
         <LoadingComp message={"Fetching Data..."} /> :
         <>
-        <Form className='schoolCreationFrom' onSubmit={handleSubmit}>
-            <Form.Label>School Creation From</Form.Label>
+        <Form className='specializationCreationFrom' onSubmit={handleSubmit}>
+            <Form.Label className='mb-5'><h3>School Creation From</h3></Form.Label>
             <Form.Select
                 aria-label='Select a School'
                 value={selectedSchoolId || ""}
@@ -95,7 +95,7 @@ function SchoolCreationForm() {
                 ))}
             </Form.Select>
             <br />
-            <Form.Group>
+            <Form.Group className='availableSpotsField'>
                 <Form.Label>Available Spots</Form.Label>
                 <Form.Control
                     type='number'

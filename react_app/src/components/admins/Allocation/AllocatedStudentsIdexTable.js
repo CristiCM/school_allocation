@@ -87,8 +87,8 @@ function AllocatedStudentsIndexTable() {
     schoolTrackSpecIsLoading || allocatedStudentsIsLoading ?
     <LoadingComp message={"Fetching data..."} /> :
     <>
-      <div>
-        <Table striped bordered hover variant="dark">
+      <div className="tableContainer">
+        <Table className="indexTable" size="sm" responsive variant="dark">
           <thead>
             <tr>
               <th colSpan={11}>All Students</th>
@@ -183,7 +183,6 @@ function AllocatedStudentsIndexTable() {
               null}
           </tbody>
         </Table>
-      </div>
 
       <CustomPagination 
         page={page}
@@ -196,6 +195,7 @@ function AllocatedStudentsIndexTable() {
           "Downloading..." :
           "Download all Students"}
       </Button>
+      </div>
     </>
   );
 }

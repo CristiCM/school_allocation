@@ -94,53 +94,49 @@ function SpecializationIndexTable() {
     schoolSpecializationsIsLoading || schoolTrackSpecIsLoading ?
     <LoadingComp message={"Fetching data..."} /> :
     <>
-      <div>
-        <Table striped bordered hover variant="dark">
-          <thead>
-            <tr>
-              <th colSpan={6}>All Specializations</th>
-            </tr>
-            <tr>
-              <th>School</th>
-              <th>Track</th>
-              <th>Specialization</th>
-              <th>
-                <a href="#" className="tableHeader"
-                  onClick={(e) => { e.preventDefault(); handleOrdering(); }}>
-                  Available Spots
-                </a>
-              </th>
-              <th></th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {console.log()}
-            {schoolSpecializationsData.data.school_specializations ?
-              schoolSpecializationsData.data.school_specializations.map(schoolSpecialization => (
-                <tr key={schoolSpecialization.id}>
-                  <td>{(schoolTrackSpecData.data.schools.find(school => school.id === schoolSpecialization.school_id) || {}).name}</td>
-                  <td>{(schoolTrackSpecData.data.tracks.find(track => track.id === schoolSpecialization.track_id) || {}).name}</td>
-                  <td>{(schoolTrackSpecData.data.specializations.find(specialization => specialization.id === schoolSpecialization.specialization_id) || {}).name}</td>
-                  <td>{schoolSpecialization.spots_available}</td>
-                  <td>
-                    <Button variant="secondary" size="sm" as={Link} to={`/specialization_edit/${schoolSpecialization.id}`}>
-                      Edit
-                    </Button>
-                  </td>
-                  <td>
-                    <Button variant="secondary" size="sm" disabled={deleteSpecializationIsLoading} onClick={() => handleDelete(schoolSpecialization.id)}>
-                      {deleteSpecializationIsLoading ?
-                        "Deleting..." :
-                        "Delete"}
-                    </Button>
-                  </td>
-                </tr>
-              )) :
-              null}
-          </tbody>
-        </Table>
-      </div>
+    <div className="tableContainer">
+      <Table className="indexTable" size="sm" responsive variant="dark">
+        <thead>
+          <tr>
+            <th>School</th>
+            <th>Track</th>
+            <th>Specialization</th>
+            <th>
+              <a href="#" className="tableHeader"
+                onClick={(e) => { e.preventDefault(); handleOrdering(); }}>
+                Available Spots
+              </a>
+            </th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {console.log()}
+          {schoolSpecializationsData.data.school_specializations ?
+            schoolSpecializationsData.data.school_specializations.map(schoolSpecialization => (
+              <tr key={schoolSpecialization.id}>
+                <td>{(schoolTrackSpecData.data.schools.find(school => school.id === schoolSpecialization.school_id) || {}).name}</td>
+                <td>{(schoolTrackSpecData.data.tracks.find(track => track.id === schoolSpecialization.track_id) || {}).name}</td>
+                <td>{(schoolTrackSpecData.data.specializations.find(specialization => specialization.id === schoolSpecialization.specialization_id) || {}).name}</td>
+                <td>{schoolSpecialization.spots_available}</td>
+                <td>
+                  <Button variant="secondary" size="sm" as={Link} to={`/specialization_edit/${schoolSpecialization.id}`}>
+                    Edit
+                  </Button>
+                </td>
+                <td>
+                  <Button variant="secondary" size="sm" disabled={deleteSpecializationIsLoading} onClick={() => handleDelete(schoolSpecialization.id)}>
+                    {deleteSpecializationIsLoading ?
+                      "Deleting..." :
+                      "Delete"}
+                  </Button>
+                </td>
+              </tr>
+            )) :
+            null}
+        </tbody>
+      </Table>
 
       <CustomPagination 
         page={page}
@@ -153,6 +149,7 @@ function SpecializationIndexTable() {
           "Downloading..." :
           "Download all specializations"}
       </Button>
+    </div>
     </>
   );
 }
