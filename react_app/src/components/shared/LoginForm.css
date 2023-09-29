@@ -1,0 +1,36 @@
+.loginForm {
+    width: 30em;
+    height: 35em;
+    position: relative;
+    border-radius: 1em;
+    box-shadow: 0 0.050em 0.35em black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+  
+.loginFormText {
+    font-size: xx-large;
+    font-weight: bold;
+    margin-top: 2em;
+}
+
+.inputLable {
+    display: block;
+    text-align: start;
+}
+
+.inputGroup {
+    height: 3em;
+    width: 80%;
+    border-radius: 0.25em;
+    margin-bottom: 3em;
+}
+
+.btn {
+
+    width: 65%;
+    height: 3em;
+    margin-bottom: 5em;
+}

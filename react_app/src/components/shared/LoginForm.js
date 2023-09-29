@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import './LoginForm.css';
 import { useNavigate } from 'react-router-dom';
 import { LoginUser } from '../../services/API/Session/LoginUser';
 import { toast } from 'react-toastify';
@@ -51,13 +52,14 @@ function LoginForm() {
     <LoadingComp message={"Logging you in..."}/>
     :
     <>
-      <Form className='loginform' onSubmit={handleSubmit}>
-        <Form.Label>LOGIN</Form.Label>
-        <Form.Group className="mb-3 mt-5" controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
-          <Form.Control 
+      <Form className='loginForm' onSubmit={handleSubmit}>
+        <Form.Label className='loginFormText'>LOGIN</Form.Label>
+
+        <Form.Group className='inputGroup' controlId="formBasicEmail">
+          <Form.Label className='inputLable'>Email address</Form.Label>
+          <Form.Control className='input'
             type="email" 
-            placeholder="Enter email"
+            placeholder="johndoe@gmail.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -66,16 +68,16 @@ function LoginForm() {
           </Form.Text>
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control 
+        <Form.Group  className='inputGroup' controlId="formBasicPassword">
+          <Form.Label className='inputLable'>Password</Form.Label>
+          <Form.Control className='input'
             type="password" 
-            placeholder="Password"
+            placeholder="***********"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Group>
-        <Button variant="dark" type="submit">
+        <Button className='btn' variant="dark" type="submit">
           Submit
         </Button>
       </Form>
