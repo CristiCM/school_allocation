@@ -11,6 +11,7 @@ import { DownloadSchoolSpecializations } from "../../../services/API/SchoolCreat
 import { toast } from 'react-toastify';
 import { useQueryClient } from '@tanstack/react-query';
 import LoadingComp from "../../shared/LoadingComp";
+import CustomPagination from "../../shared/CustomPagination";
 
 function SpecializationIndexTable() {
   const queryClient = useQueryClient();
@@ -141,19 +142,11 @@ function SpecializationIndexTable() {
         </Table>
       </div>
 
-      <div className="pagination">
-        <Pagination>
-          <Pagination.First onClick={() => handlePageChange(1)} />
-          <Pagination.Prev onClick={() => { handlePageChange(page - 1)}} />
-          {[...Array(schoolSpecializationsData.data.total_pages)].map((_, index) => (
-            <Pagination.Item key={index} active={index + 1 === page} onClick={() => handlePageChange(index + 1)}>
-              {index + 1}
-            </Pagination.Item>
-          ))}
-          <Pagination.Next onClick={() => handlePageChange(page + 1)} />
-          <Pagination.Last onClick={() => handlePageChange(schoolSpecializationsData.data.total_pages)} />
-        </Pagination>
-      </div>
+      <CustomPagination 
+        page={page}
+        total_pages={schoolSpecializationsData.data.total_pages}
+        handlePageChange={handlePageChange} 
+      />
 
       <Button variant="dark" disabled={downloadIsLoading} onClick={() => handleDownload(order)}>
         {downloadIsLoading ?
