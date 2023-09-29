@@ -41,15 +41,91 @@
   align-items: center;
 }
 
+.tableHeader {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* LOGIN FORM */
+
+.loginFormContainer {
+  max-width: 500px;
+  width: 70%;
+  height: auto;
+  margin: auto;
+  padding: 50px;
+  border-radius: 1em;
+  box-shadow: 0 0.050em 0.35em black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loginFormText {
+  font-size: xx-large;
+  font-weight: bold;
+  margin-top: 1em;
+}
+
+.inputLable {
+  display: block;
+  text-align: start;
+}
+
+.inputGroup {
+  width: 100%;
+  margin-bottom: 1em;
+}
+
+.btn {
+  width: 100%;
+  height: 3em;
+  margin-bottom: 2em;
+}
+
+
+@media (max-width: 600px) {
+  .loginFormContainer {
+      padding: 20px;
+      width: 80%;
+  }
+
+  .loginFormText {
+      font-size: x-large;
+  }
+
+  .btn {
+      margin-bottom: 1em;
+  }
+}
+
+
+/* ACCORDION */
+
 .pageInfo {
-  padding-bottom: 5px;
+  /* Removed negative margin-top */
+  padding-bottom: 5em;
+}
+
+.pageInfo h3 {
+  font-weight: bolder;
 }
 
 .accordionGeneral {
   width: 70%;
 }
 
-.tableHeader {
-  color: inherit;
-  text-decoration: none;
+.accordionGeneral button {
+  font-weight: 600;
+}
+
+
+@media (max-width: 600px) {
+  .pageInfo {
+      padding-bottom: 2em;
+  }
+
+  .accordionGeneral {
+      width: 90%;
+  }
 }

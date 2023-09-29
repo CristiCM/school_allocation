@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import './LoginForm.css';
 import { useNavigate } from 'react-router-dom';
 import { LoginUser } from '../../services/API/Session/LoginUser';
 import { toast } from 'react-toastify';
@@ -52,12 +51,12 @@ function LoginForm() {
     <LoadingComp message={"Logging you in..."}/>
     :
     <>
-      <Form className='loginForm' onSubmit={handleSubmit}>
+      <Form className='loginFormContainer' onSubmit={handleSubmit}>
         <Form.Label className='loginFormText'>LOGIN</Form.Label>
 
         <Form.Group className='inputGroup' controlId="formBasicEmail">
           <Form.Label className='inputLable'>Email address</Form.Label>
-          <Form.Control className='input'
+          <Form.Control
             type="email" 
             placeholder="johndoe@gmail.com"
             value={email}
@@ -70,7 +69,7 @@ function LoginForm() {
 
         <Form.Group  className='inputGroup' controlId="formBasicPassword">
           <Form.Label className='inputLable'>Password</Form.Label>
-          <Form.Control className='input'
+          <Form.Control
             type="password" 
             placeholder="***********"
             value={password}
