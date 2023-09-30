@@ -1,24 +1,34 @@
-# README
+## `heroku-deployment` Branch
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This branch is a modified version of the `main` branch, adapted specifically for deployment on Heroku. It mirrors the `main` branch in functionality and features but includes some essential changes to ensure smooth deployment and operation on Heroku.
 
-Things you may want to cover:
+### Key Modifications
 
-* Ruby version
+- **Database Configuration**: The database has been switched to PostgreSQL to comply with Heroku's database requirements.
+- **Additional Configurations**
 
-* System dependencies
+### Deployment Steps
 
-* Configuration
+1. **Clone the Repository:**
 
-* Database creation
+    ```sh
+    git clone https://github.com/CristiCM/school-allocation-system.git
+    ```
 
-* Database initialization
+2. **Navigate to the Project Directory:**
 
-* How to run the test suite
+    ```sh
+    cd school_allocation
+    ```
 
-* Services (job queues, cache servers, search engines, etc.)
+3. **Switch to `heroku-deployment` Branch:**
 
-* Deployment instructions
+    ```sh
+    git checkout heroku-deployment
+    ```
 
-* ...
+4. Follow the standard Heroku deployment procedure to push this branch to your Heroku application.
+
+Remember, this branch is already configured for Heroku, so you don't need to make additional changes to deploy the application.
+
+Enjoy the application on Heroku!
