@@ -95,7 +95,8 @@ function SpecializationIndexTable() {
     <LoadingComp message={"Fetching data..."} /> :
     <>
     <div className="tableContainer">
-      <Table className="indexTable" size="sm" responsive variant="dark">
+      <table>
+        <caption>All Specializations</caption>
         <thead>
           <tr>
             <th>School</th>
@@ -116,17 +117,17 @@ function SpecializationIndexTable() {
           {schoolSpecializationsData.data.school_specializations ?
             schoolSpecializationsData.data.school_specializations.map(schoolSpecialization => (
               <tr key={schoolSpecialization.id}>
-                <td>{(schoolTrackSpecData.data.schools.find(school => school.id === schoolSpecialization.school_id) || {}).name}</td>
-                <td>{(schoolTrackSpecData.data.tracks.find(track => track.id === schoolSpecialization.track_id) || {}).name}</td>
-                <td>{(schoolTrackSpecData.data.specializations.find(specialization => specialization.id === schoolSpecialization.specialization_id) || {}).name}</td>
-                <td>{schoolSpecialization.spots_available}</td>
-                <td>
-                  <Button variant="secondary" size="sm" as={Link} to={`/specialization_edit/${schoolSpecialization.id}`}>
+                <td data-cell="school">{(schoolTrackSpecData.data.schools.find(school => school.id === schoolSpecialization.school_id) || {}).name}</td>
+                <td data-cell="track">{(schoolTrackSpecData.data.tracks.find(track => track.id === schoolSpecialization.track_id) || {}).name}</td>
+                <td data-cell="specialization">{(schoolTrackSpecData.data.specializations.find(specialization => specialization.id === schoolSpecialization.specialization_id) || {}).name}</td>
+                <td data-cell="available spots">{schoolSpecialization.spots_available}</td>
+                <td data-cell="edit specialization">
+                  <Button className="tableButton" variant="secondary" size="sm" as={Link} to={`/specialization_edit/${schoolSpecialization.id}`}>
                     Edit
                   </Button>
                 </td>
-                <td>
-                  <Button variant="secondary" size="sm" disabled={deleteSpecializationIsLoading} onClick={() => handleDelete(schoolSpecialization.id)}>
+                <td data-cell="delete specialization">
+                  <Button className="tableButton" variant="secondary" size="sm" disabled={deleteSpecializationIsLoading} onClick={() => handleDelete(schoolSpecialization.id)}>
                     {deleteSpecializationIsLoading ?
                       "Deleting..." :
                       "Delete"}
@@ -136,7 +137,7 @@ function SpecializationIndexTable() {
             )) :
             null}
         </tbody>
-      </Table>
+      </table>
 
       <CustomPagination 
         page={page}

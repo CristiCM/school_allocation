@@ -95,11 +95,9 @@ function StudentIndexTable() {
     <LoadingComp message={"Fetching data..."} /> :
     <>
       <div className="tableContainer">
-        <Table className="indexTable" size="sm" responsive variant="dark">
+        <table>
+          <caption>All Students</caption>
           <thead>
-            <tr>
-              <th colSpan={4}>All Students</th>
-            </tr>
             <tr>
               <th>
                 <a href="#" className="tableHeader"
@@ -121,15 +119,15 @@ function StudentIndexTable() {
             {studentsData.data.students ?
               studentsData.data.students.map(student => (
                 <tr key={student.id}>
-                  <td>{student.email}</td>
-                  <td>{formatDate(student.created_at)}</td>
-                  <td>
-                    <Button variant="secondary" size="sm" as={Link} to={`/student_edit/${student.id}`}>
-                      Edit
-                    </Button>
+                  <td data-cell="email">{student.email}</td>
+                  <td data-cell="creation time">{formatDate(student.created_at)}</td>
+                  <td data-cell="edit student">
+                      <Button className="tableButton" variant="secondary" size="sm" as={Link} to={`/student_edit/${student.id}`}>
+                        Edit
+                      </Button>
                   </td>
-                  <td>
-                    <Button variant="secondary" size="sm" disabled={deleteStudentIsLoading} onClick={() => handleDelete(student.id)}>
+                  <td data-cell="delete student">
+                    <Button className="tableButton" variant="secondary" size="sm" disabled={deleteStudentIsLoading} onClick={() => handleDelete(student.id)}>
                       {deleteStudentIsLoading ?
                         "Deleting..." :
                         "Delete"}
@@ -139,7 +137,7 @@ function StudentIndexTable() {
               )) :
               null}
           </tbody>
-        </Table>
+        </table>
 
 
       <CustomPagination 

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import Table from "react-bootstrap/Table";
+// import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
-import Pagination from 'react-bootstrap/Pagination';
 import { GetAllocatedStudents } from "../../../services/API/Allocation/GetAllocatedStudents";
 import { DownloadAllocatedStudents } from "../../../services/API/Allocation/DownloadAllocatedStudents";
 import { GetSchoolTrackSpecData } from "../../../services/API/SchoolCreation/GetSchoolTrackSpecData";
@@ -85,77 +84,76 @@ function AllocatedStudentsIndexTable() {
 
   return (
     schoolTrackSpecIsLoading || allocatedStudentsIsLoading ?
-    <LoadingComp message={"Fetching data..."} /> :
-    <>
-      <div className="tableContainer">
-        <Table className="indexTable" size="sm" responsive variant="dark">
-          <thead>
-            <tr>
-              <th colSpan={11}>All Students</th>
-            </tr>
+    (<LoadingComp message={"Fetching data..."} />) : (
+      
+        <>
+        <div className="tableContainer">
+        <table>
+          <caption>All students</caption>
+           <thead>
             <tr>
               <th>
-                <a href="#" className="tableHeader"
+                <a href="#"
                   onClick={(e) => { e.preventDefault(); handleSortAndOrdering('users.email'); }}>
                   Email
                 </a>
               </th>
               <th>
-                <a href="#" className="tableHeader"
+                <a href="#"
                   onClick={(e) => { e.preventDefault(); handleSortAndOrdering('users.admission_average'); }}>
                   Admission Average
                 </a>
               </th>
               <th>
-                <a href="#" className="tableHeader"
+                <a href="#"
                   onClick={(e) => { e.preventDefault(); handleSortAndOrdering('users.en_average'); }}>
                   English Average
                 </a>
               </th>
               <th>
-                <a href="#" className="tableHeader"
+                <a href="#"
                   onClick={(e) => { e.preventDefault(); handleSortAndOrdering('users.ro_grade'); }}>
                   Romanian Grade
                 </a>
               </th>
               <th>
-                <a href="#" className="tableHeader"
+                <a href="#"
                   onClick={(e) => { e.preventDefault(); handleSortAndOrdering('users.mathematics_grade'); }}>
                   Mathematics Grade
                 </a>
               </th>
               <th>
-                <a href="#" className="tableHeader"
+                <a href="#"
                   onClick={(e) => { e.preventDefault(); handleSortAndOrdering('users.mother_tongue'); }}>
                   Mother Tongue
                 </a>
               </th>
               <th>
-                <a href="#" className="tableHeader"
+                <a href="#"
                   onClick={(e) => { e.preventDefault(); handleSortAndOrdering('users.mother_tongue_grade'); }}>
                   Mother Tongue Grade
                 </a>
               </th>
               <th>
-                <a href="#" className="tableHeader"
+                <a href="#"
                   onClick={(e) => { e.preventDefault(); handleSortAndOrdering('users.graduation_average'); }}>
                   Graduation Average
                 </a>
               </th>
               <th>
-                <a href="#" className="tableHeader"
+                <a href="#"
                   onClick={(e) => { e.preventDefault(); handleSortAndOrdering('schools.name'); }}>
                   School
                 </a>
               </th>
               <th>
-                <a href="#" className="tableHeader"
+                <a href="#"
                   onClick={(e) => { e.preventDefault(); handleSortAndOrdering('tracks.name'); }}>
                   Track
                 </a>
               </th>
               <th>
-                <a href="#" className="tableHeader"
+                <a href="#"
                   onClick={(e) => { e.preventDefault(); handleSortAndOrdering('specializations.name'); }}>
                   Specialization
                 </a>
@@ -167,36 +165,37 @@ function AllocatedStudentsIndexTable() {
             {allocatedStudentsData.data.assignments ?
               allocatedStudentsData.data.assignments.map(assignment => (
                 <tr key={assignment.assignment.id}>
-                  <td>{assignment.user.email}</td>
-                  <td>{assignment.user.admission_average}</td>
-                  <td>{assignment.user.en_average}</td>
-                  <td>{assignment.user.ro_grade}</td>
-                  <td>{assignment.user.mathematics_grade}</td>
-                  <td>{assignment.user.mother_tongue}</td>
-                  <td>{assignment.user.mother_tongue_grade}</td>
-                  <td>{assignment.user.graduation_average}</td>
-                  <td>{fetchSchoolTrackOrSpecializationName(assignment.school_specialization.school_id, "school")}</td>
-                  <td>{fetchSchoolTrackOrSpecializationName(assignment.school_specialization.track_id, "track")}</td>
-                  <td>{fetchSchoolTrackOrSpecializationName(assignment.school_specialization.specialization_id, "specialization")}</td>
+                  <td data-cell="email">{assignment.user.email}</td>
+                  <td data-cell="admission average">{assignment.user.admission_average}</td>
+                  <td data-cell="english average">{assignment.user.en_average}</td>
+                  <td data-cell="romanian grade">{assignment.user.ro_grade}</td>
+                  <td data-cell="mathematics grade">{assignment.user.mathematics_grade}</td>
+                  <td data-cell="mother tongue">{assignment.user.mother_tongue}</td>
+                  <td data-cell="mother tongue grade">{assignment.user.mother_tongue_grade}</td>
+                  <td data-cell="graduation average">{assignment.user.graduation_average}</td>
+                  <td data-cell="school">{fetchSchoolTrackOrSpecializationName(assignment.school_specialization.school_id, "school")}</td>
+                  <td data-cell="track">{fetchSchoolTrackOrSpecializationName(assignment.school_specialization.track_id, "track")}</td>
+                  <td data-cell="specialization">{fetchSchoolTrackOrSpecializationName(assignment.school_specialization.specialization_id, "specialization")}</td>
                 </tr>
               )) :
               null}
-          </tbody>
-        </Table>
+        </tbody>
+        </table>
+      
+        <CustomPagination
+          page={page}
+          total_pages={allocatedStudentsData.data.total_pages}
+          handlePageChange={handlePageChange}
+        />
 
-      <CustomPagination 
-        page={page}
-        total_pages={allocatedStudentsData.data.total_pages}
-        handlePageChange={handlePageChange}
-      />
-
-      <Button variant="dark" disabled={downloadAllocatedIsLoading} onClick={() => handleDownload(sortBy, order)}>
-        {downloadAllocatedIsLoading ?
-          "Downloading..." :
-          "Download all Students"}
-      </Button>
+        <Button variant="dark" disabled={downloadAllocatedIsLoading} onClick={() => handleDownload(sortBy, order)}>
+          {downloadAllocatedIsLoading ?
+            "Downloading..." :
+            "Download all Students"}
+        </Button>
       </div>
     </>
+    )
   );
 }
 

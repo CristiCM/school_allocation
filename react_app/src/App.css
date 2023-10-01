@@ -181,27 +181,93 @@
 /* INDEX TABLES */
 
 .tableContainer {
-  margin-top: 1em;
-  box-shadow: 0 0.050em 0.35em black;
-  width: 60%;
-  margin: auto;
-  padding: 10px;
-  border-radius: 5px;
-  overflow: auto;
+  width: 95%;
+  margin-inline: auto;
 }
 
-.indexTable {
+table {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
   width: 100%;
+  border-collapse: collapse;
+  background: #323232;
+  padding: 1rem;
+  color: white;
 }
 
-.indexTable td, .indexTable th {
-  text-align: center;
-  vertical-align: middle;
-}
-
-.tableHeader {
+th a {
   text-decoration: none;
   color: white;
 }
 
+caption {
+  caption-side: top !important;
+  color: white !important;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: hsl(0, 0%, 0%);
+}
 
+caption,
+th,
+td {
+  padding: 0.5rem;
+}
+
+caption,
+table th,
+table td {
+  text-align: left;
+}
+
+th {
+  background: hsl(0, 0%, 0%, 0.5);
+}
+
+tr:nth-of-type(2n) {
+  background: hsl(0, 0%, 0%, 0.1);
+}
+
+.tableButton {
+  margin: 0;
+  padding: 0.5rem;
+}
+
+
+@media (max-width: 1260px) {
+  th {
+    display: none;
+  }
+
+  td {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 30ch auto;
+    padding: 0.5rem 1rem;
+  }
+
+  td:first-child {
+    padding-top: 1rem;
+  }
+
+  td:last-child {
+    padding-bottom: 1rem;
+  }
+
+  td::before {
+    content: attr(data-cell) ": ";
+    font-weight: 700;
+    text-transform: capitalize;
+  }
+
+  td[data-hide] {
+    display: none;
+  }
+
+  caption,
+  table th,
+  table td {
+  text-align: center;
+  }
+}

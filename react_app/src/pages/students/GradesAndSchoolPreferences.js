@@ -6,9 +6,7 @@ function GradesAndSchoolPreferences
     return(
         <>
             <NavBar />
-            <div className="fullPageContainer">
-                <GradeInformationCard />
-            </div>
+            <GradeInformationCard />
         </>
     )
 }

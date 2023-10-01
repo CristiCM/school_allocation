@@ -5,9 +5,8 @@ function AllocationOverview(){
     return(
         <>
             <NavBar />
-            <div className="fullPageContainer">
-                <AllocatedStudentsIndexTable />
-            </div>
+            <AllocatedStudentsIndexTable />
+
         </>
     )
 }
