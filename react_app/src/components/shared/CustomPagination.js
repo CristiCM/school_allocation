@@ -2,7 +2,7 @@ import React from 'react';
 import Pagination from 'react-bootstrap/Pagination';
 
 const CustomPagination = ({ page, total_pages, handlePageChange }) => {
-  const maxVisibleItems = 10;
+  const maxVisibleItems = 6;
 
   let startPage = Math.max(1, page - Math.floor(maxVisibleItems / 2));
   let endPage = Math.min(total_pages, startPage + maxVisibleItems - 1);

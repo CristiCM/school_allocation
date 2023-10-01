@@ -5,9 +5,7 @@ function StudentCreation(){
     return(
         <>
             <NavBar />
-            <div className="fullPageContainer">
-                <StudentCreationForm />
-            </div>
+            <StudentCreationForm />
         </>
     )
 }

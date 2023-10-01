@@ -5,9 +5,7 @@ function StudentEdit(){
     return(
         <>
           <NavBar />
-          <div className="fullPageContainer">
-            <StudentEditForm />
-          </div>
+          <StudentEditForm />
         </>
     )
 }

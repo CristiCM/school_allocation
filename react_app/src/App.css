@@ -182,7 +182,7 @@ table {
   margin-bottom: 2rem;
   width: 100%;
   border-collapse: collapse;
-  background: #323232;
+  background:  rgb(54, 61, 68);
   padding: 1rem;
   color: white;
 }
@@ -198,7 +198,7 @@ caption {
   font-size: 1.5rem;
   font-weight: 700;
   text-transform: uppercase;
-  background: hsl(0, 0%, 0%);
+  background:  rgb(22, 25, 28);
 }
 
 caption,
@@ -214,7 +214,7 @@ table td {
 }
 
 th {
-  background: hsl(0, 0%, 0%, 0.5);
+  background:  rgb(33,37,41);
 }
 
 tr:nth-of-type(2n) {
@@ -271,6 +271,7 @@ tr:nth-of-type(2n) {
   width: 70%;
   height: auto;
   margin: auto;
+  margin-top: 2rem;
   padding: 30px;
   padding-top: 40px;
   border-radius: 0.5em;
@@ -289,22 +290,28 @@ tr:nth-of-type(2n) {
 .taskSchedulerForm {
   width: 70%;
   margin: auto;
+  margin-top: 6rem;
   border-radius: 0.5em;
   box-shadow: 0 0.050em 0.35em black;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 2px;
-  padding-bottom: 2px;
+}
+
+@media (max-width: 1260px) {
+  .taskSchedulerForm {
+    width: 70%;
+    margin: auto;
+    border-radius: 0.5em;
+    box-shadow: 0 0.050em 0.35em black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 .taskSchedulerFormControl {
   width: 70%;
-}
-
-.taskSchedulerForm h5,
-.taskSchedulerForm button {
-  margin: 0; /* Reset the margin */
 }
 
 /* STUDENT PREFERENCE PICKER */

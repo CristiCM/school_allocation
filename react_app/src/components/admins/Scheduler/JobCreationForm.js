@@ -58,6 +58,8 @@ function JobCreationForm() {
         <LoadingComp message={'Fetching data...'} /> :
         <div className='taskSchedulerForm'>
             <Form className='taskSchedulerFormControl' onSubmit={handleSubmit}>
+
+                <Form.Label><h5>Task Creation</h5></Form.Label>
                 <Form.Label className='inputLable'>Type of task</Form.Label>
                 <Form.Select
                     value={selectedJob || ""}
