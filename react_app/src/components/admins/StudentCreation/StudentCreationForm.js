@@ -63,20 +63,22 @@ function StudentCreationForm() {
     }    
 
     return(
-        <>
-        <Form className='studentform' onSubmit={handleSubmit}>
-            <Form.Label>Student Creation Form</Form.Label>
+        <div className='studentCreation-EditFrom'>
+        <Form className='studentCreationControl' onSubmit={handleSubmit}>
+            <Form.Label className='mb-3'><h5>Creation</h5></Form.Label>
+
+            <Form.Label className='inputLable'>Email address</Form.Label>
             <Form.Control
-            placeholder='Email Adress'
+            placeholder='john@doe.com'
             type='email'
             value={email}
             required
             onChange={(e) => setEmail(e.target.value)
             }/>
-            <br />
 
-            <Form.Control
-                    placeholder='Admission Average'
+            <Form.Label className='inputLable'>Admission Average</Form.Label>
+            <Form.Control 
+                    placeholder='Ex: 8.65'
                     type='number'
                     value={admissionAverage}
                     min={1.00}
@@ -85,10 +87,10 @@ function StudentCreationForm() {
                     required
                     onChange={(e) => setAdmissionAverage(e.target.value)}
                 />
-            <br />
-
+   
+            <Form.Label className='inputLable'>English Average</Form.Label>
             <Form.Control
-                    placeholder='English Average'
+                    placeholder='Ex: 8.65'
                     type='number'
                     value={englishAverage}
                     min={1.00}
@@ -97,10 +99,9 @@ function StudentCreationForm() {
                     required
                     onChange={(e) => setEnglishAverage(e.target.value)}
                 />
-            <br />
-
+            <Form.Label className='inputLable'>Romanian Average</Form.Label>
             <Form.Control
-                    placeholder='Romanian Average'
+                    placeholder='Ex: 8.65'
                     type='number'
                     value={romanianGrade}
                     min={1.00}
@@ -108,12 +109,11 @@ function StudentCreationForm() {
                     step={0.01}
                     required
                     onChange={(e) => setRomanianGrade(e.target.value)}
-                />
-            <br />
+            />
 
-
+            <Form.Label className='inputLable'>Mathematics Average</Form.Label>
             <Form.Control
-                placeholder='Mathematics Average'
+                placeholder='Ex: 8.65'
                 type='number'
                 value={mathematicsGrade}
                 min={1.00}
@@ -122,20 +122,18 @@ function StudentCreationForm() {
                 required
                 onChange={(e) => setMathematicsGrade(e.target.value)}
             />
-            <br />
 
-
+            <Form.Label className='inputLable'>Mother Tongue</Form.Label>
             <Form.Control
-                placeholder='Mother Tongue'
+                placeholder='Ex: German'
                 type='text'
                 value={motherTongue}
                 onChange={(e) => setMotherTongue(e.target.value)}
             />
-            <br />
 
-
+            <Form.Label className='inputLable'>Mother Tongue Grade</Form.Label>
             <Form.Control
-                placeholder='Mother Tongue Grade'
+                placeholder='Ex: 8.65'
                 type='number'
                 value={motherTongueGrade}
                 min={1.00}
@@ -143,11 +141,10 @@ function StudentCreationForm() {
                 step={0.01}
                 onChange={(e) => setMotherTongueGrade(e.target.value)}
             />
-            <br />
 
-
+            <Form.Label className='inputLable'>Graduation Average</Form.Label>
             <Form.Control
-                placeholder='Graduation Average'
+                placeholder='Ex: 8.65'
                 type='number'
                 value={graduationAverage}
                 min={1.00}
@@ -156,14 +153,14 @@ function StudentCreationForm() {
                 required
                 onChange={(e) => setGraduationAverage(e.target.value)}
             />
-            <br />
-            <Button variant="dark" type="submit" disabled={createStudentIsLoading}>
+
+            <Button className='mt-4' variant="dark" type="submit" disabled={createStudentIsLoading}>
                 {createStudentIsLoading ?
                     "Creating..." :
                     "Create student"}
             </Button>
         </Form>
-        </>
+        </div>
     );
 }
 

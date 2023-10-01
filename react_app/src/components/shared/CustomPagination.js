@@ -10,6 +10,10 @@ const CustomPagination = ({ page, total_pages, handlePageChange }) => {
 
   startPage = Math.max(1, endPage - maxVisibleItems + 1);
 
+  if (isNaN(page) || isNaN(total_pages)) {
+    return null;
+  }
+
   return (
     <div className="pagination">
       <Pagination>

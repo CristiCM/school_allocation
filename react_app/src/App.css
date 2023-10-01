@@ -2,17 +2,6 @@
   text-align: center;
 }
 
-.studentform {
-  width: 50%;
-  display: inline-block;
-  align-items: center;
-}
-
-.noBullets {
-  list-style-type: none;
-  padding-left: 0;
-}
-
 .fullPageContainer {
   display: flex;
   height: calc(100vh - 56px);
@@ -30,7 +19,7 @@
   height: auto;
   margin: auto;
   padding: 50px;
-  border-radius: 1em;
+  border-radius: 0.5em;
   box-shadow: 0 0.050em 0.35em black;
   display: flex;
   flex-direction: column;
@@ -108,12 +97,11 @@
 /* IMPORT DATA FORM */
 
 .importFormContainer {
-  max-width: 700px;
   width: 70%;
   height: auto;
   margin: auto;
   padding: 30px;
-  border-radius: 1em;
+  border-radius: 0.5em;
   box-shadow: 0 0.050em 0.35em black;
   display: flex;
   flex-direction: column;
@@ -152,15 +140,18 @@
 }
 
 
-/* CREATE SPECIALIZATION FORM */
+/* CREATE - EDIT SPECIALIZATION FORM */
 
-.specializationCreationFrom {
+.specializationCreation-EditFrom {
   max-width: 700px;
   width: 70%;
   height: auto;
   margin: auto;
-  padding: 30px;
-  border-radius: 1em;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding: 10px;
+  padding-top: 25px;
+  border-radius: 0.5em;
   box-shadow: 0 0.050em 0.35em black;
   display: flex;
   flex-direction: column;
@@ -183,6 +174,7 @@
 .tableContainer {
   width: 95%;
   margin-inline: auto;
+  overflow: auto;
 }
 
 table {
@@ -243,7 +235,7 @@ tr:nth-of-type(2n) {
   td {
     display: grid;
     gap: 1rem;
-    grid-template-columns: 30ch auto;
+    grid-template-columns: 20ch auto;
     padding: 0.5rem 1rem;
   }
 
@@ -270,4 +262,66 @@ tr:nth-of-type(2n) {
   table td {
   text-align: center;
   }
+}
+
+/* STUDENT CREATION-EDIT FORM */
+
+.studentCreation-EditFrom {
+  max-width: 700px;
+  width: 70%;
+  height: auto;
+  margin: auto;
+  padding: 30px;
+  padding-top: 40px;
+  border-radius: 0.5em;
+  box-shadow: 0 0.050em 0.35em black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.studentCreationControl {
+  width: 70%;
+}
+
+/* TASK SCHEDULER FORM */
+
+.taskSchedulerForm {
+  width: 70%;
+  margin: auto;
+  border-radius: 0.5em;
+  box-shadow: 0 0.050em 0.35em black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.taskSchedulerFormControl {
+  width: 70%;
+}
+
+.taskSchedulerForm h5,
+.taskSchedulerForm button {
+  margin: 0; /* Reset the margin */
+}
+
+/* STUDENT PREFERENCE PICKER */
+
+.studentPreferenceForm {
+  width: 70%;
+  margin: auto;
+  margin-top: 2rem;
+  border-radius: 0.5em;
+  box-shadow: 0 0.050em 0.35em black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.studentPreferenceFormControl {
+  width: 70%;
 }

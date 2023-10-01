@@ -6,10 +6,9 @@ function SpecializationCreation(){
     return(
         <>
             <NavBar />
-            <div className="fullPageContainer">
+            <div className='specializationCreation-EditFrom'>
                 <SpecializationCreationFrom />
                 <br />
-
                 { localStorage.getItem('lastCreatedSpec') ?
                 <SpecializationEditForm /> :
                 null

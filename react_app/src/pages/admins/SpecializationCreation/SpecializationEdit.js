@@ -5,7 +5,11 @@ function SpecializationEdit(){
     return(
         <>
           <NavBar />
-          <div className="fullPageContainer"><SpecializationEditForm /></div>
+          <div className="fullPageContainer">
+            <div className="specializationCreation-EditFrom">
+              <SpecializationEditForm />
+            </div>
+          </div>
         </>
     )
 }
