@@ -5,9 +5,7 @@ function StudentIndex(){
     return(
         <>
             <NavBar />
-            <div className="fullPageContainer">
-                <StudentIndexTable />
-            </div>
+            <StudentIndexTable />
         </>
     )
 }

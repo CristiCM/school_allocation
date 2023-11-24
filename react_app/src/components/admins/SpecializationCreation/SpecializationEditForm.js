@@ -84,7 +84,7 @@ function SpecializationEditForm() {
         <LoadingComp message={"Fetching Data..."} /> :
         <>
         <Form onSubmit={handleSubmit}>
-            <Form.Label>School Edit From</Form.Label>
+        <Form.Label className='mb-2'><h5>Edit</h5></Form.Label>
             <Form.Select
                 aria-label='Edit School'
                 value={selectedSchoolId || ""}

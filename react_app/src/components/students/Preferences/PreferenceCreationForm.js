@@ -79,9 +79,9 @@ function PreferenceCreationForm () {
     return (
         preferenceDataIsLoading || allSpecializationsDataIsLoading || schoolTrackSpecDataIsLoading ?
         <LoadingComp message={'Fetching data...'} /> :
-        <>
-            <Form onSubmit={handleSubmit}>
-                <Form.Label>Preference picker</Form.Label>
+        <div className='studentPreferenceForm'>
+            <Form className='studentPreferenceFormControl' onSubmit={handleSubmit}>
+                <Form.Label><h5>Preference Picker</h5></Form.Label>
                 <Form.Select
                     aria-label='Select a Preference'
                     value={selectedPreference || ""}
@@ -106,7 +106,7 @@ function PreferenceCreationForm () {
                         "Add preference"}           
                 </Button>
             </Form>
-        </>
+        </div>
     );
 };
 

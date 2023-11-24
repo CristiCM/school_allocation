@@ -6,13 +6,8 @@ function SchoolOptions(){
     return(
         <>
             <NavBar />
-            <div className="fullPageContainer">
-                <PreferenceCreationForm />
-                <br/>
-                <br/>
-                <br/>
-                <PreferenceIndexTable />
-            </div>
+            <PreferenceCreationForm />
+            <PreferenceIndexTable />
         </>
     )
 }

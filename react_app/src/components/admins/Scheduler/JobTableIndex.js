@@ -62,8 +62,9 @@ function JobTableIndex() {
         jobsDataIsLoading ?
         <LoadingComp message={'Fetching data...'} /> :
         <>
-            <div className="tableGeneral">
-                <Table striped bordered hover variant="dark">
+            <div className="tableContainer">
+                <table>
+                <caption>Scheduler</caption>
                 <thead>
                     <tr>
                     <th>First notification date</th>
@@ -74,43 +75,43 @@ function JobTableIndex() {
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{jobsData.data.job.first_notification_time ? 
+                        <td data-cell="first notification date/time">{jobsData.data.job.first_notification_time ? 
                             formatDate(jobsData.data.job.first_notification_time) : 
                             "N/A"}</td>
-                        <td>{jobsData.data.job.second_notification_time ? 
+                        <td data-cell="secon notification date/time">{jobsData.data.job.second_notification_time ? 
                             formatDate(jobsData.data.job.second_notification_time) : 
                             "N/A"}</td>
-                        <td>{jobsData.data.job.allocation_time ? 
+                        <td data-cell="allocation date/time">{jobsData.data.job.allocation_time ? 
                             formatDate(jobsData.data.job.allocation_time) : 
                             "N/A"}</td>
-                        <td>{jobsData.data.job.allocation_done ? 
+                        <td data-cell="allocation status">{jobsData.data.job.allocation_done ? 
                             "Done" : 
                             "Not done"}</td>
                     </tr>
                     <tr>
-                        <td>
-                        <Button variant="secondary" size="sm" disabled={deleteJobIsLoading} onClick={() => handleDelete("first_notification")}>
+                        <td data-cell="delete first notification task">
+                        <Button className="tableButton" variant="secondary" size="sm" disabled={deleteJobIsLoading} onClick={() => handleDelete("first_notification")}>
                             {deleteJobIsLoading ?
                                 "Deleting...":
                                 "Delete"}
                         </Button>
                         </td>
-                        <td>
-                        <Button variant="secondary" size="sm" onClick={() => handleDelete("second_notification")}>
+                        <td data-cell="delete second notification task">
+                        <Button className="tableButton" variant="secondary" size="sm" onClick={() => handleDelete("second_notification")}>
                             {deleteJobIsLoading ?
                                     "Deleting...":
                                     "Delete"}
                         </Button>
                         </td>
-                        <td>
-                        <Button variant="secondary" size="sm" onClick={() => handleDelete("allocation_date")}>
+                        <td data-cell="delete allocation task">
+                        <Button className="tableButton" variant="secondary" size="sm" onClick={() => handleDelete("allocation_date")}>
                             {deleteJobIsLoading ?
                                     "Deleting...":
                                     "Delete"}
                         </Button>
                         </td>
-                        <td>
-                        <Button variant="danger" size="sm" disabled={resetAllocationIsLoading} onClick={() => handleReset()}>
+                        <td data-cell="reset allocation process">
+                        <Button className="tableButton" variant="danger" size="sm" disabled={resetAllocationIsLoading} onClick={() => handleReset()}>
                             {resetAllocationIsLoading ?
                                 "Reseting..." :
                                 "Reset Allocation"}
@@ -118,7 +119,7 @@ function JobTableIndex() {
                         </td>
                     </tr>
                 </tbody>
-                </Table>
+                </table>
             </div>
         </>
     );

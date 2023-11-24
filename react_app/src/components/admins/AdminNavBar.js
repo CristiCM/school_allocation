@@ -4,15 +4,15 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 function AdminNavBar() {
     return(
         <Nav className="me-auto">
-        <NavDropdown title="Creation square" id="collasible-nav-dropdown">
-          <NavDropdown.Item href="/import_data">Import Data</NavDropdown.Item>
-          <NavDropdown.Item href="/specialization_creation">Specialization Creation</NavDropdown.Item>
-          <NavDropdown.Item href="/specialization_index">All Specializations</NavDropdown.Item>
-          <NavDropdown.Item href="/student_creation">Student Creation</NavDropdown.Item>
-          <NavDropdown.Item href="/student_index">All Students</NavDropdown.Item>
+        <NavDropdown title="CREATION SQUARE" id="collasible-nav-dropdown">
+          <NavDropdown.Item href="/import_data">IMPORT DATA</NavDropdown.Item>
+          <NavDropdown.Item href="/specialization_creation">SPECIALIZATION CREATION</NavDropdown.Item>
+          <NavDropdown.Item href="/specialization_index">ALL SPECIALIZATIONS</NavDropdown.Item>
+          <NavDropdown.Item href="/student_creation">STUDENT CREATION</NavDropdown.Item>
+          <NavDropdown.Item href="/student_index">ALL STUDENTS</NavDropdown.Item>
         </NavDropdown>
-        <Nav.Link href="/scheduler">Scheduler</Nav.Link>
-        <Nav.Link href="/allocation_overview">Allocation Overview</Nav.Link>
+        <Nav.Link href="/scheduler">SCHEDULER</Nav.Link>
+        <Nav.Link href="/allocation_overview">ALLOCATION OVERVIEW</Nav.Link>
       </Nav>
     );
 }

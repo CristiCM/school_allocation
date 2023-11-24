@@ -37,7 +37,9 @@ class Users::SessionsController < Devise::SessionsController
       secure: Rails.env.production?,
       expires: 7.days,
     }
+
     sign_out resource
+    
     render json: {
       id: resource.id,
       email: resource.email,

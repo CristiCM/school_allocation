@@ -6,12 +6,8 @@ function Scheduler(){
     return(
         <>
             <NavBar />
-            <br />
-            <br />
             <JobTableIndex />
-            <div className="fullPageContainer">
-                <JobCreationForm />
-            </div>
+            <JobCreationForm />
         </>
     )
 }

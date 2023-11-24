@@ -7,13 +7,7 @@ function GradesAndAllocationResults
     return(
         <>
             <NavBar />
-            <div className="fullPageContainer">
-                <GradeInformationCard />
-                <br/>
-                <br/>
-                <br/>
-                <AllocationResultTable />
-            </div>
+            <GradeInformationCard />
         </>
     )
 }

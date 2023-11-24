@@ -56,10 +56,11 @@ function JobCreationForm() {
     return(
         jobsDataIsLoading ?
         <LoadingComp message={'Fetching data...'} /> :
-        <>
-            <Form className='studentform' onSubmit={handleSubmit}>
+        <div className='taskSchedulerForm'>
+            <Form className='taskSchedulerFormControl' onSubmit={handleSubmit}>
 
-                <Form.Label>Scheduler Form</Form.Label>
+                <Form.Label><h5>Task Creation</h5></Form.Label>
+                <Form.Label className='inputLable'>Type of task</Form.Label>
                 <Form.Select
                     value={selectedJob || ""}
                     onChange={(e) => setSelectedJob(e.target.value)}
@@ -69,29 +70,27 @@ function JobCreationForm() {
                         <option>{job}</option>
                     ))}
                 </Form.Select>
-                
-                <br />
 
+                <Form.Label className='inputLable'>Date</Form.Label>
                 <Form.Control 
                 type='date' 
                 value={date || ""}
                 onChange={(e) => setDate(e.target.value)}
                 />
-                <br />
-                <Form.Control 
+                <Form.Label className='inputLable'>Time</Form.Label>
+                <Form.Control className='mb-3'
                 type='time'
                 value={time || ""}
                 onChange={(e) => setTime(e.target.value)}
                 />
                 
-                <br />
-                <Button variant="dark" type="submit" disabled={createJobIsLoading}>
+                <Button className='padding-bottom: 2px' variant="dark" type="submit" disabled={createJobIsLoading}>
                     {createJobIsLoading ? 
                         "Scheduling..." :
-                        "Schedule action"}
+                        "Schedule task"}
                 </Button>
             </Form>
-        </>
+        </div>
     );
 }
 

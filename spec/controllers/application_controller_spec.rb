@@ -7,9 +7,10 @@ RSpec.describe ApplicationController, type: :controller do
 
   describe 'unauthorized requests' do
     
-    it 'returns a 403 status' do
+    it 'returns a unauthorized 401 status' do
+      request.headers['Authorization'] = "Invalid Token"
       get :index 
-      expect(response).to have_http_status(403)
+      expect(response).to have_http_status(401)
     end
   end
 end

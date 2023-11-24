@@ -2,12 +2,14 @@ require 'rails_helper'
 
 RSpec.describe AssignmentsController, type: :controller do
     let!(:admin) { FactoryBot.create(:user, role: 'admin') }
+    let!(:jwt_token) { generate_jwt_for(admin) }
     let!(:job_manager) { double('JobManager') }
     let!(:job) { FactoryBot.create(:job, allocation_done: false) }
 
 
     before do
         sign_in admin
+        request.headers['Authorization'] = "Bearer #{jwt_token}"
         allow(JobManager).to receive(:new).and_return(job_manager)
     end
 
@@ -43,7 +45,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
             it 'returns students paginated with a limit of 10' do
                 parsed_response = JSON.parse(response.body)
-                expect(parsed_response["data"].size).to eq(10)
+                expect(parsed_response["students"].size).to eq(10)
             end
 
             it 'returns users with required attributes' do
@@ -59,10 +61,9 @@ RSpec.describe AssignmentsController, type: :controller do
                     "mother_tongue",
                     "mother_tongue_grade",
                     "graduation_average",
-                    "role",
-                    "jti"
+                    "role"
                 ]
-                expect(parsed_response["data"].first.keys).to match_array(attribute_array)
+                expect(parsed_response["students"].first.keys).to match_array(attribute_array)
             end
         end
     end
@@ -92,12 +93,12 @@ RSpec.describe AssignmentsController, type: :controller do
 
             it 'returns assignments paginated with a limit of 10' do
                 parsed_response = JSON.parse(response.body)
-                expect(parsed_response["data"]["assignments"].size).to eq(10)
+                expect(parsed_response["assignments"].size).to eq(10)
             end
 
             it 'returns assignment with required attributes' do
                 parsed_response = JSON.parse(response.body)
-                first_assignment = parsed_response["data"]["assignments"].first["assignment"]
+                first_assignment = parsed_response["assignments"].first["assignment"]
                 expect(first_assignment.keys).to match_array([
                     "id",
                     "user_id",
@@ -109,7 +110,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
             it 'returns user with required attributes' do
                 parsed_response = JSON.parse(response.body)
-                first_user = parsed_response["data"]["assignments"].first["user"]
+                first_user = parsed_response["assignments"].first["user"]
 
                 expect(first_user.keys).to match_array([
                     "id",
@@ -122,15 +123,14 @@ RSpec.describe AssignmentsController, type: :controller do
                     "mother_tongue",
                     "mother_tongue_grade",
                     "graduation_average",
-                    "role",
-                    "jti"
+                    "role"
                 ])
             end
 
             it 'returns matching user/assignment' do
                 parsed_response = JSON.parse(response.body)
-                first_assignment = parsed_response["data"]["assignments"].first["assignment"]
-                first_user = parsed_response["data"]["assignments"].first["user"]
+                first_assignment = parsed_response["assignments"].first["assignment"]
+                first_user = parsed_response["assignments"].first["user"]
 
                 expect(first_assignment["user_id"]).to eq(first_user["id"])
             end
@@ -142,7 +142,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
             it 'orders the assignments correctly new' do
                 parsed_response = JSON.parse(response.body)
-                response_assignment_ids = parsed_response["data"]["assignments"].map { |entry| entry["assignment"]["id"] }
+                response_assignment_ids = parsed_response["assignments"].map { |entry| entry["assignment"]["id"] }
                 
                 correct_assignments = assignments.sort_by { |assignment| assignment.user.admission_average }.reverse.first(10)
                 correct_assignments_ids = correct_assignments.map {|assignment| assignment["id"]}
@@ -166,7 +166,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
             it 'orders the assignments correctly new' do
                 parsed_response = JSON.parse(response.body)
-                response_assignment_ids = parsed_response["data"]["assignments"].map { |entry| entry["assignment"]["id"] }
+                response_assignment_ids = parsed_response["assignments"].map { |entry| entry["assignment"]["id"] }
                 
                 correct_assignments = assignments.sort_by { |assignment| assignment.user.ro_grade }.first(10)
                 correct_assignments_ids = correct_assignments.map {|assignment| assignment["id"]}

@@ -2,60 +2,333 @@
   text-align: center;
 }
 
-.loginform {
-  width: 50%;
-  display: inline-block;
-  align-items: center;
-}
-
-.studentform {
-  width: 50%;
-  display: inline-block;
-  align-items: center;
-}
-
-.noBullets {
-  list-style-type: none;
-  padding-left: 0;
-}
-
 .fullPageContainer {
   display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  min-height: calc(100vh - 200px);
-}
-
-.tableGeneral {
+  height: calc(100vh - 56px);
   width: 100%;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* LOGIN FORM */
+
+.loginFormContainer {
+  max-width: 500px;
+  width: 70%;
+  height: auto;
+  margin: auto;
+  padding: 50px;
+  border-radius: 0.5em;
+  box-shadow: 0 0.050em 0.35em black;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: center;
 }
 
-.tableGeneral .table {
-  width: 70%;
-  border-radius: 5px;
-  overflow: hidden;
+.loginFormText {
+  font-size: xx-large;
+  font-weight: bold;
+  margin-top: 1em;
 }
 
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.inputLable {
+  display: block;
+  text-align: start;
 }
+
+.inputGroup {
+  width: 100%;
+  margin-bottom: 1em;
+}
+
+.btn {
+  width: 100%;
+  height: 3em;
+  margin-bottom: 2em;
+}
+
+
+@media (max-width: 600px) {
+  .loginFormContainer {
+      padding: 20px;
+      width: 80%;
+  }
+
+  .loginFormText {
+      font-size: x-large;
+  }
+
+  .btn {
+      margin-bottom: 1em;
+  }
+}
+
+
+/* HOME PAGE ACCORDION */
 
 .pageInfo {
-  padding-bottom: 5px;
+  padding-bottom: 5em;
+}
+
+.pageInfo h3 {
+  font-weight: bolder;
 }
 
 .accordionGeneral {
   width: 70%;
 }
 
-.tableHeader {
-  color: inherit;
+.accordionGeneral button {
+  font-weight: 600;
+}
+
+
+@media (max-width: 600px) {
+  .pageInfo {
+      padding-bottom: 2em;
+  }
+
+  .accordionGeneral {
+      width: 90%;
+  }
+}
+
+/* IMPORT DATA FORM */
+
+.importFormContainer {
+  width: 70%;
+  height: auto;
+  margin: auto;
+  padding: 30px;
+  border-radius: 0.5em;
+  box-shadow: 0 0.050em 0.35em black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.importInfoLable {
+  margin-bottom: 5px;
+}
+
+.importFormGroup {
+  width: 70%;
+}
+
+.importExtensionLable {
+  padding-top: 3em;
+}
+
+.importFormControl {
+  margin-bottom: 30px;
+}
+
+.importBtn {
+  margin-top: 10px;
+}
+
+@media (max-width: 600px) {
+  .importFormContainer {
+    width: 90%;
+    padding: 15px;
+  }
+
+  .importFormGroup {
+    width: 85%;
+  }
+}
+
+
+/* CREATE - EDIT SPECIALIZATION FORM */
+
+.specializationCreation-EditFrom {
+  max-width: 700px;
+  width: 70%;
+  height: auto;
+  margin: auto;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding: 10px;
+  padding-top: 25px;
+  border-radius: 0.5em;
+  box-shadow: 0 0.050em 0.35em black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.availableSpotsField {
+  text-align: center;
+  width: auto;
+}
+
+.specializationCreationFrom .availableSpotsField input[type='number'] {
+  max-width: 120px !important;
+  margin: auto !important;
+}
+
+
+/* INDEX TABLES */
+
+.tableContainer {
+  width: 95%;
+  margin-inline: auto;
+  overflow: auto;
+}
+
+table {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  width: 100%;
+  border-collapse: collapse;
+  background:  rgb(54, 61, 68);
+  padding: 1rem;
+  color: white;
+}
+
+th a {
   text-decoration: none;
+  color: white;
+}
+
+caption {
+  caption-side: top !important;
+  color: white !important;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background:  rgb(22, 25, 28);
+}
+
+caption,
+th,
+td {
+  padding: 0.5rem;
+}
+
+caption,
+table th,
+table td {
+  text-align: left;
+}
+
+th {
+  background:  rgb(33,37,41);
+}
+
+tr:nth-of-type(2n) {
+  background: hsl(0, 0%, 0%, 0.1);
+}
+
+.tableButton {
+  margin: 0;
+  padding: 0.5rem;
+}
+
+
+@media (max-width: 1260px) {
+  th {
+    display: none;
+  }
+
+  td {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 20ch auto;
+    padding: 0.5rem 1rem;
+  }
+
+  td:first-child {
+    padding-top: 1rem;
+  }
+
+  td:last-child {
+    padding-bottom: 1rem;
+  }
+
+  td::before {
+    content: attr(data-cell) ": ";
+    font-weight: 700;
+    text-transform: capitalize;
+  }
+
+  td[data-hide] {
+    display: none;
+  }
+
+  caption,
+  table th,
+  table td {
+  text-align: center;
+  }
+}
+
+/* STUDENT CREATION-EDIT FORM */
+
+.studentCreation-EditFrom {
+  max-width: 700px;
+  width: 70%;
+  height: auto;
+  margin: auto;
+  margin-top: 2rem;
+  padding: 30px;
+  padding-top: 40px;
+  border-radius: 0.5em;
+  box-shadow: 0 0.050em 0.35em black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.studentCreationControl {
+  width: 70%;
+}
+
+/* TASK SCHEDULER FORM */
+
+.taskSchedulerForm {
+  width: 70%;
+  margin: auto;
+  margin-top: 6rem;
+  border-radius: 0.5em;
+  box-shadow: 0 0.050em 0.35em black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (max-width: 1260px) {
+  .taskSchedulerForm {
+    width: 70%;
+    margin: auto;
+    border-radius: 0.5em;
+    box-shadow: 0 0.050em 0.35em black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.taskSchedulerFormControl {
+  width: 70%;
+}
+
+/* STUDENT PREFERENCE PICKER */
+
+.studentPreferenceForm {
+  width: 70%;
+  margin: auto;
+  margin-top: 2rem;
+  border-radius: 0.5em;
+  box-shadow: 0 0.050em 0.35em black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.studentPreferenceFormControl {
+  width: 70%;
 }

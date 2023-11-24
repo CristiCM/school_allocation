@@ -66,12 +66,10 @@ function PreferenceIndexTable () {
         preferenceDataIsLoading || allSpecializationsDataIsLoading || schoolTrackSpecDataIsLoading ?
         <LoadingComp message={'Fetching data...'} /> :
         <>
-          <div className='tableGeneral'>
-            <Table striped bordered hover variant="dark">
+          <div className='tableContainer'>
+            <table>
+              <caption>Your preferences</caption>
               <thead>
-                <tr>
-                  <th colSpan={5}>Your preferences</th>
-                </tr>
                 <tr>
                   <th>
                     School
@@ -92,21 +90,21 @@ function PreferenceIndexTable () {
                 {preferenceData.data.preferences ?
                   preferenceData.data.preferences.map(preference => (
                     <tr key={preference.id}>
-                      <td>
+                      <td data-cell="school"> 
                         {fetchSchoolTrackOrSpecializationName(
                             allSpecializationsData.data.school_specializations.find(s => s.id === preference.school_specialization_id).school_id, 'school')}
                       </td>
-                      <td>
+                      <td data-cell="track">
                         {fetchSchoolTrackOrSpecializationName(
                             allSpecializationsData.data.school_specializations.find(s => s.id === preference.school_specialization_id).track_id, 'track')}
                       </td>
-                      <td>
+                      <td data-cell="specialization">
                         {fetchSchoolTrackOrSpecializationName(
                             allSpecializationsData.data.school_specializations.find(s => s.id === preference.school_specialization_id).specialization_id, 'specialization')}
                       </td>
-                      <td>{preference.priority}</td>
-                      <td>
-                        <Button variant="secondary" size="sm" disabled={deletePreferenceIsLoading} onClick={() => handleDelete(preference.id)}>
+                      <td data-cell="priority">{preference.priority}</td>
+                      <td data-cell="delete preference">
+                        <Button className='tableButton' variant="secondary" size="sm" disabled={deletePreferenceIsLoading} onClick={() => handleDelete(preference.id)}>
                             {deletePreferenceIsLoading ?
                                 "Deleting..." :
                                 "Delete"}
@@ -116,7 +114,7 @@ function PreferenceIndexTable () {
                   )) :
                   null}
               </tbody>
-            </Table>
+            </table>
           </div>
         </>
       );

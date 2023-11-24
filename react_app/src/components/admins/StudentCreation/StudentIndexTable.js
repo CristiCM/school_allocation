@@ -11,6 +11,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { toast } from "react-toastify";
 import LoadingComp from "../../shared/LoadingComp";
+import CustomPagination from "../../shared/CustomPagination";
 
 function StudentIndexTable() {
   const queryClient = useQueryClient();
@@ -93,12 +94,10 @@ function StudentIndexTable() {
     studentsIsLoading ?
     <LoadingComp message={"Fetching data..."} /> :
     <>
-      <div className="tableGeneral">
-        <Table striped bordered hover variant="dark">
+      <div className="tableContainer">
+        <table>
+          <caption>All Students</caption>
           <thead>
-            <tr>
-              <th colSpan={4}>All Students</th>
-            </tr>
             <tr>
               <th>
                 <a href="#" className="tableHeader"
@@ -120,15 +119,15 @@ function StudentIndexTable() {
             {studentsData.data.students ?
               studentsData.data.students.map(student => (
                 <tr key={student.id}>
-                  <td>{student.email}</td>
-                  <td>{formatDate(student.created_at)}</td>
-                  <td>
-                    <Button variant="secondary" size="sm" as={Link} to={`/student_edit/${student.id}`}>
-                      Edit
-                    </Button>
+                  <td data-cell="email">{student.email}</td>
+                  <td data-cell="creation time">{formatDate(student.created_at)}</td>
+                  <td data-cell="edit student">
+                      <Button className="tableButton" variant="secondary" size="sm" as={Link} to={`/student_edit/${student.id}`}>
+                        Edit
+                      </Button>
                   </td>
-                  <td>
-                    <Button variant="secondary" size="sm" disabled={deleteStudentIsLoading} onClick={() => handleDelete(student.id)}>
+                  <td data-cell="delete student">
+                    <Button className="tableButton" variant="secondary" size="sm" disabled={deleteStudentIsLoading} onClick={() => handleDelete(student.id)}>
                       {deleteStudentIsLoading ?
                         "Deleting..." :
                         "Delete"}
@@ -138,28 +137,21 @@ function StudentIndexTable() {
               )) :
               null}
           </tbody>
-        </Table>
-      </div>
+        </table>
 
-      <div className="pagination">
-        <Pagination>
-          <Pagination.First onClick={() => handlePageChange(1)} />
-          <Pagination.Prev onClick={() => { handlePageChange(page - 1)}} />
-          {[...Array(studentsData.data.total_pages)].map((_, index) => (
-            <Pagination.Item key={index} active={index + 1 === page} onClick={() => handlePageChange(index + 1)}>
-              {index + 1}
-            </Pagination.Item>
-          ))}
-          <Pagination.Next onClick={() => handlePageChange(page + 1)} />
-          <Pagination.Last onClick={() => handlePageChange(studentsData.data.total_pages)} />
-        </Pagination>
-      </div>
+
+      <CustomPagination 
+        page={page}
+        total_pages={studentsData.data.total_pages}
+        handlePageChange={handlePageChange}
+      />
 
       <Button variant="dark" disabled={downloadIsLoading} onClick={() => handleDownload(sortBy, order)}>
         {downloadIsLoading ?
           "Downloading..." :
           "Download Students"}
       </Button>
+    </div>
     </>
   );
 }

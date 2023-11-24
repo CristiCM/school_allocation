@@ -78,14 +78,14 @@ function StudentEditForm() {
     return(
         studentDataIsLoading ?
         <LoadingComp message={'Fetching data...'} /> :
-        <>
-        <Form className='studentform' onSubmit={handleSubmit}>
-            <Form.Label style={{ fontWeight: 'bold', fontSize: '1.2em' }}>
-                Edit student: {email}
+        <div className="studentCreation-EditFrom">
+        <Form className='studentCreationControl' onSubmit={handleSubmit}>
+            <Form.Label>
+                <h5>Edit: {email}</h5>
             </Form.Label>
 
             <br />
-            <Form.Label>Admission average</Form.Label>
+            <Form.Label className='inputLable'>Admission average</Form.Label>
             <Form.Control
                     type='number'
                     value={admissionAverage}
@@ -96,7 +96,7 @@ function StudentEditForm() {
                     onChange={(e) => setAdmissionAverage(e.target.value)}
                 />
             <br />
-            <Form.Label>English average</Form.Label>
+            <Form.Label className='inputLable'>English average</Form.Label>
             <Form.Control
                     type='number'
                     value={englishAverage}
@@ -107,7 +107,7 @@ function StudentEditForm() {
                     onChange={(e) => setEnglishAverage(e.target.value)}
                 />
             <br />
-            <Form.Label>Romanian grade</Form.Label>
+            <Form.Label className='inputLable'>Romanian grade</Form.Label>
             <Form.Control
                     type='number'
                     value={romanianGrade}
@@ -118,7 +118,7 @@ function StudentEditForm() {
                     onChange={(e) => setRomanianGrade(e.target.value)}
                 />
             <br />
-            <Form.Label>Mathematics average</Form.Label>
+            <Form.Label className='inputLable'>Mathematics average</Form.Label>
             <Form.Control
                 type='number'
                 value={mathematicsGrade}
@@ -130,7 +130,7 @@ function StudentEditForm() {
             />
             <br />
 
-            <Form.Label>Mother tongue</Form.Label>
+            <Form.Label className='inputLable'>Mother tongue</Form.Label>
             <Form.Control
                 placeholder="Mother tongue"
                 type='text'
@@ -139,7 +139,7 @@ function StudentEditForm() {
             />
             <br />
 
-            <Form.Label>Mother tongue grade</Form.Label>
+            <Form.Label className='inputLable'>Mother tongue grade</Form.Label>
             <Form.Control
                 placeholder="Mother Tongue Grade"
                 type='number'
@@ -151,7 +151,7 @@ function StudentEditForm() {
             />
             <br />
 
-            <Form.Label>Graduation average</Form.Label>
+            <Form.Label className='inputLable'>Graduation average</Form.Label>
             <Form.Control
                 placeholder='Graduation Average'
                 type='number'
@@ -169,7 +169,7 @@ function StudentEditForm() {
                     "Update Student"}
             </Button>
         </Form>
-        </>
+        </div>
     );
 }
 

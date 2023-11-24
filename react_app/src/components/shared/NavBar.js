@@ -11,7 +11,7 @@ function NavBar() {
   const role = sessionStorage.getItem('role');
 
   return (
-    <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary">
+    <Navbar collapseOnSelect expand="lg" bg="dark" data-bs-theme="dark">
       <Container>
         <Navbar.Brand href="/home">School Allocation 2023</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -27,7 +27,6 @@ function NavBar() {
             <Nav.Link href="/user_credentials_edit">{email? email : null}</Nav.Link>
             { email && role ?
                   (<Logout />)
-                  // (<Nav.Link> <Logout /> </Nav.Link>)
                   : 
                   (<Nav.Link href="/login">Login</Nav.Link>) 
             }

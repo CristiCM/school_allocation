@@ -11,6 +11,7 @@ import { DownloadSchoolSpecializations } from "../../../services/API/SchoolCreat
 import { toast } from 'react-toastify';
 import { useQueryClient } from '@tanstack/react-query';
 import LoadingComp from "../../shared/LoadingComp";
+import CustomPagination from "../../shared/CustomPagination";
 
 function SpecializationIndexTable() {
   const queryClient = useQueryClient();
@@ -93,73 +94,63 @@ function SpecializationIndexTable() {
     schoolSpecializationsIsLoading || schoolTrackSpecIsLoading ?
     <LoadingComp message={"Fetching data..."} /> :
     <>
-      <div className="tableGeneral">
-        <Table striped bordered hover variant="dark">
-          <thead>
-            <tr>
-              <th colSpan={6}>All Specializations</th>
-            </tr>
-            <tr>
-              <th>School</th>
-              <th>Track</th>
-              <th>Specialization</th>
-              <th>
-                <a href="#" className="tableHeader"
-                  onClick={(e) => { e.preventDefault(); handleOrdering(); }}>
-                  Available Spots
-                </a>
-              </th>
-              <th></th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {console.log()}
-            {schoolSpecializationsData.data.school_specializations ?
-              schoolSpecializationsData.data.school_specializations.map(schoolSpecialization => (
-                <tr key={schoolSpecialization.id}>
-                  <td>{(schoolTrackSpecData.data.schools.find(school => school.id === schoolSpecialization.school_id) || {}).name}</td>
-                  <td>{(schoolTrackSpecData.data.tracks.find(track => track.id === schoolSpecialization.track_id) || {}).name}</td>
-                  <td>{(schoolTrackSpecData.data.specializations.find(specialization => specialization.id === schoolSpecialization.specialization_id) || {}).name}</td>
-                  <td>{schoolSpecialization.spots_available}</td>
-                  <td>
-                    <Button variant="secondary" size="sm" as={Link} to={`/specialization_edit/${schoolSpecialization.id}`}>
-                      Edit
-                    </Button>
-                  </td>
-                  <td>
-                    <Button variant="secondary" size="sm" disabled={deleteSpecializationIsLoading} onClick={() => handleDelete(schoolSpecialization.id)}>
-                      {deleteSpecializationIsLoading ?
-                        "Deleting..." :
-                        "Delete"}
-                    </Button>
-                  </td>
-                </tr>
-              )) :
-              null}
-          </tbody>
-        </Table>
-      </div>
+    <div className="tableContainer">
+      <table>
+        <caption>All Specializations</caption>
+        <thead>
+          <tr>
+            <th>School</th>
+            <th>Track</th>
+            <th>Specialization</th>
+            <th>
+              <a href="#" className="tableHeader"
+                onClick={(e) => { e.preventDefault(); handleOrdering(); }}>
+                Available Spots
+              </a>
+            </th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {console.log()}
+          {schoolSpecializationsData.data.school_specializations ?
+            schoolSpecializationsData.data.school_specializations.map(schoolSpecialization => (
+              <tr key={schoolSpecialization.id}>
+                <td data-cell="school">{(schoolTrackSpecData.data.schools.find(school => school.id === schoolSpecialization.school_id) || {}).name}</td>
+                <td data-cell="track">{(schoolTrackSpecData.data.tracks.find(track => track.id === schoolSpecialization.track_id) || {}).name}</td>
+                <td data-cell="specialization">{(schoolTrackSpecData.data.specializations.find(specialization => specialization.id === schoolSpecialization.specialization_id) || {}).name}</td>
+                <td data-cell="available spots">{schoolSpecialization.spots_available}</td>
+                <td data-cell="edit specialization">
+                  <Button className="tableButton" variant="secondary" size="sm" as={Link} to={`/specialization_edit/${schoolSpecialization.id}`}>
+                    Edit
+                  </Button>
+                </td>
+                <td data-cell="delete specialization">
+                  <Button className="tableButton" variant="secondary" size="sm" disabled={deleteSpecializationIsLoading} onClick={() => handleDelete(schoolSpecialization.id)}>
+                    {deleteSpecializationIsLoading ?
+                      "Deleting..." :
+                      "Delete"}
+                  </Button>
+                </td>
+              </tr>
+            )) :
+            null}
+        </tbody>
+      </table>
 
-      <div className="pagination">
-        <Pagination>
-          <Pagination.First onClick={() => handlePageChange(1)} />
-          <Pagination.Prev onClick={() => { handlePageChange(page - 1)}} />
-          {[...Array(schoolSpecializationsData.data.total_pages)].map((_, index) => (
-            <Pagination.Item key={index} active={index + 1 === page} onClick={() => handlePageChange(index + 1)}>
-              {index + 1}
-            </Pagination.Item>
-          ))}
-          <Pagination.Next onClick={() => handlePageChange(page + 1)} />
-          <Pagination.Last onClick={() => handlePageChange(schoolSpecializationsData.data.total_pages)} />
-        </Pagination>
-      </div>
+      <CustomPagination 
+        page={page}
+        total_pages={schoolSpecializationsData.data.total_pages}
+        handlePageChange={handlePageChange} 
+      />
 
       <Button variant="dark" disabled={downloadIsLoading} onClick={() => handleDownload(order)}>
         {downloadIsLoading ?
           "Downloading..." :
           "Download all specializations"}
       </Button>
+    </div>
     </>
   );
 }

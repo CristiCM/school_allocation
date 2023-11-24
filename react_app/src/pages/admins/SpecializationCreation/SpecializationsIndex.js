@@ -4,9 +4,7 @@ function SpecializationsIndex(){
     return(
         <>
             <NavBar />
-            <div className="fullPageContainer">
             <SpecializationIndexTable />
-            </div>
         </>
     )
 }
