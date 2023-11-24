@@ -39,6 +39,7 @@ class Users::SessionsController < Devise::SessionsController
     }
     sign_out resource
     render json: {
+      id: resource.id,
       email: resource.email,
       admission_average: resource.admission_average,
       en_average: resource.en_average,

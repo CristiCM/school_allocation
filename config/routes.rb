@@ -28,7 +28,7 @@ Rails.application.routes.draw do
 
   resources :preferences, only: [:new, :create, :destroy, :index]
 
-  resources :assignments, only: [:new, :index] do
+  resources :assignments, only: [:new, :index, :show] do
     collection do
       get :download
     end

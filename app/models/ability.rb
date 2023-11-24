@@ -12,6 +12,7 @@ class Ability
       can :read, :pages
       can :all_specializations, :schools_creation_controller 
       can :new, :schools_creation_controller
+      can :show, :assignments_controller
     else
       can :read, :pages
     end

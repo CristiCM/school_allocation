@@ -86,7 +86,7 @@ function AllocatedStudentsIndexTable() {
     schoolTrackSpecIsLoading || allocatedStudentsIsLoading ?
     <LoadingComp message={"Fetching data..."} /> :
     <>
-      <div>
+      <div className="tableGeneral">
         <Table striped bordered hover variant="dark">
           <thead>
             <tr>

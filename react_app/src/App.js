@@ -10,7 +10,7 @@ import StudentEdit from './pages/admins/StudentCreation/StudentEdit';
 import Scheduler from './pages/admins/Scheduler';
 import AllocationOverview from './pages/admins/AllocationOverview';
 import SchoolOptions from './pages/students/SchoolOptions';
-import GradesAndSchoolPreferences from './pages/students/GradesAndSchoolPreferences';
+import GradesAndAllocationResults from './pages/students/GradesAndAllocationResults';
 import UserCredentialsEdit from './pages/shared/UserCredentialsEdit';
 import PrivateRoute from './components/shared/PrivateRoute';
 import SpecializationCreation from './pages/admins/SpecializationCreation/SpecializationCreation';
@@ -49,7 +49,7 @@ function App() {
             <Route path='/scheduler' element={<PrivateRoute roles={['admin']} route={<Scheduler />} />}/>
             <Route path='/allocation_overview' element={<PrivateRoute roles={['admin']} route={<AllocationOverview />} />}/>
             <Route path='/school_options' element={<PrivateRoute roles={['student']} route={<SchoolOptions />} />}/>
-            <Route path='/grades_and_school_preferences' element={<PrivateRoute roles={['student']} route={<GradesAndSchoolPreferences />} />}/>
+            <Route path='/grades_and_allocation_results' element={<PrivateRoute roles={['student']} route={<GradesAndAllocationResults />} />}/>
             <Route path='/user_credentials_edit' element={<PrivateRoute roles={['admin', 'student']} route={<UserCredentialsEdit />} />}/>
             <Route path='/login' element={ <Login />} />
             <Route path='*' element={ <NoPage />} />

@@ -1,6 +1,6 @@
 class AssignmentsController < ApplicationController
   before_action :authenticate_request
-  authorize_resource
+  authorize_resource except: [:show]
   skip_before_action :verify_authenticity_token
   before_action :set_no_preference_students, only: :new
   before_action :set_sorting_params, only: [:index, :download]
@@ -38,9 +38,20 @@ class AssignmentsController < ApplicationController
       }, status: :ok
     end
   end
-  
-  
 
+  def show
+    authorize! :show, :assignments_controller
+    assignment = Assignment.find_by(user_id: params[:id])
+
+    if !assignment
+      render json: {}, status: :no_content
+    else
+      render json: {
+        assignment: AssignmentSerializer.new(assignment).serializable_hash[:data][:attributes]
+      }, status: :ok
+    end
+  end
+  
   def download
     data = ExcelGenerator.generate_for_student_assignment(@assignments)
     send_data data, filename: "Assignments.xlsx", type: Mime::Type.lookup_by_extension('xlsx').to_s

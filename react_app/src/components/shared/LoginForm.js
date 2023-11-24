@@ -24,6 +24,7 @@ function LoginForm() {
 
       if (response.data.role === 'student')
       {
+        sessionStorage.setItem('id', response.data.id);
         sessionStorage.setItem('admissionAverage', response.data.admission_average);
         sessionStorage.setItem('enAverage', response.data.en_average);
         sessionStorage.setItem('roGrade', response.data.ro_grade);

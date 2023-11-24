@@ -65,12 +65,15 @@ function PreferenceCreationForm () {
 
     const handleSubmit = async(event) => {
         event.preventDefault();
-        const lastPriority = preferenceData.data.preferences[preferenceData.data.preferences.length - 1].priority;
+        let lastPriority= 0;
+        if (preferenceData.data.preferences)
+        {
+            lastPriority = preferenceData.data.preferences[preferenceData.data.preferences.length - 1].priority
+        }
+
         const priority = lastPriority + 1;
 
-
         addPreference({ school_spec_id: selectedPreference, priority });
-
     }
 
     return (
@@ -94,9 +97,6 @@ function PreferenceCreationForm () {
                                 ` 
                             }
                         </option>
-                    ))}
-                    {schoolTrackSpecData.data.schools.map(school => (
-                        <option key={school.id} value={school.id}>{school.name}</option>
                     ))}
                 </Form.Select>
                 <br/>

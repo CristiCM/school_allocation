@@ -9,6 +9,8 @@ function SchoolOptions(){
             <div className="fullPageContainer">
                 <PreferenceCreationForm />
                 <br/>
+                <br/>
+                <br/>
                 <PreferenceIndexTable />
             </div>
         </>
